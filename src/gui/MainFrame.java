@@ -4,6 +4,10 @@ import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
 
+import topLayout.TopPanel;
+import topLayout.TopPanelEvent;
+import topLayout.TopPanelListener;
+
 public class MainFrame extends JFrame {
 	
 	private TopPanel topPanel;
@@ -14,6 +18,15 @@ public class MainFrame extends JFrame {
 		topPanel = new TopPanel();
 		
 		setLayout(new BorderLayout());
+		
+		topPanel.setTopPanelListener(new TopPanelListener() {
+			
+			@Override
+			public void topPanelEventOccurred(TopPanelEvent e) {
+				System.out.println("Quantidade de Processadores: " + e.getQdeProcessadores());
+				System.out.println("Numero de processos iniciais: " + e.getNumProcessosIniciais());
+			}
+		});
 		
 		add(topPanel, BorderLayout.NORTH);
 		
