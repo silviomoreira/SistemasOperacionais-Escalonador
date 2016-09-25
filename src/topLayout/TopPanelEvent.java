@@ -5,14 +5,16 @@ import java.util.EventObject;
 public class TopPanelEvent extends EventObject {
 	int qdeProcessadores;
 	int numProcessosIniciais;
+	String estrategia;
 	
 	public TopPanelEvent(Object source) {
 		super(source);
 	}
 	
-	public TopPanelEvent(Object source, int qdeProcessadores, int numProcessosIniciais) {
+	public TopPanelEvent(Object source, String estrategia, int qdeProcessadores, int numProcessosIniciais) {
 		super(source);
 		
+		this.estrategia = estrategia;
 		this.qdeProcessadores = qdeProcessadores;
 		this.numProcessosIniciais= numProcessosIniciais;
 	}
@@ -31,6 +33,14 @@ public class TopPanelEvent extends EventObject {
 
 	public void setNumProcessosIniciais(int numProcessosIniciais) {
 		this.numProcessosIniciais = numProcessosIniciais;
+	}
+	
+	public String getEstrategia() {
+		return estrategia;
+	}
+
+	public void setEstrategia(String estrategia) {
+		this.estrategia = estrategia;
 	}
 	
 }

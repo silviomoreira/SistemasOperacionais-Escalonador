@@ -14,6 +14,9 @@ import javax.swing.JTextField;
 
 
 public class TopPanel extends JPanel{
+	private JLabel estrategiaLabel;
+	private JComboBox estrategiaField;
+	
 	private JLabel qdeProcessadoresLabel;
 	private JComboBox qdeProcessadoresField;
 	
@@ -26,6 +29,13 @@ public class TopPanel extends JPanel{
 	
 	public TopPanel() {
 		setBorder(BorderFactory.createEtchedBorder());
+		
+		estrategiaLabel = new JLabel("Estratégia: ");
+		estrategiaField = new JComboBox<>();
+		DefaultComboBoxModel estrategiaModel = new DefaultComboBoxModel();
+		estrategiaModel.addElement("Round Robin");
+		estrategiaModel.addElement("Least Time to Go (LTG)");
+		estrategiaField.setModel(estrategiaModel);
 		
 		qdeProcessadoresLabel = new JLabel("Qde. Processadores: ");
 		qdeProcessadoresField = new JComboBox();
@@ -40,10 +50,11 @@ public class TopPanel extends JPanel{
 		iniciarBtn = new JButton("Iniciar!");
 		iniciarBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				String estrategia = estrategiaField.getSelectedItem().toString();
 				int qdeProcessadores = Integer.parseInt(qdeProcessadoresField.getSelectedItem().toString());
-				int numProcessosIniciais = Integer.parseInt(numProcessosIniciaisField.getText());
+				int numProcessosIniciais = numProcessosIniciaisField.getText().equals("") ? 0 : Integer.parseInt(numProcessosIniciaisField.getText());
 				
-				TopPanelEvent tpe = new TopPanelEvent(this, qdeProcessadores, numProcessosIniciais);
+				TopPanelEvent tpe = new TopPanelEvent(this, estrategia, qdeProcessadores, numProcessosIniciais);
 				
 				if(topPanelListener != null) {
 					topPanelListener.topPanelEventOccurred(tpe);
@@ -52,6 +63,9 @@ public class TopPanel extends JPanel{
 		});
 		
 		setLayout(new FlowLayout(FlowLayout.LEFT));
+		
+		add(estrategiaLabel);
+		add(estrategiaField);
 		
 		add(qdeProcessadoresLabel);
 		add(qdeProcessadoresField);

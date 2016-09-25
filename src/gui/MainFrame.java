@@ -23,6 +23,7 @@ public class MainFrame extends JFrame {
 			
 			@Override
 			public void topPanelEventOccurred(TopPanelEvent e) {
+				System.out.println("Estrategia: " + e.getEstrategia());
 				System.out.println("Quantidade de Processadores: " + e.getQdeProcessadores());
 				System.out.println("Numero de processos iniciais: " + e.getNumProcessosIniciais());
 			}
@@ -31,7 +32,7 @@ public class MainFrame extends JFrame {
 		add(topPanel, BorderLayout.NORTH);
 		
 		setVisible(true);
-		setSize(600, 600);
+		setSize(1000, 700);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 }
