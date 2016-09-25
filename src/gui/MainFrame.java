@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
 
+import leftLayout.LeftPanel;
 import topLayout.TopPanel;
 import topLayout.TopPanelEvent;
 import topLayout.TopPanelListener;
@@ -11,11 +12,13 @@ import topLayout.TopPanelListener;
 public class MainFrame extends JFrame {
 	
 	private TopPanel topPanel;
+	private LeftPanel leftPanel;
 	
 	public MainFrame() {
 		super("Simulador de Escalonador de Processos");
 		
 		topPanel = new TopPanel();
+		leftPanel = new LeftPanel();
 		
 		setLayout(new BorderLayout());
 		
@@ -30,6 +33,7 @@ public class MainFrame extends JFrame {
 		});
 		
 		add(topPanel, BorderLayout.NORTH);
+		add(leftPanel, BorderLayout.WEST);
 		
 		setVisible(true);
 		setSize(1000, 700);
