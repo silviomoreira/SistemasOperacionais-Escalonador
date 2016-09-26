@@ -1,4 +1,4 @@
-package centerLayout;
+package gui.centerLayout;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;

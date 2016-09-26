@@ -1,4 +1,4 @@
-package topLayout;
+package gui.topLayout;
 
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
