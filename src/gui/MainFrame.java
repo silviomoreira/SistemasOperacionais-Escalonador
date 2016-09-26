@@ -3,7 +3,8 @@ package gui;
 import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
-
+import bottomLayout.BottomPanel;
+import centerLayout.CenterPanel;
 import leftLayout.LeftPanel;
 import topLayout.TopPanel;
 import topLayout.TopPanelEvent;
@@ -13,12 +14,16 @@ public class MainFrame extends JFrame {
 	
 	private TopPanel topPanel;
 	private LeftPanel leftPanel;
+	private CenterPanel centerPanel;
+	private BottomPanel bottonPanel;
 	
 	public MainFrame() {
 		super("Simulador de Escalonador de Processos");
 		
 		topPanel = new TopPanel();
 		leftPanel = new LeftPanel();
+		centerPanel = new CenterPanel();
+		bottonPanel = new BottomPanel();
 		
 		setLayout(new BorderLayout());
 		
@@ -34,6 +39,7 @@ public class MainFrame extends JFrame {
 		
 		add(topPanel, BorderLayout.NORTH);
 		add(leftPanel, BorderLayout.WEST);
+		add(centerPanel, BorderLayout.CENTER);
 		
 		setVisible(true);
 		setSize(1000, 700);
