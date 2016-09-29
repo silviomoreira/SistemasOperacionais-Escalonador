@@ -4,6 +4,8 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -12,6 +14,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
+
+import gui.topLayout.TopPanelEvent;
+import gui.topLayout.TopPanelListener;
 
 public class LeftPanel extends JPanel{
 	private JLabel identificadorProcessoLabel;
@@ -36,6 +41,8 @@ public class LeftPanel extends JPanel{
 	private JTextField intervaloField;
 	
 	private JButton addBtn;
+	
+	private LeftPanelListener leftPanelListener;
 	
 	private GridBagConstraints gc;
 	
@@ -79,6 +86,22 @@ public class LeftPanel extends JPanel{
 		intervaloField = new JTextField(10);
 		
 		addBtn = new JButton("Adicionar!");
+		addBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String tempoTotalExecucao = tempoTotalExecucaoField.getText();
+				String estadoProcesso = estadoProcessoField.getText();
+				String tempoExecucaoRestante = tempoExecucaoRestanteField.getText();
+				int prioridade = prioridadeField.getText().equals("") ? 0 : Integer.parseInt(prioridadeField.getText());
+				String deadline = deadlineField.getText();
+				String intervalo = intervaloField.getText();
+				
+				LeftPanelEvent lpe = new LeftPanelEvent(this, tempoTotalExecucao, estadoProcesso, tempoExecucaoRestante, prioridade, deadline, intervalo);
+				
+				if(leftPanelListener != null) {
+					leftPanelListener.leftPanelEventOccurred(lpe);
+				}
+			}
+		});
 	}
 
 	
@@ -121,6 +144,10 @@ public class LeftPanel extends JPanel{
 			add(field, gc);
 		
 		gc.gridy++;
+	}
+	
+	public void setLeftPanelListener(LeftPanelListener leftPanelListener) {
+		this.leftPanelListener = leftPanelListener;
 	}
 }
 
