@@ -30,6 +30,8 @@ public class MainFrame extends JFrame {
 		
 		controller = new Controller();
 		
+		centerPanel.setData(controller.getProcessos());
+		
 		setLayout(new BorderLayout());
 		
 		topPanel.setTopPanelListener(new TopPanelListener() {	
@@ -45,8 +47,10 @@ public class MainFrame extends JFrame {
 			public void leftPanelEventOccurred(LeftPanelEvent e) {
 				
 				controller.adicionarProcesso(e);
+				centerPanel.refresh();
 			}
 		});
+		
 		
 		
 		
