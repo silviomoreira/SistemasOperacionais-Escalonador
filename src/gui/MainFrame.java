@@ -37,7 +37,10 @@ public class MainFrame extends JFrame {
 		topPanel.setTopPanelListener(new TopPanelListener() {	
 			@Override
 			public void topPanelEventOccurred(TopPanelEvent e) {
+				controller.resetProcessos();
+				centerPanel.setData(controller.getProcessos());
 				controller.iniciarSimulacao(e);
+				centerPanel.refresh();
 			}
 		});
 		

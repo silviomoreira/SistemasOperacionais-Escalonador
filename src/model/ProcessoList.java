@@ -24,4 +24,8 @@ public class ProcessoList {
 	public int size() {
 		return processos.size();
 	}
+	
+	public void reset() {
+		processos = new ArrayList<>();
+	}
 }

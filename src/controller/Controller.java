@@ -15,10 +15,20 @@ public class Controller {
 		return processoList.getAll();
 	}
 	
+	public void resetProcessos() {
+		processoList.reset();
+	}
+	
 	public void iniciarSimulacao(TopPanelEvent e) {
 		System.out.println("Estrategia: " + e.getEstrategia());
 		System.out.println("Quantidade de Processadores: " + e.getQdeProcessadores());
 		System.out.println("Numero de processos iniciais: " + e.getNumProcessosIniciais());
+		
+		int numProcessosIniciais = e.getNumProcessosIniciais();
+		for(int i=0; i<numProcessosIniciais; i++) {
+			Processo p = new Processo("", "", "", 0, "", "");
+			processoList.add(p);
+		}
 	}
 	
 	public void adicionarProcesso(LeftPanelEvent e) {
