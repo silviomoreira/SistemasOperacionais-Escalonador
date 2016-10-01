@@ -17,7 +17,7 @@ public class Processo {
 					String estadoProcesso, String tempoExecucaoRestante, int prioridade, String deadline, String intervalo) {
 		this.identificadorProcesso = ++Processo.id;
 		this.tempoTotalExecucao = tempoTotalExecucao;
-		this.estadoProcesso = estadoProcesso;
+		this.estadoProcesso = estadoProcesso; // P = Pronto | E = Executando | B = Bloqueado
 		this.tempoExecucaoRestante = tempoExecucaoRestante;
 		this.prioridade = prioridade;
 		this.deadline = deadline;
