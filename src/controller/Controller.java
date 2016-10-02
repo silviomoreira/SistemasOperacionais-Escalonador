@@ -76,6 +76,11 @@ public class Controller {
 			Processo p = new Processo(tempoTotalExecucao, "P", tempoTotalExecucao, 0, deadline, "");
 			processoList.add(p);
 		}
+		/* Comparator<Processo> c = new Comparator<Processo>() {
+		      public int compare(Processo p1, Processo p2) {
+		        return p1.getDeadlineToSort().compareTo(p2.getDeadlineToSort());
+		      }
+		 };*/
 	}
     
 }

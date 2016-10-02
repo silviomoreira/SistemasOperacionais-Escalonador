@@ -67,7 +67,11 @@ public class Processo {
 	public String getDeadline() {
 		return deadline;
 	}
-
+	
+	public Integer getDeadlineToSort() {
+		return Integer.valueOf(deadline);
+	}
+	
 	public void setDeadline(String deadline) {
 		this.deadline = deadline;
 	}

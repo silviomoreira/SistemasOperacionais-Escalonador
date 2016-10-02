@@ -2,14 +2,15 @@ package LTG;
 
 public class Ltg {
 /*
- * Executar iniciarAlgoritmoLTG();  
- * Ao criar os processos na fila de aptos, calcular Tempo total e Deadline via Random()
+ * <OK>Executar iniciarAlgoritmoLTG();  
+ * <OK>Ao criar os processos na fila de aptos, calcular Tempo total e Deadline via Random()
  * ==> public Processo(String tempoTotalExecucao, 
 				   String estadoProcesso, 
 				   String tempoExecucaoRestante, 
 				   int prioridade, 
 				   String deadline, 
 				   String intervalo)
+ * Ajuste no encaixe dos parametros				   
  * Ordenar processos pelo deadline
  * Decrementar TempoRestante e Deadline na classe Processo
  * Quando o deadline do processo acabar, se o processo não estiver executando, matar o mesmo

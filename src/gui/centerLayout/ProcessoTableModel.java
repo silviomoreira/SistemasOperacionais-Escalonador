@@ -43,13 +43,13 @@ public class ProcessoTableModel extends AbstractTableModel {
 		Processo processo = processos.get(row);
 		switch (col) {
 		case 0:
-			return processo.getTempoTotalExecucao();
+			return processo.getIdentificadorProcesso();
 		case 1:
-			return processo.getEstadoProcesso();
+			return processo.getTempoTotalExecucao();
 		case 2:
-			return processo.getTempoExecucaoRestante();
+			return processo.getEstadoProcesso();
 		case 3:
-			return processo.getPrioridade();
+			return processo.getTempoExecucaoRestante();
 		case 4:
 			return processo.getPrioridade();
 		case 5:
