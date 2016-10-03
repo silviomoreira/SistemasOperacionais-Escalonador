@@ -3,7 +3,7 @@ package model;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-public class Processo {
+public class Processo implements Comparable<Processo> {
 	private static int id = 0;
 	private int identificadorProcesso;
 	private String tempoTotalExecucao;
@@ -84,5 +84,14 @@ public class Processo {
 		this.intervalo = intervalo;
 	}
 	
-	
+	public int compareTo(Processo processo) {
+		int iRetorno = 0;
+		if (this.getDeadlineToSort() < Integer.valueOf(processo.deadline)) {
+			return -1;
+		} else if (this.getDeadlineToSort() > Integer.valueOf(processo.deadline)) {
+			return 1;
+		}
+		return iRetorno;
+	}
+
 }

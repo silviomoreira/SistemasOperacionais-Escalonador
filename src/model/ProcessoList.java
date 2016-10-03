@@ -6,14 +6,18 @@ public class ProcessoList {
 	private ArrayList<Processo> processos;
 	
 	public ProcessoList() {
-		processos = new ArrayList<>();
+		processos = new ArrayList<>();		
 	}
 	
 	public void add(Processo processo) {
 		processos.add(processo);
 	}
 	
-	public ArrayList<Processo> getAll() {
+	public void insert(int index, Processo processo) {
+		processos.add(index, processo);
+	}
+	
+	public ArrayList<Processo> getAll() {		
 		return processos;
 	}
 	
@@ -27,5 +31,9 @@ public class ProcessoList {
 	
 	public void reset() {
 		processos = new ArrayList<>();
+	}
+	
+	public Processo get(int index) {
+		return processos.get(index);
 	}
 }

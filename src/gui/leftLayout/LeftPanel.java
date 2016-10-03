@@ -53,6 +53,7 @@ public class LeftPanel extends JPanel{
 		
 		setupLayout();
 
+		estadoProcessoField.setText("P");
 		addLine(identificadorProcessoLabel, identificadorProcessoField);
 		addLine(tempoTotalExecucaoLabel, tempoTotalExecucaoField);
 		addLine(estadoProcessoLabel, estadoProcessoField);
