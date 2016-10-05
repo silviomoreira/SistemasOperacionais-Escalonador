@@ -36,8 +36,9 @@ public class CenterPanel extends JPanel {
 		add(scrollPaneProcessTable, BorderLayout.CENTER);
 	}
 	
-	public void setData(List<Processo> processos) {
+	public void setData(List<Processo> processos, int numProcessadores) {
 		tableModel.setData(processos);
+		processadoresPanel.setNumProcessadores(numProcessadores);
 	}
 	
 	public void refresh() {

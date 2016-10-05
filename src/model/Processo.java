@@ -3,7 +3,12 @@ package model;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-public class Processo implements Comparable<Processo> {
+public class Processo implements Comparable<Processo>, Runnable {
+	private static final boolean _ativaLog = true;
+	public boolean isAtivalog() {
+		return _ativaLog;
+	}
+
 	private static int id = 0;
 	private int identificadorProcesso;
 	private String tempoTotalExecucao;
@@ -12,12 +17,13 @@ public class Processo implements Comparable<Processo> {
 	private int prioridade;
 	private String deadline;
 	private String intervalo;
+	private volatile boolean pare = false;
 	
 	public Processo(String tempoTotalExecucao, 
 					String estadoProcesso, String tempoExecucaoRestante, int prioridade, String deadline, String intervalo) {
 		this.identificadorProcesso = ++Processo.id;
 		this.tempoTotalExecucao = tempoTotalExecucao;
-		this.estadoProcesso = estadoProcesso; // P = Pronto | E = Executando | B = Bloqueado
+		this.estadoProcesso = estadoProcesso; // P = Pronto | E = Executando | B = Bloqueado | A = Abortado(para o alg. LTG)
 		this.tempoExecucaoRestante = tempoExecucaoRestante;
 		this.prioridade = prioridade;
 		this.deadline = deadline;
@@ -94,4 +100,35 @@ public class Processo implements Comparable<Processo> {
 		return iRetorno;
 	}
 
+	@Override
+	public void run() {
+		decrementaTempoRestante(); 
+    }
+
+    public void decrementaTempoRestante() {
+    	while (!pare)
+    	{
+	    	try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+	    	int iTempoExecucaoRestante = Integer.valueOf(this.tempoExecucaoRestante);
+	    	setTempoExecucaoRestante(String.valueOf(--iTempoExecucaoRestante));
+	    	if (iTempoExecucaoRestante == 0)
+	    		stop();
+	    	if (_ativaLog)
+	    		System.out.println("Id rodando: "+identificadorProcesso+
+						" | T. total "+tempoTotalExecucao+
+						" | T. restante: "+tempoExecucaoRestante);
+    	}
+    	if (_ativaLog)
+    		System.out.println("Id parado: "+identificadorProcesso+
+					" | T. total "+tempoTotalExecucao+
+					" | T. restante: "+tempoExecucaoRestante);
+    }
+
+    public void stop() {
+    	this.pare = true;
+    }
 }

@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 
 import controller.Controller;
 import gui.centerLayout.CenterPanel;
+import gui.centerLayout.CenterPanelEvent;
 import gui.leftLayout.LeftPanel;
 import gui.leftLayout.LeftPanelEvent;
 import gui.leftLayout.LeftPanelListener;
@@ -16,8 +17,8 @@ import gui.topLayout.TopPanelListener;
 public class MainFrame extends JFrame {
 	
 	private TopPanel topPanel;
-	private LeftPanel leftPanel;
-	private CenterPanel centerPanel;
+	protected LeftPanel leftPanel;
+	protected CenterPanel centerPanel;
 	
 	private Controller controller;
 	
@@ -28,9 +29,9 @@ public class MainFrame extends JFrame {
 		leftPanel = new LeftPanel();
 		centerPanel = new CenterPanel();
 		
-		controller = new Controller();
-		
-		centerPanel.setData(controller.getProcessos());
+		controller = new Controller(leftPanel, centerPanel);
+
+		centerPanel.setData(controller.getProcessos(),0);
 		
 		setLayout(new BorderLayout());
 		
@@ -38,9 +39,17 @@ public class MainFrame extends JFrame {
 			@Override
 			public void topPanelEventOccurred(TopPanelEvent e) {
 				controller.resetProcessos();
-				centerPanel.setData(controller.getProcessos());
+				centerPanel.setData(controller.getProcessos(), e.getQdeProcessadores());
 				controller.iniciarSimulacao(e);
+				// refresh na tela com os processos iniciais prontos p/ serem iniciados 
 				centerPanel.refresh();
+				try {
+					Thread.sleep(3000);
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				controller.iniciarExecucaoDosProcessos(e);
 			}
 		});
 		

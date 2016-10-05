@@ -150,6 +150,11 @@ public class LeftPanel extends JPanel{
 	public void setLeftPanelListener(LeftPanelListener leftPanelListener) {
 		this.leftPanelListener = leftPanelListener;
 	}
+	
+	public void setidentificadorProcessoField(String id) {
+		this.identificadorProcessoField.setText(id);
+		this.identificadorProcessoField.repaint();
+	}
 }
 
 

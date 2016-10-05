@@ -30,7 +30,7 @@ public class TopPanel extends JPanel{
 	public TopPanel() {
 		setBorder(BorderFactory.createEtchedBorder());
 		
-		estrategiaLabel = new JLabel("Estratégia: ");
+		estrategiaLabel = new JLabel("Estrategia: ");
 		estrategiaField = new JComboBox<>();
 		DefaultComboBoxModel estrategiaModel = new DefaultComboBoxModel();
 		estrategiaModel.addElement("Round Robin");
