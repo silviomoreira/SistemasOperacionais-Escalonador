@@ -5,6 +5,7 @@ import java.awt.BorderLayout;
 import javax.swing.JFrame;
 
 import controller.Controller;
+import controller.DispacherLTG;
 import gui.centerLayout.CenterPanel;
 import gui.centerLayout.CenterPanelEvent;
 import gui.leftLayout.LeftPanel;
@@ -34,7 +35,7 @@ public class MainFrame extends JFrame {
 		centerPanel.setData(controller.getProcessos(),0);
 		
 		setLayout(new BorderLayout());
-		
+
 		topPanel.setTopPanelListener(new TopPanelListener() {	
 			@Override
 			public void topPanelEventOccurred(TopPanelEvent e) {
@@ -43,13 +44,12 @@ public class MainFrame extends JFrame {
 				controller.iniciarSimulacao(e);
 				// refresh na tela com os processos iniciais prontos p/ serem iniciados 
 				centerPanel.refresh();
-				try {
-					Thread.sleep(3000);
-				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+				if (e.getEstrategia() != "Round Robin") {
+					DispacherLTG dispacherLTG = new DispacherLTG(controller.getProcessos(), centerPanel, 
+							e.getQdeProcessadores(), e.getNumProcessosIniciais());
+					Thread thread = new Thread(dispacherLTG);
+					thread.start();
 				}
-				controller.iniciarExecucaoDosProcessos(e);
 			}
 		});
 		
@@ -73,5 +73,6 @@ public class MainFrame extends JFrame {
 		setVisible(true);
 		setSize(1000, 700);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
 	}
 }

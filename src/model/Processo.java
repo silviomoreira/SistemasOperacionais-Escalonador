@@ -4,6 +4,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 public class Processo implements Comparable<Processo>, Runnable {
+	// Para ativar demonstração por log (alternativa)
 	private static final boolean _ativaLog = true;
 	public boolean isAtivalog() {
 		return _ativaLog;
@@ -21,9 +22,22 @@ public class Processo implements Comparable<Processo>, Runnable {
 	
 	public Processo(String tempoTotalExecucao, 
 					String estadoProcesso, String tempoExecucaoRestante, int prioridade, String deadline, String intervalo) {
+		
 		this.identificadorProcesso = ++Processo.id;
 		this.tempoTotalExecucao = tempoTotalExecucao;
-		this.estadoProcesso = estadoProcesso; // P = Pronto | E = Executando | B = Bloqueado | A = Abortado(para o alg. LTG)
+		this.estadoProcesso = estadoProcesso; // P = Pronto | E = Executando | B = Bloqueado | A = Abortado(para o alg. LTG) | OK = Concluído
+		this.tempoExecucaoRestante = tempoExecucaoRestante;
+		this.prioridade = prioridade;
+		this.deadline = deadline;
+		this.intervalo = intervalo;
+	}
+
+	// Para representar Core de processador livre
+	public Processo(int idCoreLivre, String tempoTotalExecucao, 
+			String estadoProcesso, String tempoExecucaoRestante, int prioridade, String deadline, String intervalo) {
+		this.identificadorProcesso = idCoreLivre;
+		this.tempoTotalExecucao = tempoTotalExecucao;
+		this.estadoProcesso = estadoProcesso; // CORE_LIVRE
 		this.tempoExecucaoRestante = tempoExecucaoRestante;
 		this.prioridade = prioridade;
 		this.deadline = deadline;
@@ -126,9 +140,21 @@ public class Processo implements Comparable<Processo>, Runnable {
     		System.out.println("Id parado: "+identificadorProcesso+
 					" | T. total "+tempoTotalExecucao+
 					" | T. restante: "+tempoExecucaoRestante);
+		setEstadoProcesso("OK");
     }
 
     public void stop() {
     	this.pare = true;
+    }
+    
+    public void decrementaDeadLine(){
+    	int iDeadline = Integer.valueOf(this.deadline);
+    	if (iDeadline != 0)
+		{
+	    	setDeadline(String.valueOf(--iDeadline));			
+		} else
+		{
+			setEstadoProcesso("A");
+		}			
     }
 }

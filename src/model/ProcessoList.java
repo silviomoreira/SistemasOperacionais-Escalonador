@@ -36,4 +36,8 @@ public class ProcessoList {
 	public Processo get(int index) {
 		return processos.get(index);
 	}
+	
+	public void set(int index, Processo processo) {
+		processos.set(index, processo);
+	}
 }

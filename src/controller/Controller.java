@@ -14,10 +14,10 @@ import model.Processo;
 
 public class Controller {
 	
-	protected LeftPanel leftPanel;
-	protected CenterPanel centerPanel;
+	private LeftPanel leftPanel;
+	private CenterPanel centerPanel;//exc depois
 	private ProcessoList processoList = new ProcessoList();
-	private ProcessoList processadoresList = new ProcessoList();	
+	//private ProcessoList processadoresList = new ProcessoList();//exc	
 	private int numProcessadores = 0;
 	private int numProcessosIniciais = 0;
 	private String estrategia;
@@ -55,6 +55,8 @@ public class Controller {
 	}
 	
 	public void adicionarProcesso(LeftPanelEvent e) {
+		System.out.println("< Processo adicionado via botão >");		
+		System.out.println("-------------------------");
 		System.out.println("Tempo Total Execucao: " + e.getTempoTotalExecucao());
 		System.out.println("Estado: " + e.getEstadoProcesso());
 		System.out.println("Tempo Execucao restante: " + e.getTempoExecucaoRestante());
@@ -66,7 +68,7 @@ public class Controller {
 		String estadoProcesso = e.getEstadoProcesso();
 		int prioridade = e.getPrioridade();
 		String tempoExecucaoRestante = e.getTempoExecucaoRestante();
-		String deadline = e.getDeadline();
+		String deadline = e.getDeadline(); 
 		String intervalo = e.getIntervalo();
 	
 		Processo p = new Processo(tempoTotalExecucao, estadoProcesso, tempoExecucaoRestante, prioridade, 
@@ -82,7 +84,8 @@ public class Controller {
 			} else if (index >= 0) {
 				index = index+totalProcessosComEsseDeadline(index, deadline);
 			}
-		    System.out.println("Índice do novo processo: "+index+". Deadline: "+deadline);    
+		    System.out.println("Índice do novo processo(posição na lista): "+index+". Deadline: "+deadline);    
+			System.out.println("--------------------------------------------------------------");
 			processoList.insert(index, p);
 			// Atualiza campo Id
 			e.setIdentificadorProcesso(p.getIdentificadorProcesso());
@@ -125,54 +128,4 @@ public class Controller {
 		Collections.sort(processoList.getAll());
 	}
 	
-	public void iniciarExecucaoDosProcessos(TopPanelEvent e)
-	{
-		if (estrategia == "Round Robin")
-			iniciarExecucaoDosProcessosRoundRobin(e);
-		else
-			iniciarExecucaoDosProcessosLTG(e);		
-	}
-
-	public void iniciarExecucaoDosProcessosRoundRobin(TopPanelEvent e)
-	{
-		// ...
-	}
-
-	public void iniciarExecucaoDosProcessosLTG(TopPanelEvent e)
-	{
-		List<Thread> threadsList = new ArrayList<Thread>();
-		// Loop de processadores starta cada processo na tela em cada processador
-		for(int i=0; i<numProcessadores; i++) {
-			if (processoList.size() > 0) 
-			{
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e1) {
-					e1.printStackTrace();
-				}
-				// Exclui processo da lista de aptos e coloca na fila de processadores, startando-o
-				processadoresList.add(processoList.get(0));
-				processoList.remove(0); 
-				centerPanel.refresh();
-				Thread thread = new Thread(processadoresList.get(i));
-				threadsList.add(thread);
-				threadsList.get(i).start();
-				if (processadoresList.get(i).isAtivalog())
-					System.out.println("Id startado: "+processadoresList.get(i).getIdentificadorProcesso()+
-							" | T. total "+processadoresList.get(i).getTempoTotalExecucao()+
-							" | T. restante: "+processadoresList.get(i).getTempoExecucaoRestante());
-			}
-			else {
-				// Imprime "core livre" nos cores restantes
-			}
-		}
-		// Guarda o último valor de i q indica qual a ordem do próximo processo a rodar
-		// ...
-		// inicia thread de controle de mudanca de processos
-		// DispatcherLTG();
-		// - Decrementa deadline, atualiza lista de aptos
-		// - atualiza lista de processos em execução
-		// - mata processos e para threads
-		// ...
-	}
 }
