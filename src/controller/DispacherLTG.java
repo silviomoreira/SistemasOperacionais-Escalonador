@@ -22,7 +22,7 @@ import model.ProcessoList;
  *  <OK>=> Testa inserção ordenada de novo processo com binarySearch(). E se existir mais de 2 deadlines repetidos. Campo Id(a conc.)
  * <OK>Decrementar TempoRestante na classe Processo
  * <OK-1>Decrementar Deadline (Dispatcher)
- * <O-2>Quando o deadline do processo acabar, se o processo não estiver executando, matar o mesmo (Dispatcher)
+ * <OK-2>Quando o deadline do processo acabar, se o processo não estiver executando, matar o mesmo (Dispatcher)
  * <OK-3>Quando o processo acabar, remover da lista de processos executando e inserir na lista de concluídos, (Dispatcher)
  *   se for o último, mostra "core livre"
  *   senão, inserir outro processo em espera da fila de aptos 
