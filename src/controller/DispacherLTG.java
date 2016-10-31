@@ -206,6 +206,7 @@ public class DispacherLTG implements Runnable {
 	private void atualizaTela() {
 		synchronized (this) {
 			centerPanel.refresh();
+			centerPanel.getProcessadoresPanel().refresh();
 		}
 	}
 

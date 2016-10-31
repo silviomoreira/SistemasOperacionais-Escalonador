@@ -39,11 +39,14 @@ public class CenterPanel extends JPanel {
 	public void setData(List<Processo> processos, int numProcessadores) {
 		tableModel.setData(processos);
 		processadoresPanel.setNumProcessadores(numProcessadores);
+		processadoresPanel.setData(processos, numProcessadores);
 	}
 	
 	public void refresh() {
 		tableModel.fireTableDataChanged();
 	}
 	
-	
+	public ProcessadoresPanel getProcessadoresPanel(){
+		return processadoresPanel;
+	}
 }

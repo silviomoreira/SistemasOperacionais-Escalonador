@@ -84,7 +84,7 @@ public class Controller {
 			} else if (index >= 0) {
 				index = index+totalProcessosComEsseDeadline(index, deadline);
 			}
-		    System.out.println("Índice do novo processo(posição na lista): "+index+". Deadline: "+deadline);    
+		    System.out.println("Índice do novo processo(posição lista): "+index+". Deadline: "+deadline);    
 			System.out.println("--------------------------------------------------------------");
 			processoList.insert(index, p);
 			// Atualiza campo Id

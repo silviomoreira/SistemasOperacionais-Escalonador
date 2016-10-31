@@ -37,7 +37,7 @@ public class Processo implements Comparable<Processo>, Runnable {
 			String estadoProcesso, String tempoExecucaoRestante, int prioridade, String deadline, String intervalo) {
 		this.identificadorProcesso = idCoreLivre;
 		this.tempoTotalExecucao = tempoTotalExecucao;
-		this.estadoProcesso = estadoProcesso; // CORE_LIVRE
+		this.estadoProcesso = estadoProcesso;  // CORE_LIVRE
 		this.tempoExecucaoRestante = tempoExecucaoRestante;
 		this.prioridade = prioridade;
 		this.deadline = deadline;
@@ -146,7 +146,7 @@ public class Processo implements Comparable<Processo>, Runnable {
     public void stop() {
     	this.pare = true;
     }
-    
+
     public void decrementaDeadLine(){
     	int iDeadline = Integer.valueOf(this.deadline);
     	if (iDeadline != 0)
@@ -156,5 +156,17 @@ public class Processo implements Comparable<Processo>, Runnable {
 		{
 			setEstadoProcesso("A");
 		}			
-    }
+    }    
+    /*
+    public void decrementaDeadLine(){
+		if (deadline != "0" && deadline != "")
+		{
+	    	int iDeadline = Integer.valueOf(this.deadline);
+	    	setDeadline(String.valueOf(--iDeadline));
+			
+		} else
+		{
+			setEstadoProcesso("A");
+		}			
+    }*/
 }
