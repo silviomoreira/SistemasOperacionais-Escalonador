@@ -45,7 +45,6 @@ public class MainFrame extends JFrame {
 				centerPanel.setDataListProcessos(controller.getProcessos());
 				centerPanel.setDataListProcessadores(controller.getProcessadoresList(), e.getQdeProcessadores());/// novo
 				centerPanel.setDataListConcluidosEAbortados(controller.getConcluidosEAbortadosList());/// novo				
-				////centerPanel.setDataListProcessadores(controller.getProcessos(), e.getQdeProcessadores());/// novo
 				
 				controller.iniciarSimulacao(e);
 				// refresh na tela com os processos iniciais prontos p/ serem iniciados 
@@ -82,7 +81,7 @@ public class MainFrame extends JFrame {
 		add(centerPanel, BorderLayout.CENTER);
 		
 		setVisible(true);
-		setSize(1000, 700);
+		setSize(1000, 600);//(1000, 700);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 	}

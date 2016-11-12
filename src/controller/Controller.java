@@ -36,7 +36,7 @@ public class Controller {
 	public void resetProcessos() {
 		processoList.reset();
 		processadoresList.reset();
-		
+		concluidosEAbortadosList.reset();
 	}
 	
 	public List<Processo> getProcessadoresList() {

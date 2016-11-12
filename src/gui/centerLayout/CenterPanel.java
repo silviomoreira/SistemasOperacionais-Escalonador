@@ -10,23 +10,23 @@ import javax.swing.JTable;
 import javax.swing.border.Border;
 
 import model.Processo;
+
 public class CenterPanel extends JPanel {
 	
 	private JTable tableProcessos;
 	private ProcessoTableModel tableModelProcessos;
-
 	private JTable tableProcessadores;///
 	private ProcessadoresTableModel tableModelProcessadores;///
 	private JTable tableConcluidosEAbortados;///
 	private ConcluidosEAbortadosTableModel tableModelConcluidosEAbortados;///
 	
+	private ProcessoPanel processoPanel; 
 	private ProcessadoresPanel processadoresPanel;///
 	private int numProcessadores = 0;///	
 	private ConcluidosEAbortadosPanel concluidosEAbortadosPanel;
 	
 	public CenterPanel() {
 		super();
-		/////processadoresPanel = new ProcessadoresPanel();///
 
 		tableModelProcessos = new ProcessoTableModel();
 		tableProcessos = new JTable(tableModelProcessos);
@@ -37,27 +37,29 @@ public class CenterPanel extends JPanel {
 		
 		processadoresPanel = new ProcessadoresPanel(tableProcessadores);/////
 		concluidosEAbortadosPanel = new ConcluidosEAbortadosPanel(tableConcluidosEAbortados);
+		processoPanel = new ProcessoPanel(tableProcessos);
 		///// comentado
 		/*Border innerBorderProcessadores = BorderFactory.createTitledBorder("Processadores");
 		Border outerBorderProcessadores = BorderFactory.createEmptyBorder(5, 5, 5, 5); // TOP, LEFT, BOTTOM, RIGHT
-		//setBorder(BorderFactory.createCompoundBorder(outerBorderProcessadores, innerBorderProcessadores));
 		JScrollPane scrollPaneProcessadoresTable = new JScrollPane(tableProcessadores);
 		//scrollPaneProcessadoresTable.setBorder(BorderFactory.createCompoundBorder(outerBorderProcessadores, innerBorderProcessadores));
 		setLayout(new BorderLayout());*/
-		
-		Border innerBorder = BorderFactory.createTitledBorder("Lista de Processos");
+	    ////// comentado	
+		/*Border innerBorder = BorderFactory.createTitledBorder("Lista de Processos");
 		Border outerBorder = BorderFactory.createEmptyBorder(5, 5, 5, 5);
 		JScrollPane scrollPaneProcessTable = new JScrollPane(tableProcessos);
 		scrollPaneProcessTable.setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
-		setLayout(new BorderLayout());
+		setLayout(new BorderLayout());*/
 
 		/////add(scrollPaneProcessadoresTable, BorderLayout.NORTH);///
 		//add(processadoresPanel, BorderLayout.NORTH);///
 		//add(scrollPaneProcessTable, BorderLayout.CENTER);///
+
+		setLayout(new BorderLayout());
 		
-		add(processadoresPanel, BorderLayout.NORTH);///
-		add(concluidosEAbortadosPanel, BorderLayout.CENTER);///
-		add(scrollPaneProcessTable, BorderLayout.SOUTH);///	
+		add(processadoresPanel, BorderLayout.NORTH);///NORTH
+		add(concluidosEAbortadosPanel, BorderLayout.CENTER);///CENTER
+		add(processoPanel, BorderLayout.SOUTH);///SOUTH
 	}
 	
 	public void setDataListProcessos(List<Processo> processos) {

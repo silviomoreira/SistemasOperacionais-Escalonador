@@ -27,9 +27,9 @@ import model.ProcessoList;
  * <OK-3>Quando o processo acabar, remover da lista de processos executando e inserir na lista de concluídos, (Dispatcher)
  *   se for o último, mostra "core livre"
  *   senão, inserir outro processo em espera da fila de aptos 
- * <4>Desenhar na Tela a execução dos processos e a lista de concluídos/abortados  (Dispatcher)
+ * <OK-4>Desenhar na Tela a execução dos processos e a lista de concluídos/abortados  (Dispatcher)
  * <OK-5>Criar table p/ os processos em execução
- * <6>Criar table p/ processos concluídos/abortados
+ * <OK-6>Criar table p/ processos concluídos/abortados
  */
 	
 public class DispacherLTG implements Runnable {
@@ -39,7 +39,6 @@ public class DispacherLTG implements Runnable {
 	////private ProcessoList processadoresList = new ProcessoList();	
 	////private ProcessoList concluidosEAbortadosList = new ProcessoList();	
 	private List<Processo> processadoresList;/////ProcessadoresList processadoresList; 	
-	////private ProcessoList concluidosEAbortadosList = new ProcessoList();
 	private List<Processo> concluidosEAbortadosList;
 																	  	
 	private int numProcessadores = 0;
@@ -98,6 +97,10 @@ public class DispacherLTG implements Runnable {
 	/*public void setProcessadoresList(List<Processo> processadoresList) {
 		this.processadoresList = processadoresList;
 	}*/
+
+	public List<Processo> getConcluidosEAbortadosList() {
+		return concluidosEAbortadosList;
+	}
 	
 	@Override
 	public void run() {
@@ -106,7 +109,7 @@ public class DispacherLTG implements Runnable {
 
 	public void iniciarExecucaoDosProcessosLTG()
 	{
-		aguardaEmMilisegundos(3000); // Possibilita dar uma olhada na lista de aptos antes de iniciar
+		aguardaEmMilisegundos(4000); // Possibilita dar uma olhada na lista de aptos antes de iniciar
 		List<Thread> threadsList = new ArrayList<Thread>();
 		// Loop de processadores starta cada processo na tela em cada processador(core)
 		for(int i=0; i<numProcessadores; i++) {
@@ -237,7 +240,7 @@ public class DispacherLTG implements Runnable {
 		synchronized (this) {
 			centerPanel.refreshProcessos();
 			centerPanel.refreshProcessadores();
-			
+			centerPanel.refreshConcluidosEAbortados();
 		}
 	}
 
