@@ -37,10 +37,11 @@ public class DispacherLTG implements Runnable {
 	private CenterPanel centerPanel;
 	private List<Processo> processoList;
 	////private ProcessoList processadoresList = new ProcessoList();	
-	////private ProcessoList abortadosConcluidosList = new ProcessoList();	
+	////private ProcessoList concluidosEAbortadosList = new ProcessoList();	
 	private List<Processo> processadoresList;/////ProcessadoresList processadoresList; 	
-	private ProcessoList abortadosConcluidosList = new ProcessoList();//// POSSIVELMENTE ALTERAR P/ O 
-																	  //// MESMO TIPO ACIMA	
+	////private ProcessoList concluidosEAbortadosList = new ProcessoList();
+	private List<Processo> concluidosEAbortadosList;
+																	  	
 	private int numProcessadores = 0;
 	private int numProcessosIniciais = 0;
 
@@ -48,10 +49,11 @@ public class DispacherLTG implements Runnable {
 	
 	/////public DispacherLTG(List<Processo> processoList, ProcessadoresList processadoresList, 
 	public DispacherLTG(List<Processo> processoList, List<Processo> processadoresList,
+			List<Processo> concluidosEAbortadosList,
 			CenterPanel centerPanel, int numProcessadores, int numProcessosIniciais) {
 		this.processoList = processoList;
 		this.processadoresList = processadoresList;
-		
+		this.concluidosEAbortadosList = concluidosEAbortadosList;
 		this.centerPanel = centerPanel;
 		this.numProcessadores = numProcessadores;
 		this.numProcessosIniciais = numProcessosIniciais;
@@ -157,8 +159,8 @@ public class DispacherLTG implements Runnable {
 			for(int i=0; i<processadoresList.size(); i++) {
 				if (processadoresList.get(i).getEstadoProcesso() == "OK"){
 					// Insere na lista de concluídos
-					abortadosConcluidosList.add(processadoresList.get(i));
-					mostraLogAbortadosConcluidos(abortadosConcluidosList.size()-1); //				
+					concluidosEAbortadosList.add(processadoresList.get(i));
+					mostraLogAbortadosConcluidos(concluidosEAbortadosList.size()-1); //				
 					if (processoList.size() > 0) {
 						// insere novo processo da lista de aptos p/ executar
 						/*Processo p = new Processo(processoList.get(0).getTempoTotalExecucao(),
@@ -210,11 +212,11 @@ public class DispacherLTG implements Runnable {
 		}
 	}
 	private void mostraLogAbortadosConcluidos(int i) {
-		if (abortadosConcluidosList.get(i).isAtivalog())
-			System.out.println("Id abortado/concluído: "+abortadosConcluidosList.get(i).getIdentificadorProcesso()+
-					" | T. total "+abortadosConcluidosList.get(i).getTempoTotalExecucao()+
-					" | T. restante: "+abortadosConcluidosList.get(i).getTempoExecucaoRestante()+
-					" | Status: "+abortadosConcluidosList.get(i).getEstadoProcesso());
+		if (concluidosEAbortadosList.get(i).isAtivalog())
+			System.out.println("Id abortado/concluído: "+concluidosEAbortadosList.get(i).getIdentificadorProcesso()+
+					" | T. total "+concluidosEAbortadosList.get(i).getTempoTotalExecucao()+
+					" | T. restante: "+concluidosEAbortadosList.get(i).getTempoExecucaoRestante()+
+					" | Status: "+concluidosEAbortadosList.get(i).getEstadoProcesso());
 	}
 
 	private boolean HaAlgumProcessoEmExecucao() {
@@ -251,8 +253,8 @@ public class DispacherLTG implements Runnable {
 	 * Insere na lista de processos abortados/concluídos e Exclui da lista de aptos 
 	 */
 	private void mataProcesso(int index){
-		abortadosConcluidosList.add(processoList.get(index));
+		concluidosEAbortadosList.add(processoList.get(index));
 		processoList.remove(index);
-		mostraLogAbortadosConcluidos(abortadosConcluidosList.size()-1); //
+		mostraLogAbortadosConcluidos(concluidosEAbortadosList.size()-1); //
 	}
 } 

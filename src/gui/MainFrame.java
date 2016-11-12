@@ -34,7 +34,7 @@ public class MainFrame extends JFrame {
 
 		centerPanel.setDataListProcessos(controller.getProcessos());
 		centerPanel.setDataListProcessadores(controller.getProcessadoresList(), 0);/// novo
-		////centerPanel.setNumProcessadores(0);
+		centerPanel.setDataListConcluidosEAbortados(controller.getConcluidosEAbortadosList());
 		
 		setLayout(new BorderLayout());
 
@@ -44,17 +44,19 @@ public class MainFrame extends JFrame {
 				controller.resetProcessos();
 				centerPanel.setDataListProcessos(controller.getProcessos());
 				centerPanel.setDataListProcessadores(controller.getProcessadoresList(), e.getQdeProcessadores());/// novo
-				////centerPanel.setNumProcessadores(e.getQdeProcessadores());
+				centerPanel.setDataListConcluidosEAbortados(controller.getConcluidosEAbortadosList());/// novo				
 				////centerPanel.setDataListProcessadores(controller.getProcessos(), e.getQdeProcessadores());/// novo
 				
 				controller.iniciarSimulacao(e);
 				// refresh na tela com os processos iniciais prontos p/ serem iniciados 
 				centerPanel.refreshProcessos();
-				 centerPanel.refreshProcessadores();/// novo
+				centerPanel.refreshProcessadores();/// novo
+				centerPanel.refreshConcluidosEAbortados();/// novo
 				if (e.getEstrategia() != "Round Robin") {
 					DispacherLTG dispacherLTG = new DispacherLTG(
 							/////controller.getProcessos(), controller.getProcessadoresObj(),
 							controller.getProcessos(), controller.getProcessadoresList(),
+							controller.getConcluidosEAbortadosList(),
 							centerPanel, e.getQdeProcessadores(), e.getNumProcessosIniciais());
 					Thread thread = new Thread(dispacherLTG);
 					thread.start();

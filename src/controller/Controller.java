@@ -17,7 +17,8 @@ public class Controller {
 	private LeftPanel leftPanel;
 	private CenterPanel centerPanel;//exc depois
 	private ProcessoList processoList = new ProcessoList();
-	private ProcessoList  processadoresList = new ProcessoList();
+	private ProcessoList processadoresList = new ProcessoList();
+	private ProcessoList concluidosEAbortadosList = new ProcessoList();
 	/////private ProcessadoresList processadoresList = new ProcessadoresList();
 	private int numProcessadores = 0;
 	private int numProcessosIniciais = 0;
@@ -45,6 +46,10 @@ public class Controller {
 	/*public ProcessadoresList getProcessadoresObj() {
 		return processadoresList;
 	}*/
+	
+	public List<Processo> getConcluidosEAbortadosList() {
+		return concluidosEAbortadosList.getAll();
+	}
 	
 	public void iniciarSimulacao(TopPanelEvent e) {
 		estrategia = e.getEstrategia();

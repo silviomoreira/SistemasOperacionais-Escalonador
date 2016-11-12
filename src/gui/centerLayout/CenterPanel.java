@@ -14,11 +14,15 @@ public class CenterPanel extends JPanel {
 	
 	private JTable tableProcessos;
 	private ProcessoTableModel tableModelProcessos;
-	
+
 	private JTable tableProcessadores;///
 	private ProcessadoresTableModel tableModelProcessadores;///
+	private JTable tableConcluidosEAbortados;///
+	private ConcluidosEAbortadosTableModel tableModelConcluidosEAbortados;///
+	
 	private ProcessadoresPanel processadoresPanel;///
 	private int numProcessadores = 0;///	
+	private ConcluidosEAbortadosPanel concluidosEAbortadosPanel;
 	
 	public CenterPanel() {
 		super();
@@ -28,8 +32,11 @@ public class CenterPanel extends JPanel {
 		tableProcessos = new JTable(tableModelProcessos);
 		tableModelProcessadores = new ProcessadoresTableModel();///
 		tableProcessadores = new JTable(tableModelProcessadores);///
+		tableModelConcluidosEAbortados = new ConcluidosEAbortadosTableModel();///
+		tableConcluidosEAbortados = new JTable(tableModelConcluidosEAbortados);///
 		
 		processadoresPanel = new ProcessadoresPanel(tableProcessadores);/////
+		concluidosEAbortadosPanel = new ConcluidosEAbortadosPanel(tableConcluidosEAbortados);
 		///// comentado
 		/*Border innerBorderProcessadores = BorderFactory.createTitledBorder("Processadores");
 		Border outerBorderProcessadores = BorderFactory.createEmptyBorder(5, 5, 5, 5); // TOP, LEFT, BOTTOM, RIGHT
@@ -44,25 +51,34 @@ public class CenterPanel extends JPanel {
 		scrollPaneProcessTable.setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
 		setLayout(new BorderLayout());
 
-		add(processadoresPanel, BorderLayout.NORTH);///
 		/////add(scrollPaneProcessadoresTable, BorderLayout.NORTH);///
-		add(scrollPaneProcessTable, BorderLayout.CENTER);///	
+		//add(processadoresPanel, BorderLayout.NORTH);///
+		//add(scrollPaneProcessTable, BorderLayout.CENTER);///
+		
+		add(processadoresPanel, BorderLayout.NORTH);///
+		add(concluidosEAbortadosPanel, BorderLayout.CENTER);///
+		add(scrollPaneProcessTable, BorderLayout.SOUTH);///	
 	}
 	
 	public void setDataListProcessos(List<Processo> processos) {
 		tableModelProcessos.setData(processos);
 	}
 	public void setDataListProcessadores(List<Processo> processos, int numProcessadores) {
-		tableModelProcessadores.setData(processos);////setDataProcessadores(processos);/// 
+		tableModelProcessadores.setData(processos); 
 		setNumProcessadores(numProcessadores);
+	}
+	public void setDataListConcluidosEAbortados(List<Processo> processos) {
+		tableModelConcluidosEAbortados.setData(processos);
 	}
 
 	public void refreshProcessos() {
 		tableModelProcessos.fireTableDataChanged();
 	}
-
 	public void refreshProcessadores() {
 		tableModelProcessadores.fireTableDataChanged();
+	}	
+	public void refreshConcluidosEAbortados() {
+		tableModelConcluidosEAbortados.fireTableDataChanged();
 	}
 	
 	public void setNumProcessadores(int numProcessadores){
@@ -71,5 +87,8 @@ public class CenterPanel extends JPanel {
 
 	public ProcessadoresPanel getProcessadoresPanel(){
 		return processadoresPanel;
+	}
+	public ConcluidosEAbortadosPanel getConcluidosEAbortadosPanel(){
+		return concluidosEAbortadosPanel;
 	}
 }
