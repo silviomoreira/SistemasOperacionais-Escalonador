@@ -14,10 +14,10 @@ import javax.swing.border.Border;
 import model.Processo;
 
 public class ProcessadoresPanel extends JPanel{
-	private List<CorePanel> corePanels;
+//	private List<CorePanel> corePanels;
 	private int numProcessadores = 0;
 	private JTable table;//
-	private ProcessoTableModel tableModel;//
+	private ProcessadoresTableModel tableModel;///private ProcessoTableModel tableModel;//
 		
 	public ProcessadoresPanel() {
 		super();
@@ -25,11 +25,11 @@ public class ProcessadoresPanel extends JPanel{
 		dim.height = 100;
 		setPreferredSize(dim);
 
-		tableModel = new ProcessoTableModel();
+		tableModel = new ProcessadoresTableModel();///tableModel = new ProcessoTableModel();///
 		table = new JTable(tableModel);
 		
 		Border innerBorder = BorderFactory.createTitledBorder("Processadores");
-		Border outerBorder = BorderFactory.createEmptyBorder(5, 5, 5, 5);
+		Border outerBorder = BorderFactory.createEmptyBorder(5, 5, 5, 5); // TOP, LEFT, BOTTOM, RIGHT
 //		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
 		JScrollPane scrollPaneProcessTable = new JScrollPane(table);
 		scrollPaneProcessTable.setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
@@ -38,7 +38,7 @@ public class ProcessadoresPanel extends JPanel{
 		add(scrollPaneProcessTable, BorderLayout.CENTER);
 	}
 
-	public void setData(List<Processo> processos, int numProcessadores) {
+	public void setData(List<Processo> processos) {
 		tableModel.setData(processos);
 	}
 	
@@ -50,7 +50,7 @@ public class ProcessadoresPanel extends JPanel{
 		this.numProcessadores = numProcessadores;
 //		MontaAreaProcessadores();
 	}
-	
+/*	
 	private void MontaAreaProcessadores(){
 		// Criação de caixas p/ representação dos processadores
 		removeAll();
@@ -60,5 +60,5 @@ public class ProcessadoresPanel extends JPanel{
 			add(corePanels.get(i), BorderLayout.WEST);			
 		}
 		this.repaint();
-	}
+	}*/
 }

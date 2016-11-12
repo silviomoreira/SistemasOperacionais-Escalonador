@@ -17,7 +17,8 @@ public class Controller {
 	private LeftPanel leftPanel;
 	private CenterPanel centerPanel;//exc depois
 	private ProcessoList processoList = new ProcessoList();
-	//private ProcessoList processadoresList = new ProcessoList();//exc	
+	private ProcessoList  processadoresList = new ProcessoList();
+	/////private ProcessadoresList processadoresList = new ProcessadoresList();
 	private int numProcessadores = 0;
 	private int numProcessosIniciais = 0;
 	private String estrategia;
@@ -33,7 +34,17 @@ public class Controller {
 	
 	public void resetProcessos() {
 		processoList.reset();
+		processadoresList.reset();
+		
 	}
+	
+	public List<Processo> getProcessadoresList() {
+		return processadoresList.getAll();
+	}
+    ///// código comentado
+	/*public ProcessadoresList getProcessadoresObj() {
+		return processadoresList;
+	}*/
 	
 	public void iniciarSimulacao(TopPanelEvent e) {
 		estrategia = e.getEstrategia();
@@ -120,6 +131,7 @@ public class Controller {
 			int iTempoTotalExecucao = retornaRandom(4, 20);
 			String tempoTotalExecucao = String.valueOf(iTempoTotalExecucao);
 			int iDeadline = retornaRandom(4, 20);
+			if (i == 2) { iDeadline = 20; }; // FORÇA O 3o PROCESSO A SER EXECUTADO - RETIRAR DEPOIS
 			String deadline = String.valueOf(iDeadline);
 			Processo p = new Processo(tempoTotalExecucao, "P", tempoTotalExecucao, 0, deadline, "");
 			processoList.add(p);

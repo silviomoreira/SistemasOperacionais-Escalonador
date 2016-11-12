@@ -1,13 +1,14 @@
 package controller;
 
+import gui.centerLayout.CenterPanel;
+import gui.centerLayout.ProcessadoresTableModel;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import gui.centerLayout.CenterPanel;
-import gui.leftLayout.LeftPanel;
-import gui.topLayout.TopPanelEvent;
 import model.Processo;
 import model.ProcessoList;
+
 /*
  * <OK>Executar iniciarAlgoritmoLTG();  
  * <OK>Ao criar os processos na fila de aptos, calcular Tempo total e Deadline via Random()
@@ -27,24 +28,30 @@ import model.ProcessoList;
  *   se for o último, mostra "core livre"
  *   senão, inserir outro processo em espera da fila de aptos 
  * <4>Desenhar na Tela a execução dos processos e a lista de concluídos/abortados  (Dispatcher)
- * <5>Criar table p/ os processos em execução
+ * <OK-5>Criar table p/ os processos em execução
  * <6>Criar table p/ processos concluídos/abortados
- */	
+ */
 	
 public class DispacherLTG implements Runnable {
 
 	private CenterPanel centerPanel;
 	private List<Processo> processoList;
-	private ProcessoList processadoresList = new ProcessoList();	
-	private ProcessoList abortadosConcluidosList = new ProcessoList();	
+	////private ProcessoList processadoresList = new ProcessoList();	
+	////private ProcessoList abortadosConcluidosList = new ProcessoList();	
+	private List<Processo> processadoresList;/////ProcessadoresList processadoresList; 	
+	private ProcessoList abortadosConcluidosList = new ProcessoList();//// POSSIVELMENTE ALTERAR P/ O 
+																	  //// MESMO TIPO ACIMA	
 	private int numProcessadores = 0;
 	private int numProcessosIniciais = 0;
 
 	private volatile boolean pare = false;
 	
-	public DispacherLTG(List<Processo> processoList, 
+	/////public DispacherLTG(List<Processo> processoList, ProcessadoresList processadoresList, 
+	public DispacherLTG(List<Processo> processoList, List<Processo> processadoresList,
 			CenterPanel centerPanel, int numProcessadores, int numProcessosIniciais) {
 		this.processoList = processoList;
+		this.processadoresList = processadoresList;
+		
 		this.centerPanel = centerPanel;
 		this.numProcessadores = numProcessadores;
 		this.numProcessosIniciais = numProcessosIniciais;
@@ -82,6 +89,14 @@ public class DispacherLTG implements Runnable {
 		this.numProcessosIniciais = numProcessosIniciais;
 	}
 
+	public List<Processo> getProcessadoresList() {
+		return processadoresList;////.getAll();
+	}
+    //// comentado
+	/*public void setProcessadoresList(List<Processo> processadoresList) {
+		this.processadoresList = processadoresList;
+	}*/
+	
 	@Override
 	public void run() {
 		iniciarExecucaoDosProcessosLTG();		
@@ -89,18 +104,24 @@ public class DispacherLTG implements Runnable {
 
 	public void iniciarExecucaoDosProcessosLTG()
 	{
-		aguardaEmMilisegundos(3000);
+		aguardaEmMilisegundos(3000); // Possibilita dar uma olhada na lista de aptos antes de iniciar
 		List<Thread> threadsList = new ArrayList<Thread>();
 		// Loop de processadores starta cada processo na tela em cada processador(core)
 		for(int i=0; i<numProcessadores; i++) {
 			if (processoList.size() > 0) 
-			{
+			{   
 				aguardaEmMilisegundos(50); // Este tempo está bom ?
 				// Exclui processo da lista de aptos e coloca na fila de processadores, startando-o
+			    //// P/ Testes
+				/*if (i==0){
+ 				Processo p = new Processo("10", "E", "10", 0, "5", "");
+ 				processadoresList.add(p);
+ 				atualizaTela();
+				}*/
 				processadoresList.add(processoList.get(0));
 				processoList.remove(0); 
-		    	atualizaTela();
 				processadoresList.get(i).setEstadoProcesso("E");
+		    	atualizaTela();
 				Thread thread = new Thread(processadoresList.get(i));
 				threadsList.add(thread);
 				threadsList.get(i).start();
@@ -118,7 +139,9 @@ public class DispacherLTG implements Runnable {
 			aguardaEmMilisegundos(1000);
 			// - Decrementa deadline
 			for(int i=0; i<processoList.size(); i++) {
-				processoList.get(i).decrementaDeadLine();
+				if (processoList.get(i).getEstadoProcesso() != "E"){
+					processoList.get(i).decrementaDeadLine();
+				}
 			}
 	    	atualizaTela();
 			// - mata processos 
@@ -138,10 +161,15 @@ public class DispacherLTG implements Runnable {
 					mostraLogAbortadosConcluidos(abortadosConcluidosList.size()-1); //				
 					if (processoList.size() > 0) {
 						// insere novo processo da lista de aptos p/ executar
+						/*Processo p = new Processo(processoList.get(0).getTempoTotalExecucao(),
+								"E", processoList.get(0).getTempoTotalExecucao(), 0, 
+								processoList.get(0).getDeadline(), ""); // novo - não resolveu esta nova implementação de 2 linhas e retirada da linha abaixo
+						
+						processadoresList.set(i, p);*/
 						processadoresList.set(i, processoList.get(0));
 						processoList.remove(0); 
-				    	atualizaTela();
 						processadoresList.get(i).setEstadoProcesso("E");
+				    	atualizaTela();
 						Thread thread = new Thread(processadoresList.get(i));
 						threadsList.add(thread);				
 						threadsList.get(threadsList.size()-1).start();
@@ -205,8 +233,9 @@ public class DispacherLTG implements Runnable {
 	 */
 	private void atualizaTela() {
 		synchronized (this) {
-			centerPanel.refresh();
-			centerPanel.getProcessadoresPanel().refresh();
+			centerPanel.refreshProcessos();
+			centerPanel.refreshProcessadores();
+			
 		}
 	}
 

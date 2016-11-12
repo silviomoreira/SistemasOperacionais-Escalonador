@@ -7,6 +7,7 @@ import javax.swing.table.AbstractTableModel;
 import model.Processo;
 
 public class ProcessadoresTableModel  extends AbstractTableModel {
+	
 	private List<Processo> processos;
 	private String[] colNames = 
 			{"Id", "Tempo Total", "Estado", "Tempo Restante", "Prioridade", "Deadline", "Intervalo"};

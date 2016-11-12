@@ -32,7 +32,9 @@ public class MainFrame extends JFrame {
 		
 		controller = new Controller(leftPanel, centerPanel);
 
-		centerPanel.setData(controller.getProcessos(),0);
+		centerPanel.setDataListProcessos(controller.getProcessos());
+		centerPanel.setDataListProcessadores(controller.getProcessadoresList(), 0);/// novo
+		////centerPanel.setNumProcessadores(0);
 		
 		setLayout(new BorderLayout());
 
@@ -40,13 +42,20 @@ public class MainFrame extends JFrame {
 			@Override
 			public void topPanelEventOccurred(TopPanelEvent e) {
 				controller.resetProcessos();
-				centerPanel.setData(controller.getProcessos(), e.getQdeProcessadores());
+				centerPanel.setDataListProcessos(controller.getProcessos());
+				centerPanel.setDataListProcessadores(controller.getProcessadoresList(), e.getQdeProcessadores());/// novo
+				////centerPanel.setNumProcessadores(e.getQdeProcessadores());
+				////centerPanel.setDataListProcessadores(controller.getProcessos(), e.getQdeProcessadores());/// novo
+				
 				controller.iniciarSimulacao(e);
 				// refresh na tela com os processos iniciais prontos p/ serem iniciados 
-				centerPanel.refresh();
+				centerPanel.refreshProcessos();
+				 centerPanel.refreshProcessadores();/// novo
 				if (e.getEstrategia() != "Round Robin") {
-					DispacherLTG dispacherLTG = new DispacherLTG(controller.getProcessos(), centerPanel, 
-							e.getQdeProcessadores(), e.getNumProcessosIniciais());
+					DispacherLTG dispacherLTG = new DispacherLTG(
+							/////controller.getProcessos(), controller.getProcessadoresObj(),
+							controller.getProcessos(), controller.getProcessadoresList(),
+							centerPanel, e.getQdeProcessadores(), e.getNumProcessosIniciais());
 					Thread thread = new Thread(dispacherLTG);
 					thread.start();
 				}
@@ -59,7 +68,7 @@ public class MainFrame extends JFrame {
 			public void leftPanelEventOccurred(LeftPanelEvent e) {
 				
 				controller.adicionarProcesso(e);
-				centerPanel.refresh();
+				centerPanel.refreshProcessos();
 			}
 		});
 		
