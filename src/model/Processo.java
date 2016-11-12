@@ -157,16 +157,4 @@ public class Processo implements Comparable<Processo>, Runnable {
 			setEstadoProcesso("A");
 		}			
     }    
-    /*
-    public void decrementaDeadLine(){
-		if (deadline != "0" && deadline != "")
-		{
-	    	int iDeadline = Integer.valueOf(this.deadline);
-	    	setDeadline(String.valueOf(--iDeadline));
-			
-		} else
-		{
-			setEstadoProcesso("A");
-		}			
-    }*/
 }

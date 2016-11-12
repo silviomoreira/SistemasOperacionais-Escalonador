@@ -17,24 +17,26 @@ public class CenterPanel extends JPanel {
 	
 	private JTable tableProcessadores;///
 	private ProcessadoresTableModel tableModelProcessadores;///
-///	private ProcessadoresPanel processadoresPanel;
+	private ProcessadoresPanel processadoresPanel;///
 	private int numProcessadores = 0;///	
 	
 	public CenterPanel() {
 		super();
-///		processadoresPanel = new ProcessadoresPanel();///
+		/////processadoresPanel = new ProcessadoresPanel();///
 
 		tableModelProcessos = new ProcessoTableModel();
 		tableProcessos = new JTable(tableModelProcessos);
 		tableModelProcessadores = new ProcessadoresTableModel();///
 		tableProcessadores = new JTable(tableModelProcessadores);///
-
-		Border innerBorderProcessadores = BorderFactory.createTitledBorder("Processadores");
+		
+		processadoresPanel = new ProcessadoresPanel(tableProcessadores);/////
+		///// comentado
+		/*Border innerBorderProcessadores = BorderFactory.createTitledBorder("Processadores");
 		Border outerBorderProcessadores = BorderFactory.createEmptyBorder(5, 5, 5, 5); // TOP, LEFT, BOTTOM, RIGHT
 		//setBorder(BorderFactory.createCompoundBorder(outerBorderProcessadores, innerBorderProcessadores));
 		JScrollPane scrollPaneProcessadoresTable = new JScrollPane(tableProcessadores);
 		//scrollPaneProcessadoresTable.setBorder(BorderFactory.createCompoundBorder(outerBorderProcessadores, innerBorderProcessadores));
-		setLayout(new BorderLayout());
+		setLayout(new BorderLayout());*/
 		
 		Border innerBorder = BorderFactory.createTitledBorder("Lista de Processos");
 		Border outerBorder = BorderFactory.createEmptyBorder(5, 5, 5, 5);
@@ -42,8 +44,8 @@ public class CenterPanel extends JPanel {
 		scrollPaneProcessTable.setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
 		setLayout(new BorderLayout());
 
-		///add(processadoresPanel, BorderLayout.NORTH);///
-		add(scrollPaneProcessadoresTable, BorderLayout.NORTH);///
+		add(processadoresPanel, BorderLayout.NORTH);///
+		/////add(scrollPaneProcessadoresTable, BorderLayout.NORTH);///
 		add(scrollPaneProcessTable, BorderLayout.CENTER);///	
 	}
 	
@@ -52,7 +54,7 @@ public class CenterPanel extends JPanel {
 	}
 	public void setDataListProcessadores(List<Processo> processos, int numProcessadores) {
 		tableModelProcessadores.setData(processos);////setDataProcessadores(processos);/// 
-		setNumProcessadores(numProcessadores);///
+		setNumProcessadores(numProcessadores);
 	}
 
 	public void refreshProcessos() {
@@ -67,7 +69,7 @@ public class CenterPanel extends JPanel {
 		this.numProcessadores = numProcessadores;
 	}
 
-	///	public ProcessadoresPanel getProcessadoresPanel(){
-	///		return processadoresPanel;
-	///	}
+	public ProcessadoresPanel getProcessadoresPanel(){
+		return processadoresPanel;
+	}
 }
