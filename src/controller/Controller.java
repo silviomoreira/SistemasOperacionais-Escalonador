@@ -61,13 +61,9 @@ public class Controller {
 		numProcessadores = e.getQdeProcessadores();
 		numProcessosIniciais = e.getNumProcessosIniciais();
 		if (estrategia == "Round Robin")
-			for(int i=0; i<numProcessosIniciais; i++) {
-				Processo p = new Processo("", "", "", 0, "", "");
-				processoList.add(p);
-			}
-		else {
+			iniciarAlgoritmoRoundRobin(e);			
+		else if (estrategia == "Least Time to Go (LTG)")
 			iniciarAlgoritmoLTG(e);
-		}
 	}
 	
 	public void adicionarProcesso(LeftPanelEvent e) {
@@ -103,10 +99,10 @@ public class Controller {
 		    System.out.println("Índice do novo processo(posição lista): "+index+". Deadline: "+deadline);    
 			System.out.println("--------------------------------------------------------------");
 			processoList.insert(index, p);
-			// Atualiza campo Id
-			e.setIdentificadorProcesso(p.getIdentificadorProcesso());
-			leftPanel.setidentificadorProcessoField(String.valueOf(p.getIdentificadorProcesso()));
 		}		
+		// Atualiza campo Id
+		e.setIdentificadorProcesso(p.getIdentificadorProcesso());
+		leftPanel.setidentificadorProcessoField(String.valueOf(p.getIdentificadorProcesso()));
 	}
 	
 	public int totalProcessosComEsseDeadline(int index, String deadline){
@@ -136,7 +132,6 @@ public class Controller {
 			int iTempoTotalExecucao = retornaRandom(4, 20);
 			String tempoTotalExecucao = String.valueOf(iTempoTotalExecucao);
 			int iDeadline = retornaRandom(4, 20);
-			if (i == 2) { iDeadline = 20; }; // FORÇA O 3o PROCESSO A SER EXECUTADO - RETIRAR DEPOIS
 			String deadline = String.valueOf(iDeadline);
 			Processo p = new Processo(tempoTotalExecucao, "P", tempoTotalExecucao, 0, deadline, "");
 			processoList.add(p);
@@ -145,4 +140,14 @@ public class Controller {
 		Collections.sort(processoList.getAll());
 	}
 	
+	private void iniciarAlgoritmoRoundRobin(TopPanelEvent e) {
+		for(int i=0; i<numProcessosIniciais; i++) {
+			int iTempoTotalExecucao = retornaRandom(4, 20);
+			String tempoTotalExecucao = String.valueOf(iTempoTotalExecucao);
+			int iPrioridade = retornaRandom(0, 3);
+			String deadline = "0";
+			Processo p = new Processo(tempoTotalExecucao, "P", tempoTotalExecucao, iPrioridade, deadline, "");
+			processoList.add(p);
+		}
+	}
 }

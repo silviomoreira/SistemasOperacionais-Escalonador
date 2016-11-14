@@ -23,6 +23,9 @@ public class TopPanel extends JPanel{
 	private JLabel numProcessosIniciaisLabel;
 	private JTextField numProcessosIniciaisField;
 	
+	private JLabel quantumLabel;
+	private JTextField quantumField;
+	
 	private JButton iniciarBtn;
 
 	private TopPanelListener topPanelListener;
@@ -37,7 +40,7 @@ public class TopPanel extends JPanel{
 		estrategiaModel.addElement("Least Time to Go (LTG)");
 		estrategiaField.setModel(estrategiaModel);
 		
-		qdeProcessadoresLabel = new JLabel("Qde. Processadores: ");
+		qdeProcessadoresLabel = new JLabel("Qde. Processadores [1-64]: ");
 		qdeProcessadoresField = new JComboBox();
 		DefaultComboBoxModel qdeProcessadoresModel = new DefaultComboBoxModel();
 		for(int i=1; i<=64; i++) 
@@ -47,14 +50,18 @@ public class TopPanel extends JPanel{
 		numProcessosIniciaisLabel = new JLabel("Num. Processos Iniciais: ");
 		numProcessosIniciaisField = new JTextField(3);
 		
+		quantumLabel = new JLabel("Quantum [2-20]: ");
+		quantumField = new JTextField(3);
+		
 		iniciarBtn = new JButton("Iniciar!");
 		iniciarBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String estrategia = estrategiaField.getSelectedItem().toString();
 				int qdeProcessadores = Integer.parseInt(qdeProcessadoresField.getSelectedItem().toString());
 				int numProcessosIniciais = numProcessosIniciaisField.getText().equals("") ? 0 : Integer.parseInt(numProcessosIniciaisField.getText());
+				float quantum = quantumField.getText().equals("") ? 0 : Float.parseFloat(quantumField.getText());
 				
-				TopPanelEvent tpe = new TopPanelEvent(this, estrategia, qdeProcessadores, numProcessosIniciais);
+				TopPanelEvent tpe = new TopPanelEvent(this, estrategia, qdeProcessadores, numProcessosIniciais, quantum);
 				
 				if(topPanelListener != null) {
 					topPanelListener.topPanelEventOccurred(tpe);
@@ -72,6 +79,9 @@ public class TopPanel extends JPanel{
 		
 		add(numProcessosIniciaisLabel);
 		add(numProcessosIniciaisField);
+		
+		add(quantumLabel);
+		add(quantumField);
 		
 		add(iniciarBtn);
 	}

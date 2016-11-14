@@ -18,6 +18,7 @@ public class Processo implements Comparable<Processo>, Runnable {
 	private int prioridade;
 	private String deadline;
 	private String intervalo;
+	private float quantum;
 	private volatile boolean pare = false;
 	
 	public Processo(String tempoTotalExecucao, 

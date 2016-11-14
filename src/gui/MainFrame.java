@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 
 import controller.Controller;
 import controller.DispacherLTG;
+import controller.DispacherRoundRobin;
 import gui.centerLayout.CenterPanel;
 import gui.centerLayout.CenterPanelEvent;
 import gui.leftLayout.LeftPanel;
@@ -33,7 +34,7 @@ public class MainFrame extends JFrame {
 		controller = new Controller(leftPanel, centerPanel);
 
 		centerPanel.setDataListProcessos(controller.getProcessos());
-		centerPanel.setDataListProcessadores(controller.getProcessadoresList(), 0);/// novo
+		centerPanel.setDataListProcessadores(controller.getProcessadoresList(), 0);
 		centerPanel.setDataListConcluidosEAbortados(controller.getConcluidosEAbortadosList());
 		
 		setLayout(new BorderLayout());
@@ -43,21 +44,28 @@ public class MainFrame extends JFrame {
 			public void topPanelEventOccurred(TopPanelEvent e) {
 				controller.resetProcessos();
 				centerPanel.setDataListProcessos(controller.getProcessos());
-				centerPanel.setDataListProcessadores(controller.getProcessadoresList(), e.getQdeProcessadores());/// novo
-				centerPanel.setDataListConcluidosEAbortados(controller.getConcluidosEAbortadosList());/// novo				
+				centerPanel.setDataListProcessadores(controller.getProcessadoresList(), e.getQdeProcessadores());
+				centerPanel.setDataListConcluidosEAbortados(controller.getConcluidosEAbortadosList());				
 				
 				controller.iniciarSimulacao(e);
 				// refresh na tela com os processos iniciais prontos p/ serem iniciados 
 				centerPanel.refreshProcessos();
-				centerPanel.refreshProcessadores();/// novo
-				centerPanel.refreshConcluidosEAbortados();/// novo
-				if (e.getEstrategia() != "Round Robin") {
+				centerPanel.refreshProcessadores();
+				centerPanel.refreshConcluidosEAbortados();
+				if (e.getEstrategia() == "Round Robin") {
+					DispacherRoundRobin dispacherRR = new DispacherRoundRobin(
+							controller.getProcessos(), controller.getProcessadoresList(),
+							controller.getConcluidosEAbortadosList(),
+							centerPanel, e.getQdeProcessadores(), e.getNumProcessosIniciais(), e.getQuantum());
+					Thread thread = new Thread(dispacherRR);
+					thread.start();
+				} else if (e.getEstrategia() == "Least Time to Go (LTG)") {
 					DispacherLTG dispacherLTG = new DispacherLTG(
 							/////controller.getProcessos(), controller.getProcessadoresObj(),
 							controller.getProcessos(), controller.getProcessadoresList(),
 							controller.getConcluidosEAbortadosList(),
 							centerPanel, e.getQdeProcessadores(), e.getNumProcessosIniciais());
-					Thread thread = new Thread(dispacherLTG);
+					Thread thread = new Thread(dispacherLTG);				
 					thread.start();
 				}
 			}
