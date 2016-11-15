@@ -1,6 +1,7 @@
 package controller;
 
 import gui.centerLayout.CenterPanel;
+import gui.centerLayout.ListProcessoPanel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,12 +35,22 @@ import model.ProcessoList;
    Prio3 -> |  | | | | | | | |     (roda em Q/4)
 
    Como funciona: Do mesmo jeito do anterior, só q pega 1 processo de cada fila de prioridade p/ rodar no tempo de quantum 
-   ref. àquela fila de prioridade. O pc entra em um loop de leitura p/ ler as filas de prioridades e, ao terminar um processo, 
-   o processador pega o processo da fila corrente, de acordo com a var. de loop.
+   ref. àquela fila de prioridade. O pc entra em um loop de leitura p/ ler as filas de prioridades e,  
+   ao terminar um processo, o processador pega o processo da fila corrente(próxima), de acordo com a var. de loop.
    
  * Criar laço onde se testará o quantum de cada processo, conforme a prioridade e preparará o processo p/ ser 
- *   interrompido pelo método (interrupt()) ou setando o estado do processo p/ "B" (bloqueado).
- *     
+ *   interrompido pelo método (interrupt() ou stop() mesmo) ou setando o estado do processo p/ "B" (bloqueado).
+ * <OK-1> Criar decrementaQuantum().
+ * <OK-2> Criar método excluiProcessoDaProximaFilaDePrioridadeERetornaIdDoMesmo(). 
+ * <-3> Desenvolver if de troca de processos se "B" ou "OK". 
+ *     - Se "B", volta p/ a fila de prioridades dela e pega o processo da fila seguinte que tiver processos a escalonar.
+ *     - Se "OK", apenas pega o processo da fila seguinte que tiver processos a escalonar.   
+ * -4) Ver ordenação por Prioridade+Id na listProcesso e onde ordenar.
+ * <O-5> Desenvolver removeProcessoDaFilaDeAptos(), p/ remover da fila de prioridades específica(filaprioNList) 
+ *     e da listProcesso, após buscar Id.       
+ * <-6> Desenvolver addProcessoNaFilaDeAptos(), p/ incluir no final da fila de prioridades específica(filaprioNList) 
+ *     e na listProcesso, em determinada posição, ordenada pelos campos Prioridade+Id.
+ *  => PAREI em retornaProcessoBloqueadoParaAFilaDePrioridades() ...        
  */
 
 public class DispacherRoundRobin implements Runnable {
@@ -52,10 +63,14 @@ public class DispacherRoundRobin implements Runnable {
 	private List<Processo> filaprio1List;
 	private List<Processo> filaprio2List;
 	private List<Processo> filaprio3List;*/
-	private ProcessoList filaprio0List = new ProcessoList();
+	/*private ProcessoList filaprio0List = new ProcessoList();
 	private ProcessoList filaprio1List = new ProcessoList();
 	private ProcessoList filaprio2List = new ProcessoList();
-	private ProcessoList filaprio3List = new ProcessoList();
+	private ProcessoList filaprio3List = new ProcessoList();*/
+	private List<Integer> filaprio0List;
+	private List<Integer> filaprio1List;
+	private List<Integer> filaprio2List;
+	private List<Integer> filaprio3List;
 		
 	private int numProcessadores = 0;
 	private int numProcessosIniciais = 0;
@@ -63,7 +78,8 @@ public class DispacherRoundRobin implements Runnable {
 	private float quantum1 = 0;
 	private float quantum2 = 0;
 	private float quantum3 = 0;	
-
+	private int iPrioridadeDaVez = 0;
+	
 	private volatile boolean pare = false;
 	
 	public DispacherRoundRobin(List<Processo> processoList, List<Processo> processadoresList,
@@ -76,24 +92,24 @@ public class DispacherRoundRobin implements Runnable {
 		this.numProcessadores = numProcessadores;
 		this.numProcessosIniciais = numProcessosIniciais;
 		this.quantum0 = quantum0;
-		// Distribui processos entre as filas de prioridade
+		// Distribui processos(o id deles) entre as filas de prioridade
 		int iPrioridade;
 		for(int i=0; i<numProcessosIniciais; i++) {
 			iPrioridade = processoList.get(i).getPrioridade();
 			switch (iPrioridade) {
 			case 0:
-				filaprio0List.add(processoList.get(i));
+				filaprio0List.add(processoList.get(i).getIdentificadorProcesso());
 				break;
 			case 1:
-				filaprio1List.add(processoList.get(i));
-				quantum1 = quantum0/2;
+				filaprio1List.add(processoList.get(i).getIdentificadorProcesso());
+				quantum1 = quantum0/2; // PENDENCIA: DEBUGAR quantum
 				break;
 			case 2:
-				filaprio2List.add(processoList.get(i));
+				filaprio2List.add(processoList.get(i).getIdentificadorProcesso());
 				quantum2 = quantum0/3;
 				break;
 			case 3:
-				filaprio3List.add(processoList.get(i));
+				filaprio3List.add(processoList.get(i).getIdentificadorProcesso());
 				quantum3 = quantum0/4;
 				break;
 			}					
@@ -150,9 +166,11 @@ public class DispacherRoundRobin implements Runnable {
 		aguardaEmMilisegundos(4000); // Possibilita dar uma olhada na lista de aptos antes de iniciar
 		List<Thread> threadsList = new ArrayList<Thread>();
 		int iPrioridadeDaVez = 0;
+		int idProcesso;
+		int iPosProcesso;
 		// Loop de processadores starta cada processo na tela em cada processador(core)
 		for(int i=0; i<numProcessadores; i++) {
-			if (filaprio0List.size() > 0 || filaprio1List.size() > 0 || filaprio2List.size() > 0 || filaprio3List.size() > 0) 
+			if (processoList.size() > 0) //if (filaprio0List.size() > 0 || filaprio1List.size() > 0 || filaprio2List.size() > 0 || filaprio3List.size() > 0) 
 			{   
 				aguardaEmMilisegundos(50); // Este tempo está bom ?
 				// Exclui processo da lista de aptos e coloca na fila de processadores, startando-o
@@ -162,43 +180,11 @@ public class DispacherRoundRobin implements Runnable {
  				processadoresList.add(p);
  				atualizaTela();
 				}*/
-				switch (iPrioridadeDaVez) {
-					case 0:
-						if (filaprio0List.size() > 0) {
-							processadoresList.add(filaprio0List.get(0));
-							filaprio0List.remove(0); 
-							iPrioridadeDaVez++;
-							break;
-						} else
-							iPrioridadeDaVez++;
-					case 1:
-						if (filaprio1List.size() > 0) {
-							processadoresList.add(filaprio1List.get(0));
-							filaprio1List.remove(0); 
-							iPrioridadeDaVez++;
-							break;
-						} else
-							iPrioridadeDaVez++;
-					case 2:
-						if (filaprio2List.size() > 0) {
-							processadoresList.add(filaprio2List.get(0));
-							filaprio2List.remove(0);
-							iPrioridadeDaVez++;
-							break;
-						} else
-							iPrioridadeDaVez++;
-					case 3:
-						if (filaprio3List.size() > 0) {
-							processadoresList.add(filaprio3List.get(0));
-							filaprio3List.remove(0); 
-							iPrioridadeDaVez = 0; // ?
-							break;
-						} else
-							iPrioridadeDaVez = 0; // ?
-				}
-				//processadoresList.add(processoList.get(0));
-				//processoList.remove(0); 
-				//
+				idProcesso = excluiProcessoDaProximaFilaDePrioridadeERetornaIdDoMesmo();
+				// Retorna posição do processo em processoList buscando pelo id
+				iPosProcesso = retornaPosicaoProcesso(idProcesso);
+				processadoresList.add(processoList.get(iPosProcesso));
+				processoList.remove(iPosProcesso); 
 				processadoresList.get(i).setEstadoProcesso("E");
 		    	atualizaTela();
 				Thread thread = new Thread(processadoresList.get(i));
@@ -211,56 +197,41 @@ public class DispacherRoundRobin implements Runnable {
 				processadoresList.add(p);
 			}
 			mostraLogProcessadores(i); //
-		}
+		} // Fim <for>
 		
 		// Controle de mudança de processos
 		while (!pare) {
 			aguardaEmMilisegundos(1000);
-			// - Decrementa deadline
-			/*for(int i=0; i<processoList.size(); i++) {
-				if (processoList.get(i).getEstadoProcesso() != "E"){
-					processoList.get(i).decrementaDeadLine();
-				}
-			}*/
-			
-			// - Verifica/decrementa quantum | PENDENCIA: implementar na classe Processo
-			/*for(int i=0; i<processadoresList.size(); i++) {
+			// - Decrementa quantum
+			for(int i=0; i<processadoresList.size(); i++) {
 				if (processadoresList.get(i).getEstadoProcesso() == "E"){
 					processadoresList.get(i).decrementaQuantum();
 				}
-			}*/
+			}
 	    	atualizaTela();
-
-	    	// - mata processos 
-			/*for(int i=0; i<processoList.size(); i++) {
+	    	// - mata processos (no Round Robin, ocorre apenas no caso de "Out of Memory"(gerado pelo Algoritmo de memória)) 
+			for(int i=0; i<processoList.size(); i++) {
 				if (processoList.get(i).getEstadoProcesso() == "A"){
 					mataProcesso(i);
 				}
-			}*/
-	    	// - interrompe/bloqueia processos
-			/*for(int i=0; i<processadoresList.size(); i++) {
-				if (processadoresList.get(i).getEstadoProcesso() == "B"){
-					bloqueiaProcesso(i);
-				}
-			}*/	    	
+			}
 	    	atualizaTela(); 
-			// Quando o processo acabar, remover da lista de processos executando,
+			// Quando o processo acabar, remover da lista de processos executando(processadores),
 			// se for o último, mostra "core livre"
-			// senão, inserir outro processo em espera da fila de aptos
+			// senão, inserir outro processo em espera da fila de aptos da seguinte forma:
+	    	// * - Se status="B", volta p/ a fila de prioridades dela e pega o processo da fila seguinte que tiver processos a escalonar.
+	    	// * - Se status="OK", apenas pega o processo da fila seguinte que tiver processos a escalonar.   
 			for(int i=0; i<processadoresList.size(); i++) {
 				if (processadoresList.get(i).getEstadoProcesso() == "OK"){
 					// Insere na lista de concluídos
 					concluidosEAbortadosList.add(processadoresList.get(i));
 					mostraLogAbortadosConcluidos(concluidosEAbortadosList.size()-1); //				
 					if (processoList.size() > 0) {
-						// insere novo processo da lista de aptos p/ executar
-						/*Processo p = new Processo(processoList.get(0).getTempoTotalExecucao(),
-								"E", processoList.get(0).getTempoTotalExecucao(), 0, 
-								processoList.get(0).getDeadline(), ""); // novo - não resolveu esta nova implementação de 2 linhas e retirada da linha abaixo
-						
-						processadoresList.set(i, p);*/
-						processadoresList.set(i, processoList.get(0));
-						processoList.remove(0); 
+						idProcesso = excluiProcessoDaProximaFilaDePrioridadeERetornaIdDoMesmo();
+						// Retorna posição do processo em processoList buscando pelo id
+						iPosProcesso = retornaPosicaoProcesso(idProcesso);
+						processadoresList.set(i, processoList.get(iPosProcesso));
+						processoList.remove(iPosProcesso); 
 						processadoresList.get(i).setEstadoProcesso("E");
 				    	atualizaTela();
 						Thread thread = new Thread(processadoresList.get(i));
@@ -273,7 +244,11 @@ public class DispacherRoundRobin implements Runnable {
 						processadoresList.set(i, p);
 					}
 					mostraLogProcessadores(i); //
-				}
+				} else  	
+				if (processadoresList.get(i).getEstadoProcesso() == "B"){
+					//retornaProcessoBloqueadoParaAFilaDePrioridades(i);
+					//escalonaProximoProcesso();
+				}					
 			}
 	    	atualizaTela();
 	    	
@@ -348,5 +323,58 @@ public class DispacherRoundRobin implements Runnable {
 		processoList.remove(index);
 		mostraLogAbortadosConcluidos(concluidosEAbortadosList.size()-1); //
 	}
+
+	private int excluiProcessoDaProximaFilaDePrioridadeERetornaIdDoMesmo() { 
+		int idProcesso = 0;
+		while (idProcesso == 0) {
+			switch (iPrioridadeDaVez) {
+				case 0:
+					if (filaprio0List.size() > 0) {
+						idProcesso = filaprio0List.get(0);							
+						filaprio0List.remove(0); 
+						iPrioridadeDaVez++;
+						break;
+					} else
+						iPrioridadeDaVez++;
+				case 1:
+					if (filaprio1List.size() > 0) {
+						idProcesso = filaprio1List.get(0);							
+						filaprio1List.remove(0); 
+						iPrioridadeDaVez++;
+						break;
+					} else
+						iPrioridadeDaVez++;
+				case 2:
+					if (filaprio2List.size() > 0) {
+						idProcesso = filaprio2List.get(0);							
+						filaprio2List.remove(0);
+						iPrioridadeDaVez++;
+						break;
+					} else
+						iPrioridadeDaVez++;
+				case 3:
+					if (filaprio3List.size() > 0) {
+						idProcesso = filaprio3List.get(0);							
+						filaprio3List.remove(0); 
+						iPrioridadeDaVez = 0; // ?
+						break;
+					} else
+						iPrioridadeDaVez = 0; // ?
+			}
+		} // Fim <while>
+		return idProcesso;
+	}
 	
+	private int retornaPosicaoProcesso(int idProcesso) {
+		int iPos = -1;
+		for (int i = 0; i < processoList.size(); i++) {
+			if (processoList.get(i).getIdentificadorProcesso() == idProcesso)
+				iPos = i;
+		}
+		return iPos;
+	}
+
+    private void retornaProcessoBloqueadoParaAFilaDePrioridades(int iProcessador) {
+    	
+    }
 }

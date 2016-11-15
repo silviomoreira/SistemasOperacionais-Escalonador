@@ -148,7 +148,7 @@ public class DispacherLTG implements Runnable {
 				}
 			}
 	    	atualizaTela(); 
-			// Quando o processo acabar, remover da lista de processos executando,
+			// Quando o processo acabar, remover da lista de processos executando(processadores),
 			// se for o último, mostra "core livre"
 			// senão, inserir outro processo em espera da fila de aptos
 			for(int i=0; i<processadoresList.size(); i++) {

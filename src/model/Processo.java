@@ -105,6 +105,14 @@ public class Processo implements Comparable<Processo>, Runnable {
 		this.intervalo = intervalo;
 	}
 	
+	public float getQuantum() {
+		return quantum;
+	}
+
+	public void setQuantum(float quantum) {
+		this.quantum = quantum;
+	}
+
 	public int compareTo(Processo processo) {
 		int iRetorno = 0;
 		if (this.getDeadlineToSort() < Integer.valueOf(processo.deadline)) {
@@ -158,4 +166,14 @@ public class Processo implements Comparable<Processo>, Runnable {
 			setEstadoProcesso("A");
 		}			
     }    
+    
+    public void decrementaQuantum() {
+    	if (this.quantum != 0)
+		{
+	    	setQuantum(--this.quantum);			
+		} else
+		{
+			setEstadoProcesso("B");
+		}	   	
+    }
 }
