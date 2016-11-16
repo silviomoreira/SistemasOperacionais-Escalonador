@@ -59,7 +59,7 @@ public class TopPanel extends JPanel{
 				String estrategia = estrategiaField.getSelectedItem().toString();
 				int qdeProcessadores = Integer.parseInt(qdeProcessadoresField.getSelectedItem().toString());
 				int numProcessosIniciais = numProcessosIniciaisField.getText().equals("") ? 0 : Integer.parseInt(numProcessosIniciaisField.getText());
-				float quantum = quantumField.getText().equals("") ? 0 : Float.parseFloat(quantumField.getText());
+				int quantum = quantumField.getText().equals("") ? 0 : Integer.parseInt(quantumField.getText());
 				
 				TopPanelEvent tpe = new TopPanelEvent(this, estrategia, qdeProcessadores, numProcessosIniciais, quantum);
 				

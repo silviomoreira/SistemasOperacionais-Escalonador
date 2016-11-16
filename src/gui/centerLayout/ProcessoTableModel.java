@@ -10,7 +10,7 @@ public class ProcessoTableModel extends AbstractTableModel {
 		
 	private List<Processo> processos;
 	private String[] colNames = 
-			{"Id", "Tempo Total", "Estado", "Tempo Restante", "Prioridade", "Deadline", "Intervalo"};
+			{"Id", "Tempo Total", "Estado", "Tempo Restante", "Prioridade", "Deadline", "Quantum", "Intervalo"};
 	
 	public void ProcessoTableModel() {
 	}
@@ -55,6 +55,8 @@ public class ProcessoTableModel extends AbstractTableModel {
 		case 5:
 			return processo.getDeadline();
 		case 6:
+			return processo.getQuantum();
+		case 7:
 			return processo.getIntervalo();
 		}
 		

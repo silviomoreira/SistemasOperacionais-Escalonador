@@ -51,8 +51,13 @@ import model.ProcessoList;
  *     e na listProcesso, em determinada posição, ordenada pelos campos Prioridade+Id.
  * <OK-6> Ver detalhes sobre a parada do processo bloqueado e como reestartá-lo p/ continuar a
  *     contagem do tempo a partir do TempoRestante.
- * <O-7> Ver ordenação por Prioridade+Id na listProcesso e onde ordenar. Fazer para a adição 
- *     de novo processo tbém.      
+ * <O-7> Ver ordenação por Prioridade+Id na listProcesso e onde ordenar<OK>. 
+ *     Fazer para a adição de novo processo tbém<PENDENCIA>. 
+ * <-8> Quantum
+ *      -<OK> Ver campo Quantum na grid. 
+ *      -<OK-Em teste> Ver retomada do quantum pelo valor inicial ao reiniciar processo. 
+ *      -<> Ver melhor local onde tratar o bloqueio do processo. Nao esta desbloqueando processo.
+ * -9 Suspender ordenação pela F.P. e tornar semelhante ao LTG.     
  *  => PAREI em testes de erro no alg. RR - tempo restante ...        
  */
 
@@ -77,17 +82,17 @@ public class DispacherRoundRobin implements Runnable {
 		
 	private int numProcessadores = 0;
 	private int numProcessosIniciais = 0;
-	private float quantum0 = 0;
-	private float quantum1 = 0;
-	private float quantum2 = 0;
-	private float quantum3 = 0;	
+	private int quantum0 = 0;
+	private int quantum1 = 0;
+	private int quantum2 = 0;
+	private int quantum3 = 0;	
 	private int iPrioridadeDaVez = 0;
 	
 	private volatile boolean pare = false;
 	
 	public DispacherRoundRobin(List<Processo> processoList, List<Processo> processadoresList,
 			List<Processo> concluidosEAbortadosList,
-			CenterPanel centerPanel, int numProcessadores, int numProcessosIniciais, float quantum0) {
+			CenterPanel centerPanel, int numProcessadores, int numProcessosIniciais, int quantum0) {
 		this.processoList = processoList;
 		this.processadoresList = processadoresList;
 		this.concluidosEAbortadosList = concluidosEAbortadosList;
@@ -103,21 +108,25 @@ public class DispacherRoundRobin implements Runnable {
 			case 0:
 				filaprio0List.add(processoList.get(i).getIdentificadorProcesso());
 				processoList.get(i).setQuantum(quantum0);
+				processoList.get(i).setQuantumInicial(quantum0);
 				break;
 			case 1:
 				filaprio1List.add(processoList.get(i).getIdentificadorProcesso());
-				quantum1 = (float) Math.ceil(quantum0/2); // PENDENCIA: DEBUGAR quantum
+				quantum1 = Math.round(quantum0/2);
 				processoList.get(i).setQuantum(quantum1);
+				processoList.get(i).setQuantumInicial(quantum1);
 				break;
 			case 2:
 				filaprio2List.add(processoList.get(i).getIdentificadorProcesso());
-				quantum2 =  (float) Math.ceil(quantum0/3);
+				quantum2 = Math.round(quantum0/3);
 				processoList.get(i).setQuantum(quantum2);				
+				processoList.get(i).setQuantumInicial(quantum2);
 				break;
 			case 3:
 				filaprio3List.add(processoList.get(i).getIdentificadorProcesso());
-				quantum3 =  (float) Math.ceil(quantum0/4);
+				quantum3 = Math.round(quantum0/4);
 				processoList.get(i).setQuantum(quantum3);
+				processoList.get(i).setQuantumInicial(quantum3);
 				break;
 			}					
 		}
@@ -181,17 +190,11 @@ public class DispacherRoundRobin implements Runnable {
 			{   
 				aguardaEmMilisegundos(50); // Este tempo está bom ?
 				// Exclui processo da lista de aptos e coloca na fila de processadores, startando-o
-			    //// P/ Testes
-				/*if (i==0){
- 				Processo p = new Processo("10", "E", "10", 0, "5", "");
- 				processadoresList.add(p);
- 				atualizaTela();
-				}*/
-				idProcesso = excluiProcessoDaProximaFilaDePrioridadeERetornaIdDoMesmo();
+				//idProcesso = excluiProcessoDaProximaFilaDePrioridadeERetornaIdDoMesmo();
 				// Retorna posição do processo em processoList buscando pelo id
-				iPosProcesso = retornaPosicaoProcesso(idProcesso);
-				processadoresList.add(processoList.get(iPosProcesso));
-				processoList.remove(iPosProcesso); 
+				//iPosProcesso = retornaPosicaoProcesso(idProcesso);
+				processadoresList.add(processoList.get(0));//processadoresList.add(processoList.get(iPosProcesso));
+				processoList.remove(0);//processoList.remove(iPosProcesso); 
 				processadoresList.get(i).setEstadoProcesso("E");
 		    	atualizaTela();
 				Thread thread = new Thread(processadoresList.get(i));
@@ -210,14 +213,18 @@ public class DispacherRoundRobin implements Runnable {
 		while (!pare) {
 			aguardaEmMilisegundos(1000);
 			// - Decrementa quantum
-			synchronized (this) { // novo
+			//synchronized (this) { // novo
 				for(int i=0; i<processadoresList.size(); i++) {
 					if (processadoresList.get(i).getEstadoProcesso() == "E"){
 						processadoresList.get(i).decrementaQuantum();
 					}
 				}
-			}
+			//}
 	    	atualizaTela();
+	    	// Duvida : ver a possibilidade de realizar o tratamento do processo bloqueado logo
+	    	// aqui, ou em Processo.DecrementaTempoRestante(), qdo. setaria o estado p/ "B" lá
+	    	// e já finalizaria a execução do processo
+	    	// ... ?
 	    	// - mata processos (no Round Robin, ocorre apenas no caso de "Out of Memory"(gerado pelo Algoritmo de memória)) 
 			for(int i=0; i<processoList.size(); i++) {
 				if (processoList.get(i).getEstadoProcesso() == "A"){
@@ -237,11 +244,11 @@ public class DispacherRoundRobin implements Runnable {
 					mostraLogAbortadosConcluidos(concluidosEAbortadosList.size()-1); //				
 					if (processoList.size() > 0) {
 						// escalona Proximo Processo
-						idProcesso = excluiProcessoDaProximaFilaDePrioridadeERetornaIdDoMesmo();
+						//idProcesso = excluiProcessoDaProximaFilaDePrioridadeERetornaIdDoMesmo();
 						// Retorna posição do processo em processoList buscando pelo id
-						iPosProcesso = retornaPosicaoProcesso(idProcesso);
-						processadoresList.set(i, processoList.get(iPosProcesso));
-						processoList.remove(iPosProcesso); 
+						//iPosProcesso = retornaPosicaoProcesso(idProcesso);
+						processadoresList.set(i, processoList.get(0));//processadoresList.set(i, processoList.get(iPosProcesso));
+						processoList.remove(0);//processoList.remove(iPosProcesso); 
 						processadoresList.get(i).setEstadoProcesso("E");
 				    	atualizaTela();
 						Thread thread = new Thread(processadoresList.get(i));
@@ -256,15 +263,15 @@ public class DispacherRoundRobin implements Runnable {
 					mostraLogProcessadores(i); //
 				} else  	
 				if (processadoresList.get(i).getEstadoProcesso() == "B"){
-					recolocaProcessoBloqueadoNaFilaDePrioridades(i);
-					recolocaProcessoBloqueadoNalistaDeProcessosGeral(i);
+					//recolocaProcessoBloqueadoNaFilaDePrioridades(i);
+					processoList.add(processadoresList.get(i)); //recolocaProcessoBloqueadoNalistaDeProcessosGeral(i);
 					if (processoList.size() > 0) {
-						// escalonaProximoProcesso();
-						idProcesso = excluiProcessoDaProximaFilaDePrioridadeERetornaIdDoMesmo();
+						// escalona Proximo Processo // escalonaProximoProcesso();
+						//idProcesso = excluiProcessoDaProximaFilaDePrioridadeERetornaIdDoMesmo();
 						// Retorna posição do processo em processoList buscando pelo id
-						iPosProcesso = retornaPosicaoProcesso(idProcesso);
-						processadoresList.set(i, processoList.get(iPosProcesso));
-						processoList.remove(iPosProcesso); 
+						//iPosProcesso = retornaPosicaoProcesso(idProcesso);
+						processadoresList.set(i, processoList.get(0));//processadoresList.set(i, processoList.get(iPosProcesso));
+						processoList.remove(0);//processoList.remove(iPosProcesso); 
 						processadoresList.get(i).setEstadoProcesso("E");
 				    	atualizaTela();
 						Thread thread = new Thread(processadoresList.get(i));
@@ -301,7 +308,7 @@ public class DispacherRoundRobin implements Runnable {
 					" | T. total "+processadoresList.get(i).getTempoTotalExecucao()+
 					" | T. restante: "+processadoresList.get(i).getTempoExecucaoRestante()+
 					" | Core "+i+
-					" | Deadline: "+processadoresList.get(i).getDeadline());
+					" | Quantum: "+processadoresList.get(i).getQuantumInicial());
 		} else {
 			System.out.println("Core "+i+" livre");
 		}

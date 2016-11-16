@@ -6,13 +6,13 @@ public class TopPanelEvent extends EventObject {
 	int qdeProcessadores;
 	int numProcessosIniciais;
 	String estrategia;
-	float quantum;
+	int quantum;
 	
 	public TopPanelEvent(Object source) {
 		super(source);
 	}
 	
-	public TopPanelEvent(Object source, String estrategia, int qdeProcessadores, int numProcessosIniciais, float quantum) {
+	public TopPanelEvent(Object source, String estrategia, int qdeProcessadores, int numProcessosIniciais, int quantum) {
 		super(source);
 		
 		this.estrategia = estrategia;
@@ -45,11 +45,11 @@ public class TopPanelEvent extends EventObject {
 		this.estrategia = estrategia;
 	}
 	
-	public float getQuantum() {
+	public int getQuantum() {
 		return quantum;
 	}
 
-	public void setQuantum(float quantum) {
+	public void setQuantum(int quantum) {
 		this.quantum = quantum;
 	}
 }

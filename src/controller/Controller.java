@@ -88,8 +88,8 @@ public class Controller {
 		if (estrategia == "Round Robin")
 		{
 			processoList.add(p);
-		    // adicionar na posição específica
-			
+		    // adicionar na posição específica se for round robin com fila de prioridades
+			// ...		
 		}
 		else {
 			// O index é < 0 qdo. não achado o deadline em nenhum processo e é um número >= 0 quando representa o index de outro processo com o mesmo deadline

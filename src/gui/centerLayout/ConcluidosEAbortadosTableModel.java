@@ -10,7 +10,7 @@ public class ConcluidosEAbortadosTableModel extends AbstractTableModel {
 
 	private List<Processo> processos;
 	private String[] colNames = 
-			{"Id", "Tempo Total", "Estado", "Tempo Restante", "Prioridade", "Deadline", "Intervalo"};
+			{"Id", "Tempo Total", "Estado", "Tempo Restante", "Prioridade", "Deadline", "Quantum", "Intervalo"};
 
 	public void ConcluidosEAbortadosTableModel(){
 		
@@ -56,6 +56,8 @@ public class ConcluidosEAbortadosTableModel extends AbstractTableModel {
 		case 5:
 			return processo.getDeadline();
 		case 6:
+			return processo.getQuantum();
+		case 7:
 			return processo.getIntervalo();
 		}
 		

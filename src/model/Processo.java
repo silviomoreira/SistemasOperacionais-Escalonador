@@ -18,7 +18,9 @@ public class Processo implements Comparable<Processo>, Runnable {
 	private int prioridade;
 	private String deadline;
 	private String intervalo;
-	private float quantum;
+	private int quantum;
+	private int quantumInicial = 0;
+
 	private volatile boolean pare = false;
 	
 	public Processo(String tempoTotalExecucao, 
@@ -105,19 +107,26 @@ public class Processo implements Comparable<Processo>, Runnable {
 		this.intervalo = intervalo;
 	}
 	
-	public float getQuantum() {
+	public int getQuantum() {
 		return quantum;
 	}
 
-	public void setQuantum(float quantum) {
+	public void setQuantum(int quantum) {
 		this.quantum = quantum;
+	}
+
+	public int getQuantumInicial() {
+		return quantumInicial;
+	}
+
+	public void setQuantumInicial(int quantumInicial) {
+		this.quantumInicial = quantumInicial;
 	}
 
 	public int compareTo(Processo processo) {
 		int iRetorno = 0;
 		if (Integer.valueOf(processo.deadline) == 0) {
 			// Ordenação por Prioridade + Id (para o algoritmo Round robin com fila de Prioridades)
-//			int iRetorno = 0;
 			if (this.getPrioridade() < processo.prioridade) {
 				return -1;
 			} else if (this.getPrioridade() > processo.prioridade) {
@@ -127,7 +136,6 @@ public class Processo implements Comparable<Processo>, Runnable {
 		}
 		else {
 			// Ordenação por Deadline (para o algoritmo LTG)
-//			int iRetorno = 0;
 			if (this.getDeadlineToSort() < Integer.valueOf(processo.deadline)) {
 				return -1;
 			} else if (this.getDeadlineToSort() > Integer.valueOf(processo.deadline)) {
@@ -151,7 +159,14 @@ public class Processo implements Comparable<Processo>, Runnable {
 		decrementaTempoRestante(); 
     }
 
-    public void decrementaTempoRestante() {
+    private void reestartaQuantum(){
+		if (this.quantumInicial != 0)
+			setQuantum(this.quantumInicial);
+    }
+
+	public void decrementaTempoRestante() {
+		reestartaQuantum();
+		start();
     	while (!pare)
     	{
 	    	try {
@@ -161,25 +176,30 @@ public class Processo implements Comparable<Processo>, Runnable {
 			}
 	    	int iTempoExecucaoRestante = Integer.valueOf(this.tempoExecucaoRestante);
 	    	setTempoExecucaoRestante(String.valueOf(--iTempoExecucaoRestante));
-	    	if (iTempoExecucaoRestante == 0 || this.estadoProcesso == "B")
+	    	if (iTempoExecucaoRestante == 0 || this.quantum == 0) //this.estadoProcesso == "B")
 	    		stop();
 	    	if (_ativaLog)
 	    		System.out.println("Id rodando: "+identificadorProcesso+
 						" | T. total "+tempoTotalExecucao+
 						" | T. restante: "+tempoExecucaoRestante);
     	}
+    	int iTempoExecucaoRestante = Integer.valueOf(this.tempoExecucaoRestante);
     	if (_ativaLog)
     		System.out.println("Id parado: "+identificadorProcesso+
 					" | T. total "+tempoTotalExecucao+
 					" | T. restante: "+tempoExecucaoRestante+
-					" | Últ. estado: "+estadoProcesso);
-    	int iTempoExecucaoRestante = Integer.valueOf(this.tempoExecucaoRestante);
-    	if (iTempoExecucaoRestante == 0)
+					" | Causa parada: pro. "+(iTempoExecucaoRestante == 0 ? "concluído" : "bloqueado"));
+    	if (this.quantum == 0 && iTempoExecucaoRestante != 0)
+    		setEstadoProcesso("B");
+    	else if (iTempoExecucaoRestante == 0)
     		setEstadoProcesso("OK");
     }
 
     public void stop() {
     	this.pare = true;
+    }
+    public void start() {
+    	this.pare = false;
     }
 
     public void decrementaDeadLine(){
@@ -195,11 +215,11 @@ public class Processo implements Comparable<Processo>, Runnable {
     
     public void decrementaQuantum() {
     	if (this.quantum != 0)
-		{
+		//{
 	    	setQuantum(--this.quantum);			
-		} else
+		/*} else
 		{
 			setEstadoProcesso("B");
-		}	   	
+		}*/	   	
     }
 }
