@@ -9,6 +9,7 @@ public class LeftPanelEvent extends EventObject {
 	private String tempoExecucaoRestante;
 	private int prioridade;
 	private String deadline;
+	private int quantum;
 	private String intervalo;
 	
 	public LeftPanelEvent(Object source) {
@@ -16,7 +17,7 @@ public class LeftPanelEvent extends EventObject {
 	}
 	
 	public LeftPanelEvent(Object source, String tempoTotalExecucao, 
-			String estadoProcesso, String tempoExecucaoRestante, int prioridade, String deadline, String intervalo) {
+			String estadoProcesso, String tempoExecucaoRestante, int prioridade, String deadline, int quantum, String intervalo) {
 		super(source);
 		
 		this.tempoTotalExecucao = tempoTotalExecucao;
@@ -24,11 +25,12 @@ public class LeftPanelEvent extends EventObject {
 		this.tempoExecucaoRestante = tempoExecucaoRestante;
 		this.prioridade = prioridade;
 		this.deadline = deadline;
+		this.quantum = quantum;
 		this.intervalo = intervalo;
 	}
 	
 	public LeftPanelEvent(Object source, int identificadorProcesso, String tempoTotalExecucao, 
-			String estadoProcesso, String tempoExecucaoRestante, int prioridade, String deadline, String intervalo) {
+			String estadoProcesso, String tempoExecucaoRestante, int prioridade, String deadline, int quantum, String intervalo) {
 		super(source);
 		
 		this.identificadorProcesso = identificadorProcesso;
@@ -37,6 +39,7 @@ public class LeftPanelEvent extends EventObject {
 		this.tempoExecucaoRestante = tempoExecucaoRestante;
 		this.prioridade = prioridade;
 		this.deadline = deadline;
+		this.quantum = quantum;
 		this.intervalo = intervalo;
 	}
 
@@ -86,6 +89,14 @@ public class LeftPanelEvent extends EventObject {
 
 	public void setDeadline(String deadline) {
 		this.deadline = deadline;
+	}
+
+	public int getQuantum() {
+		return quantum;
+	}
+
+	public void setQuantum(int quantum) {
+		this.quantum = quantum;
 	}
 
 	public String getIntervalo() {

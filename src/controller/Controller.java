@@ -73,6 +73,7 @@ public class Controller {
 		System.out.println("Estado: " + e.getEstadoProcesso());
 		System.out.println("Tempo Execucao restante: " + e.getTempoExecucaoRestante());
 		System.out.println("Deadline: " + e.getDeadline());
+		System.out.println("Quantum: " + e.getQuantum());
 		System.out.println("Intervalo: " + e.getIntervalo());
 		System.out.println("-------------------------");
 		
@@ -81,12 +82,15 @@ public class Controller {
 		int prioridade = e.getPrioridade();
 		String tempoExecucaoRestante = e.getTempoExecucaoRestante();
 		String deadline = e.getDeadline(); 
+		int quantum = e.getQuantum();
 		String intervalo = e.getIntervalo();
 	
 		Processo p = new Processo(tempoTotalExecucao, estadoProcesso, tempoExecucaoRestante, prioridade, 
 				deadline, intervalo);
 		if (estrategia == "Round Robin")
 		{
+			p.setQuantum(quantum);
+			p.setQuantumInicial(quantum);
 			processoList.add(p);
 		    // adicionar na posição específica se for round robin com fila de prioridades
 			// ...		
