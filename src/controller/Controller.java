@@ -86,7 +86,11 @@ public class Controller {
 		Processo p = new Processo(tempoTotalExecucao, estadoProcesso, tempoExecucaoRestante, prioridade, 
 				deadline, intervalo);
 		if (estrategia == "Round Robin")
+		{
 			processoList.add(p);
+		    // adicionar na posição específica
+			
+		}
 		else {
 			// O index é < 0 qdo. não achado o deadline em nenhum processo e é um número >= 0 quando representa o index de outro processo com o mesmo deadline
 			int index = Collections.binarySearch(getProcessos(), p); 
@@ -149,5 +153,7 @@ public class Controller {
 			Processo p = new Processo(tempoTotalExecucao, "P", tempoTotalExecucao, iPrioridade, deadline, "");
 			processoList.add(p);
 		}
+		// ordena por prioridade + id
+		Collections.sort(processoList.getAll());
 	}
 }

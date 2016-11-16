@@ -115,14 +115,37 @@ public class Processo implements Comparable<Processo>, Runnable {
 
 	public int compareTo(Processo processo) {
 		int iRetorno = 0;
-		if (this.getDeadlineToSort() < Integer.valueOf(processo.deadline)) {
-			return -1;
-		} else if (this.getDeadlineToSort() > Integer.valueOf(processo.deadline)) {
-			return 1;
+		if (Integer.valueOf(processo.deadline) == 0) {
+			// Ordenação por Prioridade + Id (para o algoritmo Round robin com fila de Prioridades)
+//			int iRetorno = 0;
+			if (this.getPrioridade() < processo.prioridade) {
+				return -1;
+			} else if (this.getPrioridade() > processo.prioridade) {
+				return 1;
+			}
+			iRetorno = compareTo_Id(processo); 
+		}
+		else {
+			// Ordenação por Deadline (para o algoritmo LTG)
+//			int iRetorno = 0;
+			if (this.getDeadlineToSort() < Integer.valueOf(processo.deadline)) {
+				return -1;
+			} else if (this.getDeadlineToSort() > Integer.valueOf(processo.deadline)) {
+				return 1;
+			}
 		}
 		return iRetorno;
 	}
-
+	
+	public int compareTo_Id(Processo processo) {
+		if (this.getIdentificadorProcesso() < processo.identificadorProcesso) {
+			return -1;
+		} else if (this.getIdentificadorProcesso() > processo.identificadorProcesso) {
+			return 1;
+		} else
+			return 0;
+	}
+	
 	@Override
 	public void run() {
 		decrementaTempoRestante(); 
@@ -138,7 +161,7 @@ public class Processo implements Comparable<Processo>, Runnable {
 			}
 	    	int iTempoExecucaoRestante = Integer.valueOf(this.tempoExecucaoRestante);
 	    	setTempoExecucaoRestante(String.valueOf(--iTempoExecucaoRestante));
-	    	if (iTempoExecucaoRestante == 0)
+	    	if (iTempoExecucaoRestante == 0 || this.estadoProcesso == "B")
 	    		stop();
 	    	if (_ativaLog)
 	    		System.out.println("Id rodando: "+identificadorProcesso+
@@ -148,8 +171,11 @@ public class Processo implements Comparable<Processo>, Runnable {
     	if (_ativaLog)
     		System.out.println("Id parado: "+identificadorProcesso+
 					" | T. total "+tempoTotalExecucao+
-					" | T. restante: "+tempoExecucaoRestante);
-		setEstadoProcesso("OK");
+					" | T. restante: "+tempoExecucaoRestante+
+					" | Últ. estado: "+estadoProcesso);
+    	int iTempoExecucaoRestante = Integer.valueOf(this.tempoExecucaoRestante);
+    	if (iTempoExecucaoRestante == 0)
+    		setEstadoProcesso("OK");
     }
 
     public void stop() {

@@ -157,12 +157,6 @@ public class DispacherLTG implements Runnable {
 					concluidosEAbortadosList.add(processadoresList.get(i));
 					mostraLogAbortadosConcluidos(concluidosEAbortadosList.size()-1); //				
 					if (processoList.size() > 0) {
-						// insere novo processo da lista de aptos p/ executar
-						/*Processo p = new Processo(processoList.get(0).getTempoTotalExecucao(),
-								"E", processoList.get(0).getTempoTotalExecucao(), 0, 
-								processoList.get(0).getDeadline(), ""); // novo - não resolveu esta nova implementação de 2 linhas e retirada da linha abaixo
-						
-						processadoresList.set(i, p);*/
 						processadoresList.set(i, processoList.get(0));
 						processoList.remove(0); 
 						processadoresList.get(i).setEstadoProcesso("E");
