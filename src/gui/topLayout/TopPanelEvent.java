@@ -7,18 +7,24 @@ public class TopPanelEvent extends EventObject {
 	int numProcessosIniciais;
 	String estrategia;
 	int quantum;
+	// Memória
+	int tamanhoMem;
+	String estrategiaMem;
 	
 	public TopPanelEvent(Object source) {
 		super(source);
 	}
 	
-	public TopPanelEvent(Object source, String estrategia, int qdeProcessadores, int numProcessosIniciais, int quantum) {
+	public TopPanelEvent(Object source, String estrategia, int qdeProcessadores, 
+			int numProcessosIniciais, int quantum, int tamanhoMem, String estrategiaMem) {
 		super(source);
 		
 		this.estrategia = estrategia;
 		this.qdeProcessadores = qdeProcessadores;
 		this.numProcessosIniciais= numProcessosIniciais;
 		this.quantum = quantum;
+		this.tamanhoMem = tamanhoMem;
+		this.estrategiaMem = estrategiaMem;
 	}
 
 	public int getQdeProcessadores() {
@@ -52,4 +58,21 @@ public class TopPanelEvent extends EventObject {
 	public void setQuantum(int quantum) {
 		this.quantum = quantum;
 	}
+
+	public int getTamanhoMem() {
+		return tamanhoMem;
+	}
+
+	public void setTamanhoMem(int tamanhoMem) {
+		this.tamanhoMem = tamanhoMem;
+	}
+
+	public String getEstrategiaMem() {
+		return estrategiaMem;
+	}
+
+	public void setEstrategiaMem(String estrategiaMem) {
+		this.estrategiaMem = estrategiaMem;
+	}
+
 }

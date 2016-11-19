@@ -26,6 +26,13 @@ public class TopPanel extends JPanel{
 	private JLabel quantumLabel;
 	private JTextField quantumField;
 	
+    // Memória
+	private JLabel tamanhoMemLabel;
+	private JTextField tamanhoMemField;
+	
+	private JLabel estrategiaMemLabel;
+	private JComboBox estrategiaMemField;
+    //
 	private JButton iniciarBtn;
 
 	private TopPanelListener topPanelListener;
@@ -53,6 +60,17 @@ public class TopPanel extends JPanel{
 		quantumLabel = new JLabel("Quantum [2-20]: ");
 		quantumField = new JTextField(3);
 		
+		tamanhoMemLabel = new JLabel("  |   Mem-> Tamanho: ");
+		tamanhoMemField = new JTextField(3);
+
+		estrategiaMemLabel = new JLabel("Estrategia: ");
+		estrategiaMemField = new JComboBox<>();
+		DefaultComboBoxModel estrategiaMemModel = new DefaultComboBoxModel();
+		estrategiaMemModel.addElement("Quick fit");
+		estrategiaMemModel.addElement("Best fit");
+		estrategiaMemModel.addElement("Merge fit");		
+		estrategiaMemField.setModel(estrategiaMemModel);
+		
 		iniciarBtn = new JButton("Iniciar!");
 		iniciarBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -60,8 +78,10 @@ public class TopPanel extends JPanel{
 				int qdeProcessadores = Integer.parseInt(qdeProcessadoresField.getSelectedItem().toString());
 				int numProcessosIniciais = numProcessosIniciaisField.getText().equals("") ? 0 : Integer.parseInt(numProcessosIniciaisField.getText());
 				int quantum = quantumField.getText().equals("") ? 0 : Integer.parseInt(quantumField.getText());
+				int tamanhoMem = tamanhoMemField.getText().equals("") ? 0 : Integer.parseInt(tamanhoMemField.getText());
+				String estrategiaMem = estrategiaMemField.getSelectedItem().toString();
 				
-				TopPanelEvent tpe = new TopPanelEvent(this, estrategia, qdeProcessadores, numProcessosIniciais, quantum);
+				TopPanelEvent tpe = new TopPanelEvent(this, estrategia, qdeProcessadores, numProcessosIniciais, quantum, tamanhoMem, estrategiaMem);
 				
 				if(topPanelListener != null) {
 					topPanelListener.topPanelEventOccurred(tpe);
@@ -82,6 +102,12 @@ public class TopPanel extends JPanel{
 		
 		add(quantumLabel);
 		add(quantumField);
+
+		add(tamanhoMemLabel);
+		add(tamanhoMemField);
+		
+		add(estrategiaMemLabel);
+		add(estrategiaMemField);
 		
 		add(iniciarBtn);
 	}

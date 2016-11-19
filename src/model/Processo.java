@@ -23,8 +23,12 @@ public class Processo implements Comparable<Processo>, Runnable {
 
 	private volatile boolean pare = false;
 	
+	// Memória
+	private int qtdBytes;
+	
 	public Processo(String tempoTotalExecucao, 
-					String estadoProcesso, String tempoExecucaoRestante, int prioridade, String deadline, String intervalo) {
+					String estadoProcesso, String tempoExecucaoRestante, int prioridade, 
+					String deadline, String intervalo, int qtdBytes) {
 		
 		this.identificadorProcesso = ++Processo.id;
 		this.tempoTotalExecucao = tempoTotalExecucao;
@@ -33,6 +37,7 @@ public class Processo implements Comparable<Processo>, Runnable {
 		this.prioridade = prioridade;
 		this.deadline = deadline;
 		this.intervalo = intervalo;
+		this.qtdBytes = qtdBytes;
 	}
 
 	// Para representar Core de processador livre
@@ -121,6 +126,14 @@ public class Processo implements Comparable<Processo>, Runnable {
 
 	public void setQuantumInicial(int quantumInicial) {
 		this.quantumInicial = quantumInicial;
+	}
+
+	public int getQtdBytes() {
+		return qtdBytes;
+	}
+
+	public void setQtdBytes(int qtdBytes) {
+		this.qtdBytes = qtdBytes;
 	}
 
 	public int compareTo(Processo processo) {

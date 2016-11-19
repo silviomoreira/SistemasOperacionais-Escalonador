@@ -16,7 +16,7 @@ public class ProcessoPanel extends JPanel{
 	public ProcessoPanel(JTable table) {
 		super();
 		Dimension dim = getPreferredSize();
-		dim.height = 260;
+		dim.height = 150;
 		setPreferredSize(dim);
 
 		this.table = table;

@@ -1,11 +1,13 @@
 package controller;
 
 import gui.centerLayout.CenterPanel;
-import gui.centerLayout.ListProcessoPanel;
+//import gui.centerLayout.ListProcessoPanel;
+
 
 import java.util.ArrayList;
 import java.util.List;
 
+import model.BlocoMemoria;
 import model.Processo;
 import model.ProcessoList;
 
@@ -67,6 +69,7 @@ public class DispacherRoundRobin implements Runnable {
 	private List<Processo> processoList;
 	private List<Processo> processadoresList; 	
 	private List<Processo> concluidosEAbortadosList;
+	private List<BlocoMemoria> memoriaList;
 	/*private List<Processo> filaprio0List;
 	private List<Processo> filaprio1List;
 	private List<Processo> filaprio2List;
@@ -92,7 +95,8 @@ public class DispacherRoundRobin implements Runnable {
 	
 	public DispacherRoundRobin(List<Processo> processoList, List<Processo> processadoresList,
 			List<Processo> concluidosEAbortadosList,
-			CenterPanel centerPanel, int numProcessadores, int numProcessosIniciais, int quantum0) {
+			CenterPanel centerPanel, int numProcessadores, int numProcessosIniciais, int quantum0,
+			List<BlocoMemoria> memoriaList) {
 		this.processoList = processoList;
 		this.processadoresList = processadoresList;
 		this.concluidosEAbortadosList = concluidosEAbortadosList;
@@ -170,6 +174,10 @@ public class DispacherRoundRobin implements Runnable {
 
 	public List<Processo> getConcluidosEAbortadosList() {
 		return concluidosEAbortadosList;
+	}
+	
+	public List<BlocoMemoria> getMemoriaList() {
+		return memoriaList;
 	}
 	
 	@Override

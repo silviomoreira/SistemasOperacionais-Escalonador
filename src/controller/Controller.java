@@ -9,6 +9,8 @@ import gui.centerLayout.CenterPanel;
 import gui.leftLayout.LeftPanel;
 import gui.leftLayout.LeftPanelEvent;
 import gui.topLayout.TopPanelEvent;
+import model.BlocoMemoria;
+import model.MemoriaList;
 import model.ProcessoList;
 import model.Processo;
 
@@ -17,9 +19,9 @@ public class Controller {
 	private LeftPanel leftPanel;
 	private CenterPanel centerPanel;//exc depois
 	private ProcessoList processoList = new ProcessoList();
-	private ProcessoList processadoresList = new ProcessoList();
+	private ProcessoList processadoresList = new ProcessoList();/////private ProcessadoresList processadoresList = new ProcessadoresList();
 	private ProcessoList concluidosEAbortadosList = new ProcessoList();
-	/////private ProcessadoresList processadoresList = new ProcessadoresList();
+	private MemoriaList memoriaList = new MemoriaList(); 
 	private int numProcessadores = 0;
 	private int numProcessosIniciais = 0;
 	private String estrategia;
@@ -49,6 +51,10 @@ public class Controller {
 	
 	public List<Processo> getConcluidosEAbortadosList() {
 		return concluidosEAbortadosList.getAll();
+	}
+
+	public List<BlocoMemoria> getMemoriaList() {
+		return memoriaList.getAll();
 	}
 	
 	public void iniciarSimulacao(TopPanelEvent e) {
@@ -84,13 +90,15 @@ public class Controller {
 		String deadline = e.getDeadline(); 
 		int quantum = e.getQuantum();
 		String intervalo = e.getIntervalo();
-	
+		int qtdBytes = 0;
+		
 		Processo p = new Processo(tempoTotalExecucao, estadoProcesso, tempoExecucaoRestante, prioridade, 
-				deadline, intervalo);
+				deadline, intervalo, qtdBytes);
 		if (estrategia == "Round Robin")
 		{
 			p.setQuantum(quantum);
 			p.setQuantumInicial(quantum);
+			p.setQtdBytes(retornaRandom(32, 1024));
 			processoList.add(p);
 		    // adicionar na posição específica se for round robin com fila de prioridades
 			// ...		
@@ -141,7 +149,7 @@ public class Controller {
 			String tempoTotalExecucao = String.valueOf(iTempoTotalExecucao);
 			int iDeadline = retornaRandom(4, 20);
 			String deadline = String.valueOf(iDeadline);
-			Processo p = new Processo(tempoTotalExecucao, "P", tempoTotalExecucao, 0, deadline, "");
+			Processo p = new Processo(tempoTotalExecucao, "P", tempoTotalExecucao, 0, deadline, "", 0);
 			processoList.add(p);
 		}
 		// ordena por deadline
@@ -154,7 +162,8 @@ public class Controller {
 			String tempoTotalExecucao = String.valueOf(iTempoTotalExecucao);
 			int iPrioridade = retornaRandom(0, 3);
 			String deadline = "0";
-			Processo p = new Processo(tempoTotalExecucao, "P", tempoTotalExecucao, iPrioridade, deadline, "");
+			int iQtdBytes = retornaRandom(32, 1024);
+			Processo p = new Processo(tempoTotalExecucao, "P", tempoTotalExecucao, iPrioridade, deadline, "", iQtdBytes);
 			processoList.add(p);
 		}
 		// ordena por prioridade + id

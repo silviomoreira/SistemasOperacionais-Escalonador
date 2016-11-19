@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import controller.Controller;
 import controller.DispacherLTG;
 import controller.DispacherRoundRobin;
+import gui.bottomLayout.BottomPanel;
 import gui.centerLayout.CenterPanel;
 import gui.centerLayout.CenterPanelEvent;
 import gui.leftLayout.LeftPanel;
@@ -21,6 +22,7 @@ public class MainFrame extends JFrame {
 	private TopPanel topPanel;
 	protected LeftPanel leftPanel;
 	protected CenterPanel centerPanel;
+	protected BottomPanel bottomPanel;
 	
 	private Controller controller;
 	
@@ -30,13 +32,14 @@ public class MainFrame extends JFrame {
 		topPanel = new TopPanel();
 		leftPanel = new LeftPanel();
 		centerPanel = new CenterPanel();
+		bottomPanel = new BottomPanel();
 		
-		controller = new Controller(leftPanel, centerPanel);
+		controller = new Controller(leftPanel, centerPanel);// passar bottomPanel ?
 
 		centerPanel.setDataListProcessos(controller.getProcessos());
 		centerPanel.setDataListProcessadores(controller.getProcessadoresList(), 0);
 		centerPanel.setDataListConcluidosEAbortados(controller.getConcluidosEAbortadosList());
-		
+		bottomPanel.setDataListMemoria(controller.getMemoriaList());
 		setLayout(new BorderLayout());
 
 		topPanel.setTopPanelListener(new TopPanelListener() {	
@@ -46,17 +49,20 @@ public class MainFrame extends JFrame {
 				centerPanel.setDataListProcessos(controller.getProcessos());
 				centerPanel.setDataListProcessadores(controller.getProcessadoresList(), e.getQdeProcessadores());
 				centerPanel.setDataListConcluidosEAbortados(controller.getConcluidosEAbortadosList());				
+				bottomPanel.setDataListMemoria(controller.getMemoriaList());
 				
 				controller.iniciarSimulacao(e);
 				// refresh na tela com os processos iniciais prontos p/ serem iniciados 
 				centerPanel.refreshProcessos();
 				centerPanel.refreshProcessadores();
 				centerPanel.refreshConcluidosEAbortados();
+				bottomPanel.refreshMemoria();
 				if (e.getEstrategia() == "Round Robin") {
 					DispacherRoundRobin dispacherRR = new DispacherRoundRobin(
 							controller.getProcessos(), controller.getProcessadoresList(),
-							controller.getConcluidosEAbortadosList(),
-							centerPanel, e.getQdeProcessadores(), e.getNumProcessosIniciais(), e.getQuantum());
+							controller.getConcluidosEAbortadosList(), 
+							centerPanel, e.getQdeProcessadores(), e.getNumProcessosIniciais(), 
+							e.getQuantum(), controller.getMemoriaList());
 					Thread thread = new Thread(dispacherRR);
 					thread.start();
 				} else if (e.getEstrategia() == "Least Time to Go (LTG)") {
@@ -87,9 +93,10 @@ public class MainFrame extends JFrame {
 		add(topPanel, BorderLayout.NORTH);
 		add(leftPanel, BorderLayout.WEST);
 		add(centerPanel, BorderLayout.CENTER);
+		add(bottomPanel, BorderLayout.SOUTH);
 		
 		setVisible(true);
-		setSize(1000, 600);//(1000, 700);
+		setSize(1200, 600);//(1000, 700);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 	}

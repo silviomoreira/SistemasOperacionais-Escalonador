@@ -9,20 +9,21 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.Border;
 
+import model.BlocoMemoria;
 import model.Processo;
 
 public class CenterPanel extends JPanel {
 	
 	private JTable tableProcessos;
 	private ProcessoTableModel tableModelProcessos;
-	private JTable tableProcessadores;///
-	private ProcessadoresTableModel tableModelProcessadores;///
-	private JTable tableConcluidosEAbortados;///
-	private ConcluidosEAbortadosTableModel tableModelConcluidosEAbortados;///
+	private JTable tableProcessadores;
+	private ProcessadoresTableModel tableModelProcessadores;
+	private JTable tableConcluidosEAbortados;
+	private ConcluidosEAbortadosTableModel tableModelConcluidosEAbortados;
 	
 	private ProcessoPanel processoPanel; 
-	private ProcessadoresPanel processadoresPanel;///
-	private int numProcessadores = 0;///	
+	private ProcessadoresPanel processadoresPanel;
+	private int numProcessadores = 0;	
 	private ConcluidosEAbortadosPanel concluidosEAbortadosPanel;
 	
 	public CenterPanel() {
@@ -30,12 +31,12 @@ public class CenterPanel extends JPanel {
 
 		tableModelProcessos = new ProcessoTableModel();
 		tableProcessos = new JTable(tableModelProcessos);
-		tableModelProcessadores = new ProcessadoresTableModel();///
-		tableProcessadores = new JTable(tableModelProcessadores);///
-		tableModelConcluidosEAbortados = new ConcluidosEAbortadosTableModel();///
-		tableConcluidosEAbortados = new JTable(tableModelConcluidosEAbortados);///
+		tableModelProcessadores = new ProcessadoresTableModel();
+		tableProcessadores = new JTable(tableModelProcessadores);
+		tableModelConcluidosEAbortados = new ConcluidosEAbortadosTableModel();
+		tableConcluidosEAbortados = new JTable(tableModelConcluidosEAbortados);
 		
-		processadoresPanel = new ProcessadoresPanel(tableProcessadores);/////
+		processadoresPanel = new ProcessadoresPanel(tableProcessadores);
 		concluidosEAbortadosPanel = new ConcluidosEAbortadosPanel(tableConcluidosEAbortados);
 		processoPanel = new ProcessoPanel(tableProcessos);
 		///// comentado
