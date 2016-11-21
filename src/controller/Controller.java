@@ -43,6 +43,7 @@ public class Controller {
 		processadoresList.reset();
 		concluidosEAbortadosList.reset();
 		memoriaList.reset();
+		bestfitList.reset();
 	}
 	
 	public List<Processo> getProcessadoresList() {
@@ -176,11 +177,11 @@ public class Controller {
 	private void iniciarAlgoritmoRoundRobin(TopPanelEvent e) {
 		for(int i=0; i<numProcessosIniciais; i++) {
 			// Passa novos parâmetros se for escolhido rodar a demonstração do funcionamento da memória
-			int iTempoTotalExecucao = retornaRandom(tamanhoMemoria > 0 ? 3 : 4, tamanhoMemoria > 0 ? 30 : 20);
+			int iTempoTotalExecucao = retornaRandom(tamanhoMemoria > 0 ? 10 : 4, tamanhoMemoria > 0 ? 30 : 20);
 			String tempoTotalExecucao = String.valueOf(iTempoTotalExecucao);
 			int iPrioridade = retornaRandom(0, 3);
 			String deadline = "0";
-			int iQtdBytes = retornaRandom(32, 1024);
+			int iQtdBytes = retornaRandom(32, 1024);//iQtdBytes = 200;
 			Processo p = new Processo(tempoTotalExecucao, "P", tempoTotalExecucao, iPrioridade, deadline, "", iQtdBytes);
 			processoList.add(p);
 		}

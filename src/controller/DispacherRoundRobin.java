@@ -101,6 +101,7 @@ public class DispacherRoundRobin implements Runnable {
 	private BottomPanel bottomPanel;  
 	private int tamanhoMemoria = 0;
 	private boolean bMostraMemoria = false;
+	private boolean bAtivaLog;
 	
 	private volatile boolean pare = false;
 	
@@ -120,6 +121,7 @@ public class DispacherRoundRobin implements Runnable {
 		this.bMostraMemoria = (this.tamanhoMemoria> 0);
 		this.memoriaList = memoriaList;
 		this.memoriaObj = memoriaObj;
+		this.bAtivaLog = processoList.get(0).isAtivalog();
 		// Distribui processos(o id deles) entre as filas de prioridade
 		int iPrioridade;
 		for(int i=0; i<numProcessosIniciais; i++) {
@@ -205,13 +207,13 @@ public class DispacherRoundRobin implements Runnable {
 	{
 		aguardaEmMilisegundos(4000); // Possibilita dar uma olhada na lista de aptos antes de iniciar
 		List<Thread> threadsList = new ArrayList<Thread>();
+		String statusProcessoNoProcessador; 
 		//int iPrioridadeDaVez = 0;
 		//int idProcesso;
 		//int iPosProcesso;
-		// ref. a memória
+		// Ref. a memória
 		int tamanhoBloco;
 		int espacoUsado; 
-		int referenciaProxBloco = 0;
 		memoriaObj.setRemainingMemorySize(tamanhoMemoria);
 		boolean bMemoriaAlocada = true;
 		// Loop de processadores starta cada processo na tela em cada processador(core)
@@ -221,19 +223,7 @@ public class DispacherRoundRobin implements Runnable {
 				aguardaEmMilisegundos(50); 
 				// AlocaMem
 				if (bMostraMemoria) {
-					tamanhoBloco = processoList.get(0).getQtdBytes(); 
-					espacoUsado = tamanhoBloco;
-					bMemoriaAlocada = false;
-					if (tamanhoBloco <= memoriaObj.getRemainingMemorySize()) {
-						BlocoMemoria bm = new BlocoMemoria(tamanhoBloco, espacoUsado, referenciaProxBloco);
-						memoriaList.add(bm);
-						memoriaObj.setRemainingMemorySize(memoriaObj.getRemainingMemorySize()-tamanhoBloco);
-						bMemoriaAlocada = true;
-					} else {
-						JOptionPane.showMessageDialog(null, "Out of memory");
-						processoList.get(0).setEstadoProcesso("A");
-						mataProcesso(0);
-					}
+					bMemoriaAlocada = tentaAlocarMemoria(i, bMemoriaAlocada, true);
 				}
 				if (bMemoriaAlocada) {
 					// Exclui processo da lista de aptos e coloca na fila de processadores, startando-o
@@ -246,7 +236,7 @@ public class DispacherRoundRobin implements Runnable {
 			    	atualizaTela();
 					Thread thread = new Thread(processadoresList.get(i));
 					threadsList.add(thread);
-					threadsList.get(i).start();
+					threadsList.get(threadsList.size()-1).start(); // get(i).start();
 				}
 			}
 			else {
@@ -262,13 +252,11 @@ public class DispacherRoundRobin implements Runnable {
 		while (!pare) {
 			aguardaEmMilisegundos(1000);
 			// - Decrementa quantum
-			//synchronized (this) { // novo
-				for(int i=0; i<processadoresList.size(); i++) {
-					if (processadoresList.get(i).getEstadoProcesso() == "E"){
-						processadoresList.get(i).decrementaQuantum();
-					}
+			for(int i=0; i<processadoresList.size(); i++) {
+				if (processadoresList.get(i).getEstadoProcesso() == "E"){
+					processadoresList.get(i).decrementaQuantum();
 				}
-			//}
+			}
 	    	atualizaTela();
 	    	// Ver a possibilidade de realizar o tratamento do processo bloqueado logo
 	    	// aqui, ou em Processo.DecrementaTempoRestante(), qdo. já finalizaria a execução do processo 
@@ -288,12 +276,24 @@ public class DispacherRoundRobin implements Runnable {
 	    	// * - Se status="OK", apenas pega o processo da fila seguinte que tiver processos a escalonar.   
 			for(int i=0; i<processadoresList.size(); i++) {
 				bMemoriaAlocada = true;
-				if (processadoresList.get(i).getEstadoProcesso() == "OK"){
-					// Insere na lista de concluídos
-					concluidosEAbortadosList.add(processadoresList.get(i));
-					mostraLogAbortadosConcluidos(concluidosEAbortadosList.size()-1); //				
+				statusProcessoNoProcessador = processadoresList.get(i).getEstadoProcesso();
+				if (statusProcessoNoProcessador == "OK" || statusProcessoNoProcessador == "CORE_LIVRE" ){
+					if (statusProcessoNoProcessador == "OK") {
+						// Insere na lista de concluídos
+						boolean bFoiIncluido = false;
+						for(int k=0; k<concluidosEAbortadosList.size(); k++) {
+							bFoiIncluido = (processadoresList.get(i).getIdentificadorProcesso() == concluidosEAbortadosList.get(k).getIdentificadorProcesso());
+							if (bFoiIncluido)
+								break;
+						}
+						if (!bFoiIncluido) {
+							concluidosEAbortadosList.add(processadoresList.get(i));
+							mostraLogAbortadosConcluidos(concluidosEAbortadosList.size()-1); //
+						}
+					}
+					liberaMemoria(processadoresList.get(i).getIdentificadorProcesso());
 					if (processoList.size() > 0) {
-						bMemoriaAlocada = tentaAlocarMemoria(bMemoriaAlocada);
+						bMemoriaAlocada = tentaAlocarMemoria(i, bMemoriaAlocada, false);
 						if (bMemoriaAlocada) { 
 							// escalona Proximo Processo
 							//idProcesso = excluiProcessoDaProximaFilaDePrioridadeERetornaIdDoMesmo();
@@ -314,13 +314,14 @@ public class DispacherRoundRobin implements Runnable {
 						processadoresList.set(i, p);
 					}
 					if (bMemoriaAlocada)
-						mostraLogProcessadores(i); //
+						mostraLogProcessadores(i); 
 				} else  	
 				if (processadoresList.get(i).getEstadoProcesso() == "B"){
 					//recolocaProcessoBloqueadoNaFilaDePrioridades(i);
 					processoList.add(processadoresList.get(i)); //recolocaProcessoBloqueadoNalistaDeProcessosGeral(i);
+					liberaMemoria(processadoresList.get(i).getIdentificadorProcesso());
 					if (processoList.size() > 0) {
-						bMemoriaAlocada = tentaAlocarMemoria(bMemoriaAlocada);
+						bMemoriaAlocada = tentaAlocarMemoria(i, bMemoriaAlocada, false);
 						if (bMemoriaAlocada) {
 							// escalona Proximo Processo // escalonaProximoProcesso();
 							//idProcesso = excluiProcessoDaProximaFilaDePrioridadeERetornaIdDoMesmo();
@@ -341,7 +342,7 @@ public class DispacherRoundRobin implements Runnable {
 						processadoresList.set(i, p);
 					}
 					if (bMemoriaAlocada)
-						mostraLogProcessadores(i); //					
+						mostraLogProcessadores(i);				
 				} // Fim <if geral>					
 			} // Fim <for>
 	    	atualizaTela();
@@ -354,18 +355,36 @@ public class DispacherRoundRobin implements Runnable {
 		} // Fim <while>
 	}
 
+	private void liberaMemoria(int idProcesso) {
+		for(int i=0; i<memoriaList.size(); i++) {
+			if (memoriaList.get(i).getIdProcesso() == idProcesso) {
+				memoriaList.get(i).setEspacoUsado(0);
+				memoriaList.get(i).setIdProcesso(0);
+				break;
+			}
+		}		
+	}
+
 	/**
 	 * @param bMemoriaAlocada
 	 * @return
 	 */
-	private boolean tentaAlocarMemoria(boolean bMemoriaAlocada) {
+	private boolean tentaAlocarMemoria(int i, boolean bMemoriaAlocada, boolean bCargaInicial) {
 		if (bMostraMemoria) {
 			bMemoriaAlocada = memoriaObj.alocouMemoria(processoList.get(0).getQtdBytes(), 
-							 						   memoriaObj.getRemainingMemorySize());							
+							 						   memoriaObj.getRemainingMemorySize(),
+							 						   processoList.get(0).getIdentificadorProcesso());							
 			if (!bMemoriaAlocada) {
-				JOptionPane.showMessageDialog(null, "Out of memory");
+				JOptionPane.showMessageDialog(null,  "Out of memory ! ) Solicitado: "+processoList.get(0).getQtdBytes()+" | Remanescente: "+ memoriaObj.getRemainingMemorySize());//"Out of memory");
+				mostraLogMemoria(0);
 				processoList.get(0).setEstadoProcesso("A");
 				mataProcesso(0);
+				Processo p = new Processo(0, "0", "CORE_LIVRE", "0", 0, "0", "");
+				if (bCargaInicial)
+					processadoresList.add(p);
+				else
+					processadoresList.set(i, p);	
+				atualizaTela();
 			}
 		}
 		return bMemoriaAlocada;
@@ -395,7 +414,14 @@ public class DispacherRoundRobin implements Runnable {
 					" | T. restante: "+concluidosEAbortadosList.get(i).getTempoExecucaoRestante()+
 					" | Status: "+concluidosEAbortadosList.get(i).getEstadoProcesso());
 	}
-
+	private void mostraLogMemoria(int i) {
+		if (bAtivaLog && bMostraMemoria) {
+			System.out.println("Id processo abortado p/ falta de mem.: "+processoList.get(i).getIdentificadorProcesso()+
+					" | Mem. requisitada: "+processoList.get(i).getQtdBytes()+
+					" | Mem. restante: "+memoriaObj.getRemainingMemorySize());		
+		}
+	}
+	
 	private boolean HaAlgumProcessoEmExecucao() {
 		boolean bRetorno = false;
 		for(int i=0; i<processadoresList.size(); i++) {

@@ -6,13 +6,14 @@ public class BlocoMemoria {
 	private int idBloco;
 	private int tamanho; 	 // bytes
 	private int espacoUsado; // bytes
-	private int referenciaProxBloco;
+	private BlocoMemoria referenciaProxBloco;
 	private int idProcesso;
  
-	public BlocoMemoria(int tamanho, int espacoUsado, int referenciaProxBloco) {
+	public BlocoMemoria(int tamanho, int espacoUsado, int idProcesso, BlocoMemoria referenciaProxBloco) {
 		this.idBloco = ++BlocoMemoria.id;
 		this.tamanho = tamanho;
 		this.espacoUsado = espacoUsado;
+		this.idProcesso = idProcesso;
 		this.referenciaProxBloco = referenciaProxBloco;
 	}
 
@@ -40,11 +41,11 @@ public class BlocoMemoria {
 		this.espacoUsado = espacoUsado;
 	}
 
-	public int getReferenciaProxBloco() {
+	public BlocoMemoria getReferenciaProxBloco() {
 		return referenciaProxBloco;
 	}
 
-	public void setReferenciaProxBloco(int referenciaProxBloco) {
+	public void setReferenciaProxBloco(BlocoMemoria referenciaProxBloco) {
 		this.referenciaProxBloco = referenciaProxBloco;
 	}
 

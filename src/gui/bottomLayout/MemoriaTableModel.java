@@ -10,7 +10,7 @@ public class MemoriaTableModel extends AbstractTableModel {
 
 	private List<BlocoMemoria> blocosMemoria;
 	private String[] colNames =
-		{"Id", "Tamanho", "Espaço usado", "Referência prox. bloco"};
+		{"Id", "Tamanho", "Espaço usado", "Id do Processo", "Referência prox. bloco"};
 	
 	public MemoriaTableModel() {
 	}
@@ -48,6 +48,8 @@ public class MemoriaTableModel extends AbstractTableModel {
 		case 2:
 			return blocoMemoria.getEspacoUsado();
 		case 3:
+			return blocoMemoria.getIdProcesso();
+		case 4:
 			return blocoMemoria.getReferenciaProxBloco();
 		}
 

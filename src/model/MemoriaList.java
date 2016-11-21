@@ -60,7 +60,7 @@ public class MemoriaList {
 		this.remainingMemorySize = remainingMemorySize;
 	}
 
-	public boolean alocouMemoria(int tamanhoBloco, int tamanhoMemoriaRestante) {
+	public boolean alocouMemoria(int tamanhoBloco, int tamanhoMemoriaRestante, int idProcesso) {
 		return true;
 	}
 }
