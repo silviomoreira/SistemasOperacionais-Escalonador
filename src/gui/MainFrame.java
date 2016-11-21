@@ -34,12 +34,12 @@ public class MainFrame extends JFrame {
 		centerPanel = new CenterPanel();
 		bottomPanel = new BottomPanel();
 		
-		controller = new Controller(leftPanel, centerPanel);// passar bottomPanel ?
+		controller = new Controller(leftPanel, centerPanel);
 
 		centerPanel.setDataListProcessos(controller.getProcessos());
 		centerPanel.setDataListProcessadores(controller.getProcessadoresList(), 0);
 		centerPanel.setDataListConcluidosEAbortados(controller.getConcluidosEAbortadosList());
-		bottomPanel.setDataListMemoria(controller.getMemoriaList());
+		bottomPanel.setDataListMemoria(controller.getBestfitList()); //controller.getMemoriaList());
 		setLayout(new BorderLayout());
 
 		topPanel.setTopPanelListener(new TopPanelListener() {	
@@ -49,7 +49,7 @@ public class MainFrame extends JFrame {
 				centerPanel.setDataListProcessos(controller.getProcessos());
 				centerPanel.setDataListProcessadores(controller.getProcessadoresList(), e.getQdeProcessadores());
 				centerPanel.setDataListConcluidosEAbortados(controller.getConcluidosEAbortadosList());				
-				bottomPanel.setDataListMemoria(controller.getMemoriaList());
+				bottomPanel.setDataListMemoria(controller.getBestfitList());//controller.getMemoriaList());
 				
 				controller.iniciarSimulacao(e);
 				// refresh na tela com os processos iniciais prontos p/ serem iniciados 
@@ -62,7 +62,8 @@ public class MainFrame extends JFrame {
 							controller.getProcessos(), controller.getProcessadoresList(),
 							controller.getConcluidosEAbortadosList(), 
 							centerPanel, e.getQdeProcessadores(), e.getNumProcessosIniciais(), 
-							e.getQuantum(), controller.getMemoriaList());
+							e.getQuantum(), bottomPanel, e.getTamanhoMem(), controller.getBestfitList(),
+							controller.getBestfitObj());//controller.getMemoriaList());
 					Thread thread = new Thread(dispacherRR);
 					thread.start();
 				} else if (e.getEstrategia() == "Least Time to Go (LTG)") {

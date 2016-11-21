@@ -1,13 +1,15 @@
 package model;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class MemoriaList {
 
-	private ArrayList<BlocoMemoria> blocosMemoria;
+	protected LinkedList<BlocoMemoria> blocosMemoria;
+	protected int memorySize;
+	protected int remainingMemorySize;
 
 	public MemoriaList() {
-		blocosMemoria = new ArrayList<>();
+		blocosMemoria = new LinkedList<>();		
 	}
 
 	public void add(BlocoMemoria blocoMemoria) {
@@ -18,7 +20,7 @@ public class MemoriaList {
 		blocosMemoria.add(index, blocoMemoria);
 	}
 	
-	public ArrayList<BlocoMemoria> getAll() {		
+	public LinkedList<BlocoMemoria> getAll() {		
 		return blocosMemoria;
 	}
 	
@@ -31,7 +33,7 @@ public class MemoriaList {
 	}
 	
 	public void reset() {
-		blocosMemoria = new ArrayList<>();
+		blocosMemoria = new LinkedList<>();		
 	}
 	
 	public BlocoMemoria get(int index) {
@@ -41,5 +43,24 @@ public class MemoriaList {
 	public void set(int index, BlocoMemoria blocoMemoria) {
 		blocosMemoria.set(index, blocoMemoria);
 	}
+
+	public int getMemorySize() {
+		return memorySize;
+	}
+
+	public void setMemorySize(int memorySize) {
+		this.memorySize = memorySize;
+	}
 	
+	public int getRemainingMemorySize() {
+		return remainingMemorySize;
+	}
+
+	public void setRemainingMemorySize(int remainingMemorySize) {
+		this.remainingMemorySize = remainingMemorySize;
+	}
+
+	public boolean alocouMemoria(int tamanhoBloco, int tamanhoMemoriaRestante) {
+		return true;
+	}
 }

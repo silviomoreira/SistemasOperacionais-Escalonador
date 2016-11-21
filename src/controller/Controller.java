@@ -9,6 +9,7 @@ import gui.centerLayout.CenterPanel;
 import gui.leftLayout.LeftPanel;
 import gui.leftLayout.LeftPanelEvent;
 import gui.topLayout.TopPanelEvent;
+import model.BestfitList;
 import model.BlocoMemoria;
 import model.MemoriaList;
 import model.ProcessoList;
@@ -21,10 +22,12 @@ public class Controller {
 	private ProcessoList processoList = new ProcessoList();
 	private ProcessoList processadoresList = new ProcessoList();/////private ProcessadoresList processadoresList = new ProcessadoresList();
 	private ProcessoList concluidosEAbortadosList = new ProcessoList();
-	private MemoriaList memoriaList = new MemoriaList(); 
+	private MemoriaList memoriaList = new MemoriaList();
+	private BestfitList bestfitList = new BestfitList();
 	private int numProcessadores = 0;
 	private int numProcessosIniciais = 0;
 	private String estrategia;
+	private int tamanhoMemoria = 0;
 
 	public Controller(LeftPanel leftPanel, CenterPanel centerPanel){
 		this.leftPanel = leftPanel;
@@ -39,6 +42,7 @@ public class Controller {
 		processoList.reset();
 		processadoresList.reset();
 		concluidosEAbortadosList.reset();
+		memoriaList.reset();
 	}
 	
 	public List<Processo> getProcessadoresList() {
@@ -53,10 +57,22 @@ public class Controller {
 		return concluidosEAbortadosList.getAll();
 	}
 
+	public MemoriaList getMemoriaObj() {
+		return memoriaList;
+	}
+	
 	public List<BlocoMemoria> getMemoriaList() {
 		return memoriaList.getAll();
 	}
 	
+	public BestfitList getBestfitObj() {
+		return bestfitList;
+	}
+
+	public List<BlocoMemoria> getBestfitList() { 
+		return bestfitList.getAll();
+	}
+
 	public void iniciarSimulacao(TopPanelEvent e) {
 		estrategia = e.getEstrategia();
 		System.out.println("Estrategia: " + estrategia);
@@ -66,6 +82,7 @@ public class Controller {
 		
 		numProcessadores = e.getQdeProcessadores();
 		numProcessosIniciais = e.getNumProcessosIniciais();
+		tamanhoMemoria = e.getTamanhoMem();
 		if (estrategia == "Round Robin")
 			iniciarAlgoritmoRoundRobin(e);			
 		else if (estrategia == "Least Time to Go (LTG)")
@@ -158,7 +175,8 @@ public class Controller {
 	
 	private void iniciarAlgoritmoRoundRobin(TopPanelEvent e) {
 		for(int i=0; i<numProcessosIniciais; i++) {
-			int iTempoTotalExecucao = retornaRandom(4, 20);
+			// Passa novos parâmetros se for escolhido rodar a demonstração do funcionamento da memória
+			int iTempoTotalExecucao = retornaRandom(tamanhoMemoria > 0 ? 3 : 4, tamanhoMemoria > 0 ? 30 : 20);
 			String tempoTotalExecucao = String.valueOf(iTempoTotalExecucao);
 			int iPrioridade = retornaRandom(0, 3);
 			String deadline = "0";
@@ -168,5 +186,7 @@ public class Controller {
 		}
 		// ordena por prioridade + id
 		Collections.sort(processoList.getAll());
+		if (tamanhoMemoria > 0)
+			bestfitList.setMemorySize(tamanhoMemoria); 
 	}
 }
