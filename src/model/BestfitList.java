@@ -1,6 +1,6 @@
 package model;
 
-import javax.swing.JOptionPane;
+//import javax.swing.JOptionPane;
 
 public class BestfitList extends MemoriaList {
 	
