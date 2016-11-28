@@ -14,6 +14,7 @@ import model.BlocoMemoria;
 import model.MemoriaList;
 import model.ProcessoList;
 import model.Processo;
+import model.QuickfitList;
 
 public class Controller {
 	
@@ -24,9 +25,12 @@ public class Controller {
 	private ProcessoList concluidosEAbortadosList = new ProcessoList();
 	private MemoriaList memoriaList = new MemoriaList();
 	private BestfitList bestfitList = new BestfitList();
+	private QuickfitList quickfitList = new QuickfitList();
+	
 	private int numProcessadores = 0;
 	private int numProcessosIniciais = 0;
 	private String estrategia;
+	private String estrategiaMem;
 	private int tamanhoMemoria = 0;
 
 	public Controller(LeftPanel leftPanel, CenterPanel centerPanel){
@@ -44,6 +48,8 @@ public class Controller {
 		concluidosEAbortadosList.reset();
 		memoriaList.reset();
 		bestfitList.reset();
+		quickfitList.reset();
+		
 	}
 	
 	public List<Processo> getProcessadoresList() {
@@ -72,6 +78,14 @@ public class Controller {
 
 	public List<BlocoMemoria> getBestfitList() { 
 		return bestfitList.getAll();
+	}
+	
+	public QuickfitList getQuickfitObj() {
+		return quickfitList;
+	}
+	
+	public List<BlocoMemoria> getQuickfitList() {
+		return quickfitList.getAll();
 	}
 
 	public void iniciarSimulacao(TopPanelEvent e) {
@@ -188,6 +202,13 @@ public class Controller {
 		// ordena por prioridade + id
 		Collections.sort(processoList.getAll());
 		if (tamanhoMemoria > 0)
-			bestfitList.setMemorySize(tamanhoMemoria); 
+		{
+			if (estrategiaMem == "Best fit")
+				bestfitList.setMemorySize(tamanhoMemoria);
+			if (estrategiaMem == "Quick fit")
+				quickfitList.setMemorySize(tamanhoMemoria);
+			/*if (estrategiaMem == "Merge fit")
+				mergefitList.setMemorySize(tamanhoMemoria);*/
+		}
 	}
 }

@@ -48,8 +48,13 @@ public class MainFrame extends JFrame {
 				controller.resetProcessos();
 				centerPanel.setDataListProcessos(controller.getProcessos());
 				centerPanel.setDataListProcessadores(controller.getProcessadoresList(), e.getQdeProcessadores());
-				centerPanel.setDataListConcluidosEAbortados(controller.getConcluidosEAbortadosList());				
-				bottomPanel.setDataListMemoria(controller.getBestfitList());//controller.getMemoriaList());
+				centerPanel.setDataListConcluidosEAbortados(controller.getConcluidosEAbortadosList());	
+				if (e.getEstrategiaMem() == "Best fit")
+					bottomPanel.setDataListMemoria(controller.getBestfitList());//controller.getMemoriaList());
+				else if (e.getEstrategiaMem() == "Quick fit")
+					bottomPanel.setDataListMemoria(controller.getQuickfitList());
+				/*else if (e.getEstrategiaMem() == "Merge fit")
+					bottomPanel.setDataListMemoria(controller.getQuickfitList());*/
 				
 				controller.iniciarSimulacao(e);
 				// refresh na tela com os processos iniciais prontos p/ serem iniciados 
@@ -58,12 +63,28 @@ public class MainFrame extends JFrame {
 				centerPanel.refreshConcluidosEAbortados();
 				bottomPanel.refreshMemoria();
 				if (e.getEstrategia() == "Round Robin") {
-					DispacherRoundRobin dispacherRR = new DispacherRoundRobin(
-							controller.getProcessos(), controller.getProcessadoresList(),
-							controller.getConcluidosEAbortadosList(), 
-							centerPanel, e.getQdeProcessadores(), e.getNumProcessosIniciais(), 
-							e.getQuantum(), bottomPanel, e.getTamanhoMem(), controller.getBestfitList(),
-							controller.getBestfitObj());//controller.getMemoriaList());
+					DispacherRoundRobin dispacherRR = null;
+					if (e.getEstrategiaMem() == "Best fit") 
+						dispacherRR = new DispacherRoundRobin(
+								controller.getProcessos(), controller.getProcessadoresList(),
+								controller.getConcluidosEAbortadosList(), 
+								centerPanel, e.getQdeProcessadores(), e.getNumProcessosIniciais(), 
+								e.getQuantum(), bottomPanel, e.getTamanhoMem(), controller.getBestfitList(),
+								controller.getBestfitObj());//controller.getMemoriaList());
+					else if (e.getEstrategiaMem() == "Quick fit")
+						dispacherRR = new DispacherRoundRobin(
+								controller.getProcessos(), controller.getProcessadoresList(),
+								controller.getConcluidosEAbortadosList(), 
+								centerPanel, e.getQdeProcessadores(), e.getNumProcessosIniciais(), 
+								e.getQuantum(), bottomPanel, e.getTamanhoMem(), controller.getQuickfitList(),
+								controller.getQuickfitObj());
+					/*else if (e.getEstrategiaMem() == "Merge fit")
+						dispacherRR = new DispacherRoundRobin(
+								controller.getProcessos(), controller.getProcessadoresList(),
+								controller.getConcluidosEAbortadosList(), 
+								centerPanel, e.getQdeProcessadores(), e.getNumProcessosIniciais(), 
+								e.getQuantum(), bottomPanel, e.getTamanhoMem(), controller.getMergefitList(),
+								controller.getMergefitObj());*/
 					Thread thread = new Thread(dispacherRR);
 					thread.start();
 				} else if (e.getEstrategia() == "Least Time to Go (LTG)") {
