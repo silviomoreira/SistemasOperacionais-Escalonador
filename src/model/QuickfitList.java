@@ -1,12 +1,14 @@
 package model;
 
+import java.util.Hashtable;
 import java.util.LinkedList;
-import java.util.ArrayList;
 
 public class QuickfitList extends MemoriaList {
 
-	private int requisicoes = 5; 
-	private ArrayList<RequisicaoMemoria> requisicoesMemoria;
+	private int requisicoes_Chao = 2;
+	private int contadorRequisicoes = 0;
+	private boolean bNaoAtingiuChao = true;
+	private RequisicaoMemoriaList requisicoesMemoria;
 	private LinkedList<BlocoMemoria> listaBlocosLivres;
 	private LinkedList<BlocoMemoria> listaBlocos0;
 	private LinkedList<BlocoMemoria> listaBlocos1;
@@ -15,7 +17,7 @@ public class QuickfitList extends MemoriaList {
 
 	public QuickfitList() {
 		super();
-		requisicoesMemoria = new ArrayList<>(); 
+		requisicoesMemoria = new RequisicaoMemoriaList(); 
 		listaBlocosLivres = new LinkedList<>();
 		listaBlocos0 = new LinkedList<>();
 		listaBlocos1 = new LinkedList<>();
@@ -65,8 +67,16 @@ public class QuickfitList extends MemoriaList {
 	}
 	
 	private void guardaRequisicoes(int tamanhoBloco) {
-		RequisicaoMemoria rm = new RequisicaoMemoria();
-		rm.setTamanhoBloco(tamanhoBloco);
+		if (bNaoAtingiuChao) {
+			if (++contadorRequisicoes == requisicoes_Chao){
+				bNaoAtingiuChao = false;
+			}
+			else
+				return;
+		}
+		RequisicaoMemoria rm = new RequisicaoMemoria(tamanhoBloco);
 		requisicoesMemoria.add(rm);
+		if (requisicoesMemoria.size() > 100)
+			requisicoesMemoria.remove(0);
 	}
 } 

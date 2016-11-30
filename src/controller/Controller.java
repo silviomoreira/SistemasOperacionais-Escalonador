@@ -15,6 +15,8 @@ import model.MemoriaList;
 import model.ProcessoList;
 import model.Processo;
 import model.QuickfitList;
+import model.RequisicaoMemoria;
+import model.RequisicaoMemoriaList;
 
 public class Controller {
 	
@@ -26,6 +28,7 @@ public class Controller {
 	private MemoriaList memoriaList = new MemoriaList();
 	private BestfitList bestfitList = new BestfitList();
 	private QuickfitList quickfitList = new QuickfitList();
+	private RequisicaoMemoriaList requisicaoMemoriaList = new RequisicaoMemoriaList();
 	
 	private int numProcessadores = 0;
 	private int numProcessosIniciais = 0;
@@ -49,7 +52,7 @@ public class Controller {
 		memoriaList.reset();
 		bestfitList.reset();
 		quickfitList.reset();
-		
+		requisicaoMemoriaList.reset();
 	}
 	
 	public List<Processo> getProcessadoresList() {
@@ -86,6 +89,14 @@ public class Controller {
 	
 	public List<BlocoMemoria> getQuickfitList() {
 		return quickfitList.getAll();
+	}
+
+	public RequisicaoMemoriaList getRequisicaoMemoriaObj() {
+		return requisicaoMemoriaList;
+	}
+	
+	public List<RequisicaoMemoria> getRequisicaoMemoriaList() {
+		return requisicaoMemoriaList.getAll();
 	}
 
 	public void iniciarSimulacao(TopPanelEvent e) {

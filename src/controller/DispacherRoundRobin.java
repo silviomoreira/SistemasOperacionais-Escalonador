@@ -8,6 +8,8 @@ import gui.centerLayout.CenterPanel;
 
 
 
+import gui.rightLayout.RightPanel;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -102,13 +104,15 @@ public class DispacherRoundRobin implements Runnable {
 	private int tamanhoMemoria = 0;
 	private boolean bMostraMemoria = false;
 	private boolean bAtivaLog;
+	private RightPanel rightPanel;
 	
 	private volatile boolean pare = false;
 	
 	public DispacherRoundRobin(List<Processo> processoList, List<Processo> processadoresList,
 			List<Processo> concluidosEAbortadosList,
 			CenterPanel centerPanel, int numProcessadores, int numProcessosIniciais, int quantum0,
-			BottomPanel bottomPanel, int tamanhoMem, List<BlocoMemoria> memoriaList, MemoriaList memoriaObj) {
+			BottomPanel bottomPanel, int tamanhoMem, List<BlocoMemoria> memoriaList, MemoriaList memoriaObj,
+			RightPanel rightPanel) {
 		this.processoList = processoList;
 		this.processadoresList = processadoresList;
 		this.concluidosEAbortadosList = concluidosEAbortadosList;
@@ -121,6 +125,7 @@ public class DispacherRoundRobin implements Runnable {
 		this.bMostraMemoria = (this.tamanhoMemoria> 0);
 		this.memoriaList = memoriaList;
 		this.memoriaObj = memoriaObj;
+		this.rightPanel = rightPanel;
 		this.bAtivaLog = processoList.get(0).isAtivalog();
 		// Distribui processos(o id deles) entre as filas de prioridade
 		int iPrioridade;
@@ -292,6 +297,7 @@ public class DispacherRoundRobin implements Runnable {
 						}
 					}
 					liberaMemoria(processadoresList.get(i).getIdentificadorProcesso());
+					atualizaTela();
 					if (processoList.size() > 0) {
 						bMemoriaAlocada = tentaAlocarMemoria(i, bMemoriaAlocada, false);
 						if (bMemoriaAlocada) { 
@@ -442,6 +448,7 @@ public class DispacherRoundRobin implements Runnable {
 			centerPanel.refreshProcessadores();
 			centerPanel.refreshConcluidosEAbortados();
 			bottomPanel.refreshMemoria();
+			rightPanel.refreshRequisicoesMemoria();
 		}
 	}
 	

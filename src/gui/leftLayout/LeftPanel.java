@@ -116,7 +116,7 @@ public class LeftPanel extends JPanel{
 	
 	public void setupLayout() {
 		Dimension dim = getPreferredSize();
-		dim.width = 350;
+		dim.width = 300;
 		setPreferredSize(dim);
 		
 		Border innerBorder = BorderFactory.createTitledBorder("Adicionar novo processo");

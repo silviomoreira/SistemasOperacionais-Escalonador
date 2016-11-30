@@ -1,17 +1,17 @@
 package model;
 
-public class RequisicaoMemoria {
+public class RequisicaoMemoria implements Comparable<RequisicaoMemoria> {
 
-	private int numeroLista;
 	private int tamanhoBloco;
 	private int incidencia; 
+	private int numeroLista;
 		
-	public int getNumeroLista() {
-		return numeroLista;
+	public RequisicaoMemoria() {
+		this.incidencia = 1;
 	}
-
-	public void setNumeroLista(int numeroLista) {
-		this.numeroLista = numeroLista;
+	public RequisicaoMemoria(int t) {
+		this.tamanhoBloco = t;
+		this.incidencia = 1;
 	}
 
 	public int getTamanhoBloco() {
@@ -27,11 +27,25 @@ public class RequisicaoMemoria {
 	}
 
 	public void setIncidencia(int incidencia) {
-		this.incidencia = incidencia;
-	}
-	
-	public RequisicaoMemoria() {
-		// TODO Auto-generated constructor stub
+		this.incidencia += incidencia;
 	}
 
+	public int getNumeroLista() {
+		return numeroLista;
+	}
+
+	public void setNumeroLista(int numeroLista) {
+		this.numeroLista = numeroLista;
+	}
+
+	@Override
+	public int compareTo(RequisicaoMemoria requisicaoMemoria) {
+		// Ordenada inversamente por incidencia
+		if (this.getIncidencia() < requisicaoMemoria.incidencia)
+			return 1;
+		if (this.getIncidencia() > requisicaoMemoria.incidencia)
+			return -1;
+		return 0; 
+	}
+	
 }
