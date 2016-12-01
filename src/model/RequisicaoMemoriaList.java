@@ -5,10 +5,10 @@ import java.util.ListIterator;
 
 public class RequisicaoMemoriaList {
 
-	LinkedList<RequisicaoMemoria> blocos = new LinkedList<>();
+	protected LinkedList<RequisicaoMemoria> blocos;
 
 	public RequisicaoMemoriaList() {
-
+		blocos = new LinkedList<>();
 	}
 
 	public void add(RequisicaoMemoria r) {//, int x) {

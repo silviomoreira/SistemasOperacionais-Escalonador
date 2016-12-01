@@ -2,10 +2,11 @@ package model;
 
 import java.util.Hashtable;
 import java.util.LinkedList;
+import java.util.ListIterator;
 
 public class QuickfitList extends MemoriaList {
 
-	private int requisicoes_Chao = 2;
+	private int requisicoes_Chao = 1; // valor min. p/ a partir daí construir a lista de requisições de memória
 	private int contadorRequisicoes = 0;
 	private boolean bNaoAtingiuChao = true;
 	private RequisicaoMemoriaList requisicoesMemoria;
@@ -15,9 +16,16 @@ public class QuickfitList extends MemoriaList {
 	private LinkedList<BlocoMemoria> listaBlocos2;
 	private LinkedList<BlocoMemoria> listaBlocos3;
 
-	public QuickfitList() {
+	public QuickfitList(RequisicaoMemoriaList requisicoesMemoria) {
 		super();
-		requisicoesMemoria = new RequisicaoMemoriaList(); 
+		if (requisicoes_Chao == 0)
+			try {
+				throw new Exception("Valor mín. de requisições inválido !");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		this.requisicoesMemoria = requisicoesMemoria; 
 		listaBlocosLivres = new LinkedList<>();
 		listaBlocos0 = new LinkedList<>();
 		listaBlocos1 = new LinkedList<>();
@@ -79,4 +87,18 @@ public class QuickfitList extends MemoriaList {
 		if (requisicoesMemoria.size() > 100)
 			requisicoesMemoria.remove(0);
 	}
+	
+	public void liberaMemoria(int idProcesso) {
+		BlocoMemoria b;
+		ListIterator<BlocoMemoria> liter = getAll().listIterator();
+		while(liter.hasNext()){
+			b = liter.next();
+			if (b.getIdProcesso() == idProcesso) {
+				b.setEspacoUsado(0);
+				b.setIdProcesso(0);
+				break;
+			}
+		}
+	}
+	
 } 

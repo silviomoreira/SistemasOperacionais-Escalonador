@@ -2,23 +2,19 @@ package controller;
 
 import gui.bottomLayout.BottomPanel;
 import gui.centerLayout.CenterPanel;
-//import gui.centerLayout.ListProcessoPanel;
-
-
-
-
-
 import gui.rightLayout.RightPanel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 import javax.swing.JOptionPane;
 
 import model.BlocoMemoria;
 import model.MemoriaList;
 import model.Processo;
-import model.ProcessoList;
+import model.RequisicaoMemoria;
+import model.RequisicaoMemoriaList;
 
 /*
    Como funciona: Os processos da fila de aptos rodam a cada tempo de quantum, q não pode ser muito pequeno, porque 
@@ -73,13 +69,14 @@ import model.ProcessoList;
  */
 
 public class DispacherRoundRobin implements Runnable {
-
 	private CenterPanel centerPanel;
 	private List<Processo> processoList;
 	private List<Processo> processadoresList; 	
 	private List<Processo> concluidosEAbortadosList;
 	private List<BlocoMemoria> memoriaList;
 	private MemoriaList memoriaObj;
+//	private List<RequisicaoMemoria> requisicaoMemoriaList;//
+//	private RequisicaoMemoriaList requisicaoMemoriaObj;//
 	/*private List<Processo> filaprio0List;
 	private List<Processo> filaprio1List;
 	private List<Processo> filaprio2List;
@@ -112,7 +109,8 @@ public class DispacherRoundRobin implements Runnable {
 			List<Processo> concluidosEAbortadosList,
 			CenterPanel centerPanel, int numProcessadores, int numProcessosIniciais, int quantum0,
 			BottomPanel bottomPanel, int tamanhoMem, List<BlocoMemoria> memoriaList, MemoriaList memoriaObj,
-			RightPanel rightPanel) {
+			RightPanel rightPanel/*, List<RequisicaoMemoria> requisicaoMemoriaList, 
+			RequisicaoMemoriaList requisicaoMemoriaObj*/) {
 		this.processoList = processoList;
 		this.processadoresList = processadoresList;
 		this.concluidosEAbortadosList = concluidosEAbortadosList;
@@ -126,6 +124,8 @@ public class DispacherRoundRobin implements Runnable {
 		this.memoriaList = memoriaList;
 		this.memoriaObj = memoriaObj;
 		this.rightPanel = rightPanel;
+		//this.requisicaoMemoriaList = requisicaoMemoriaList;//
+		//this.requisicaoMemoriaObj = requisicaoMemoriaObj;//
 		this.bAtivaLog = processoList.get(0).isAtivalog();
 		// Distribui processos(o id deles) entre as filas de prioridade
 		int iPrioridade;
@@ -203,6 +203,10 @@ public class DispacherRoundRobin implements Runnable {
 		return memoriaList;
 	}
 	
+/*	public List<RequisicaoMemoria> getRequisicaoMemoriaList() {
+		return requisicaoMemoriaList;
+	}
+*/	
 	@Override
 	public void run() {
 		iniciarExecucaoDosProcessosRR();		
@@ -217,8 +221,8 @@ public class DispacherRoundRobin implements Runnable {
 		//int idProcesso;
 		//int iPosProcesso;
 		// Ref. a memória
-		int tamanhoBloco;
-		int espacoUsado; 
+		//int tamanhoBloco;
+		//int espacoUsado; 
 		memoriaObj.setRemainingMemorySize(tamanhoMemoria);
 		boolean bMemoriaAlocada = true;
 		// Loop de processadores starta cada processo na tela em cada processador(core)
@@ -296,7 +300,7 @@ public class DispacherRoundRobin implements Runnable {
 							mostraLogAbortadosConcluidos(concluidosEAbortadosList.size()-1); //
 						}
 					}
-					liberaMemoria(processadoresList.get(i).getIdentificadorProcesso());
+					memoriaObj.liberaMemoria(processadoresList.get(i).getIdentificadorProcesso());
 					atualizaTela();
 					if (processoList.size() > 0) {
 						bMemoriaAlocada = tentaAlocarMemoria(i, bMemoriaAlocada, false);
@@ -325,7 +329,7 @@ public class DispacherRoundRobin implements Runnable {
 				if (processadoresList.get(i).getEstadoProcesso() == "B"){
 					//recolocaProcessoBloqueadoNaFilaDePrioridades(i);
 					processoList.add(processadoresList.get(i)); //recolocaProcessoBloqueadoNalistaDeProcessosGeral(i);
-					liberaMemoria(processadoresList.get(i).getIdentificadorProcesso());
+					memoriaObj.liberaMemoria(processadoresList.get(i).getIdentificadorProcesso());
 					if (processoList.size() > 0) {
 						bMemoriaAlocada = tentaAlocarMemoria(i, bMemoriaAlocada, false);
 						if (bMemoriaAlocada) {
@@ -361,16 +365,26 @@ public class DispacherRoundRobin implements Runnable {
 		} // Fim <while>
 	}
 
-	private void liberaMemoria(int idProcesso) {
-		for(int i=0; i<memoriaList.size(); i++) {
+//	private void liberaMemoria(int idProcesso) {
+		/*for(int i=0; i<memoriaList.size(); i++) {
 			if (memoriaList.get(i).getIdProcesso() == idProcesso) {
 				memoriaList.get(i).setEspacoUsado(0);
 				memoriaList.get(i).setIdProcesso(0);
 				break;
 			}
-		}		
+		}*/		
+/*		BlocoMemoria b;
+		ListIterator<BlocoMemoria> liter = memoriaList.listIterator();
+		while(liter.hasNext()){
+			b = liter.next();
+			if (b.getIdProcesso() == idProcesso) {
+				b.setEspacoUsado(0);
+				b.setIdProcesso(0);
+				break;
+			}
+		}
 	}
-
+*/
 	/**
 	 * @param bMemoriaAlocada
 	 * @return

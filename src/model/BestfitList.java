@@ -1,5 +1,7 @@
 package model;
 
+import java.util.ListIterator;
+
 //import javax.swing.JOptionPane;
 
 public class BestfitList extends MemoriaList {
@@ -45,4 +47,18 @@ public class BestfitList extends MemoriaList {
 		getAll().get(i).setEspacoUsado(tamanhoBloco);	
 		getAll().get(i).setIdProcesso(idProcesso);		
 	}
+
+	public void liberaMemoria(int idProcesso) {
+		BlocoMemoria b;
+		ListIterator<BlocoMemoria> liter = getAll().listIterator();
+		while(liter.hasNext()){
+			b = liter.next();
+			if (b.getIdProcesso() == idProcesso) {
+				b.setEspacoUsado(0);
+				b.setIdProcesso(0);
+				break;
+			}
+		}
+	}
+	
 }

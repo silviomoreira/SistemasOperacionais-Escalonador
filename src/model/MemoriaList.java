@@ -63,4 +63,7 @@ public class MemoriaList {
 	public boolean alocouMemoria(int tamanhoBloco, int tamanhoMemoriaRestante, int idProcesso) {
 		return true;
 	}
+	
+	public void liberaMemoria(int idProcesso) {		
+	}
 }

@@ -8,6 +8,7 @@ import controller.Controller;
 import controller.DispacherLTG;
 import controller.DispacherRoundRobin;
 import gui.bottomLayout.BottomPanel;
+import gui.bottomLayout.BottomPanelEvent;//
 import gui.centerLayout.CenterPanel;
 import gui.centerLayout.CenterPanelEvent;
 import gui.leftLayout.LeftPanel;
@@ -76,7 +77,8 @@ public class MainFrame extends JFrame {
 								controller.getConcluidosEAbortadosList(), 
 								centerPanel, e.getQdeProcessadores(), e.getNumProcessosIniciais(), 
 								e.getQuantum(), bottomPanel, e.getTamanhoMem(), controller.getBestfitList(),
-								controller.getBestfitObj(), rightPanel);//controller.getMemoriaList());
+								controller.getBestfitObj(), rightPanel/*, controller.getRequisicaoMemoriaList(),
+								controller.getRequisicaoMemoriaObj()*/);//controller.getMemoriaList());
 					else if (e.getEstrategiaMem() == "Quick fit") {
 						rightPanel.refreshRequisicoesMemoria();						
 						dispacherRR = new DispacherRoundRobin(
@@ -84,7 +86,8 @@ public class MainFrame extends JFrame {
 								controller.getConcluidosEAbortadosList(), 
 								centerPanel, e.getQdeProcessadores(), e.getNumProcessosIniciais(), 
 								e.getQuantum(), bottomPanel, e.getTamanhoMem(), controller.getQuickfitList(),
-								controller.getQuickfitObj(), rightPanel);
+								controller.getQuickfitObj(), rightPanel/*, controller.getRequisicaoMemoriaList(),
+								controller.getRequisicaoMemoriaObj()*/);
 					}
 					/*else if (e.getEstrategiaMem() == "Merge fit")
 						dispacherRR = new DispacherRoundRobin(
