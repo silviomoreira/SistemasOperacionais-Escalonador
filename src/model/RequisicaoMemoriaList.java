@@ -52,11 +52,11 @@ public class RequisicaoMemoriaList {
 	}
 	public int buscaPorTamanhoBlocoERetPos(int t){
 		ListIterator<RequisicaoMemoria> liter = blocos.listIterator();
-		int c = 0;
+		int i = 0;
 		while(liter.hasNext()){
 			if (liter.next().getTamanhoBloco() == t)
-				return c;	
-			c++;
+				return i;	
+			i++;
 		}
 		return -1;
 	}

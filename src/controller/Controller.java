@@ -27,8 +27,8 @@ public class Controller {
 	private ProcessoList concluidosEAbortadosList = new ProcessoList();
 	private MemoriaList memoriaList = new MemoriaList();
 	private BestfitList bestfitList = new BestfitList();
-	private QuickfitList quickfitList = new QuickfitList();
 	private RequisicaoMemoriaList requisicaoMemoriaList = new RequisicaoMemoriaList();
+	private QuickfitList quickfitList = new QuickfitList(requisicaoMemoriaList);
 	
 	private int numProcessadores = 0;
 	private int numProcessosIniciais = 0;
