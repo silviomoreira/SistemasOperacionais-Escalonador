@@ -12,10 +12,10 @@ public class QuickfitList extends MemoriaList {
 	private boolean bAtingiuChao = false;
 	private RequisicaoMemoriaList requisicoesMemoria;
 	private LinkedList<BlocoMemoria> listaBlocosLivres;
-	private LinkedList<BlocoMemoria> listaBlocos1;
+	/*private LinkedList<BlocoMemoria> listaBlocos1;
 	private LinkedList<BlocoMemoria> listaBlocos2;
 	private LinkedList<BlocoMemoria> listaBlocos3;
-	private LinkedList<BlocoMemoria> listaBlocos4;
+	private LinkedList<BlocoMemoria> listaBlocos4;*/
 	private MemoriaList[] listaBlocos;
 	 
 	public QuickfitList(RequisicaoMemoriaList requisicoesMemoria) {
@@ -49,6 +49,7 @@ public class QuickfitList extends MemoriaList {
 				if (tamanhoBloco == getAll().get(i).getTamanho()) { // aloca bloco livre de mesmo tamanho
 					aloqueMemoria(tamanhoBloco, idProcesso, i);
 					guardaRequisicoes(tamanhoBloco);
+					removeDasListasBlocosLivres(getAll().get(i).getIdBloco(), tamanhoBloco); 
 					return true;
 				}
 				else if (iPosBlocoMaior == -1) // guarda posição de bloco maior, acaso não encontre um igual ou 
@@ -63,9 +64,46 @@ public class QuickfitList extends MemoriaList {
 		if (iPosBlocoMaior != -1) { // aloca bloco livre maior
 			aloqueMemoria(tamanhoBloco, idProcesso, iPosBlocoMaior);
 			guardaRequisicoes(tamanhoBloco);
+			removeDasListasBlocosLivres(getAll().get(iPosBlocoMaior).getIdBloco(), 
+					getAll().get(iPosBlocoMaior).getTamanho()); 
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * @param i
+	 * Objetivo: Exclui blocos livres das lista geral de blocos livres e das listas 0,1,2,3. Algoritmo: Varre a 
+	 * lista de requisições, pelo campo numerolista, atrás do bloco do tamanho passado por parâmetro. Se encontrar(.1),
+	 * exclui da lista indicada. Se não encontrar(.2), exclui da listaBlocosLivres. 
+	 */
+	private void removeDasListasBlocosLivres(int idBloco, int tamanhoBloco) {
+		// ordena
+//		Collections.sort(requisicoesMemoria.getAll()); // ver se é necessário, mas pode deixar lento
+		// .1
+		ListIterator<RequisicaoMemoria> liter = requisicoesMemoria.getAll().listIterator();
+		int i = 0;
+		while(i < 4 && liter.hasNext()) {
+			RequisicaoMemoria r = liter.next();
+			if (r.getTamanhoBloco() == tamanhoBloco) {
+				ListIterator<BlocoMemoria> lite = listaBlocos[r.getNumeroLista()].getAll().listIterator();
+				while(lite.hasNext()) {
+					if (lite.next().getIdBloco() == idBloco) {
+						lite.remove(); // PENDENCIA: TESTAR
+						return;
+					}
+				}
+			}									
+			i++;
+		} // Fim <while>
+		// .2
+		ListIterator<BlocoMemoria> liter2 = listaBlocosLivres.listIterator();
+		while(liter2.hasNext()) {
+			if (liter2.next().getIdBloco() == idBloco) { 
+				liter2.remove(); // PENDENCIA: TESTAR
+				return;
+			}									
+		} // Fim <while>
 	}
 	
 	private void aloqueMemoria(int tamanhoBloco, int idProcesso) {
@@ -117,46 +155,79 @@ public class QuickfitList extends MemoriaList {
 			// ordena
 			Collections.sort(requisicoesMemoria.getAll());
 			ListIterator<RequisicaoMemoria> liter = requisicoesMemoria.getAll().listIterator();
-			// montagem das listas (loop de 4)
+			// montagem das listas (loop de 4) | a var. abaixo guarda os números das listas q vão permanecer inalteradas
+			String sListasQuePermanecem = ""; 
 			int i = 0;
-			while(++i <= 4 && liter.hasNext()){
+			while(i < 4 && liter.hasNext()){
 				RequisicaoMemoria r = liter.next();
 				// Verificar se as 4 primeiras listas de blocos são de blocos do mesmo tamanho que os 4 1os. da
-				// lista de requisições, daí seto o número da lista 
+				// lista de requisições, daí guardo em uma string os que forem encontrados
 				for (int c=0; c < listaBlocos.length; c++) {
 					if (listaBlocos[c].size() > 0 && r.getTamanhoBloco() == listaBlocos[c].get(0).getTamanho())
-						r.setNumeroLista(c+1);					
+						sListasQuePermanecem += String.valueOf(c)+",";					
 				}
-				/*if (r.getTamanhoBloco() == listaBlocos1.element().getTamanho())
-					r.setNumeroLista(1);
-				if (r.getTamanhoBloco() == listaBlocos2.element().getTamanho())
-					r.setNumeroLista(2);
-				if (r.getTamanhoBloco() == listaBlocos3.element().getTamanho())
-					r.setNumeroLista(3);
-				if (r.getTamanhoBloco() == listaBlocos4.element().getTamanho())
-					r.setNumeroLista(4);*/
+				i++;
 			} // Fim <while>
-			/*i = 0;
-			while(++i <= 4 && liter.hasNext()){
+			// Se todas as listas permanecem com os mesmos tamanhos de bloco, isto é, não houve mudança nas requisições 
+			// prioritárias, então aborta
+			if (sListasQuePermanecem.length() == 8) {
+				return;
+			}
+			// Verifica se lista N vai mudar p/ uma lista de outro bloco, verificando se cada bloco na lista de 
+			// requisições, não está encaixado em nenhuma lista
+			i = 0;
+			while(i < 4 && liter.hasNext()){
 				RequisicaoMemoria r = liter.next(); 
-				// Verifica se lista N vai mudar p/ uma lista de outro bloco
-				if (r.getTamanhoBloco() != listaBlocos0.element().getTamanho() &&
-					r.getTamanhoBloco() != listaBlocos1.element().getTamanho() &&
-					r.getTamanhoBloco() != listaBlocos2.element().getTamanho() &&
-					r.getTamanhoBloco() != listaBlocos3.element().getTamanho()) {
-					if (verificaSeHaMemoriaDisponivelParaCriarEsteBloco(r.getTamanhoBloco())) {
-						// Vê em qual lista vai guardar
-						
-						// Seta o número da lista em q a requisição está guardada
-						
+				// Verifica se lista N vai mudar p/ o bloco atual na lista de requisições
+				if (r.getTamanhoBloco() != listaBlocos[0].get(0).getTamanho() &&
+					r.getTamanhoBloco() != listaBlocos[1].get(0).getTamanho() &&
+					r.getTamanhoBloco() != listaBlocos[2].get(0).getTamanho() &&
+					r.getTamanhoBloco() != listaBlocos[3].get(0).getTamanho()) {
+					if (verificaSeHaMemoriaDisponivelParaCriarEsteBloco(r.getTamanhoBloco())) { // ...
+						int iNumeroListaQVaiMudar = veEmQualListaVaiGuardar(sListasQuePermanecem, i);
+						if (iNumeroListaQVaiMudar != -1)
+						{
+							// Seta o número da lista em q a requisição será guardada
+							r.setNumeroLista(iNumeroListaQVaiMudar); // VER A QUESTÃO DO -1 NAS LISTAS							
+							// realoca --> VER se não vai ficar FORA do IFZÃO
+							// ...
+						}
 					} else {
 						// Sai em busca do proximo bloco da lista de requisições que mais teve requisições a partir do 5o registro
-						int iTamanhoBloco = retornaTamanhoProxBlocoQTeveMaisRequisicoesPartindoDo5oRegistro();
+						int iTamanhoBloco = retornaTamanhoProxBlocoQTeveMaisRequisicoesPartindoDo5oRegistro(); // ...
+						if (verificaSeHaMemoriaDisponivelParaCriarEsteBloco(r.getTamanhoBloco())) { // ...
+							// Vê em qual lista vai guardar
+							
+							// Seta o número da lista em q a requisição será guardada
+							
+						}						
 					}					
 				} // Fim <if>
+				i++;
 			} // Fim <while>
-			*/
+			
 		} // Fim <if (bAtingiuChao)>		
+	}
+
+	/**
+	 * @param sListasQuePermanecem
+	 * @param i
+	 * @return
+	 */
+	private int veEmQualListaVaiGuardar(String sListasQuePermanecem, int i) {
+		// Entra em loop em busca de uma lista que não está mais entre as 4 primeiras e retorna o número dela
+		int j = i;
+		int c = 0;
+		int iNumeroListaQVaiMudar = -1;						
+		while (c++ < 4 && iNumeroListaQVaiMudar == -1){
+			if (!sListasQuePermanecem.contains( String.valueOf(j) ))
+				iNumeroListaQVaiMudar = j;
+			j++;
+			// no caso em q o loop parte de valor intermediário, garante q os 1os valores serão checados 
+			if (j == 4)
+				j = 0;
+		}
+		return iNumeroListaQVaiMudar;
 	}
 
 	private int retornaTamanhoProxBlocoQTeveMaisRequisicoesPartindoDo5oRegistro() {
@@ -170,4 +241,12 @@ public class QuickfitList extends MemoriaList {
 		return false;
 	}
 
+	/*if (r.getTamanhoBloco() == listaBlocos1.element().getTamanho())
+	r.setNumeroLista(1);
+	if (r.getTamanhoBloco() == listaBlocos2.element().getTamanho())
+		r.setNumeroLista(2);
+	if (r.getTamanhoBloco() == listaBlocos3.element().getTamanho())
+		r.setNumeroLista(3);
+	if (r.getTamanhoBloco() == listaBlocos4.element().getTamanho())
+		r.setNumeroLista(4);*/
 } 

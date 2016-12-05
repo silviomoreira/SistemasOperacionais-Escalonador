@@ -8,10 +8,12 @@ public class RequisicaoMemoria implements Comparable<RequisicaoMemoria> {
 		
 	public RequisicaoMemoria() {
 		this.incidencia = 1;
+		this.numeroLista = -1;
 	}
 	public RequisicaoMemoria(int t) {
 		this.tamanhoBloco = t;
 		this.incidencia = 1;
+		this.numeroLista = -1;		
 	}
 
 	public int getTamanhoBloco() {
