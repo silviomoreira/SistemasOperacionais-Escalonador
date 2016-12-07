@@ -27,10 +27,10 @@ public class Controller {
 	private ProcessoList processadoresList = new ProcessoList();/////private ProcessadoresList processadoresList = new ProcessadoresList();
 	private ProcessoList concluidosEAbortadosList = new ProcessoList();
 	private MemoriaList memoriaList = new MemoriaList();
-	private MemoriaHDList memoriaHDList = new MemoriaHDList();
 	private BestfitList bestfitList = new BestfitList();
 	private RequisicaoMemoriaList requisicaoMemoriaList = new RequisicaoMemoriaList();
 	private QuickfitList quickfitList = new QuickfitList(requisicaoMemoriaList);
+	private MemoriaHDList memoriaHDList = new MemoriaHDList(bestfitList);
 	
 	private int numProcessadores = 0;
 	private int numProcessosIniciais = 0;

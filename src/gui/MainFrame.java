@@ -82,7 +82,7 @@ public class MainFrame extends JFrame {
 								controller.getConcluidosEAbortadosList(), 
 								centerPanel, e.getQdeProcessadores(), e.getNumProcessosIniciais(), 
 								e.getQuantum(), bottomPanel, e.getTamanhoMem(), controller.getBestfitList(),
-								controller.getBestfitObj(), rightPanel/*, controller.getRequisicaoMemoriaList(),
+								controller.getBestfitObj(), rightPanel, controller.getMemoriaHDObj()/*, controller.getRequisicaoMemoriaList(),
 								controller.getRequisicaoMemoriaObj()*/);//controller.getMemoriaList());
 					else if (e.getEstrategiaMem() == "Quick fit") {
 						rightPanel.refreshRequisicoesMemoria();						
@@ -91,7 +91,7 @@ public class MainFrame extends JFrame {
 								controller.getConcluidosEAbortadosList(), 
 								centerPanel, e.getQdeProcessadores(), e.getNumProcessosIniciais(), 
 								e.getQuantum(), bottomPanel, e.getTamanhoMem(), controller.getQuickfitList(),
-								controller.getQuickfitObj(), rightPanel/*, controller.getRequisicaoMemoriaList(),
+								controller.getQuickfitObj(), rightPanel, controller.getMemoriaHDObj()/*, controller.getRequisicaoMemoriaList(),
 								controller.getRequisicaoMemoriaObj()*/);
 					}
 					/*else if (e.getEstrategiaMem() == "Merge fit")

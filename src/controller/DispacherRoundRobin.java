@@ -11,6 +11,7 @@ import java.util.ListIterator;
 import javax.swing.JOptionPane;
 
 import model.BlocoMemoria;
+import model.MemoriaHDList;
 import model.MemoriaList;
 import model.Processo;
 import model.RequisicaoMemoria;
@@ -75,6 +76,7 @@ public class DispacherRoundRobin implements Runnable {
 	private List<Processo> concluidosEAbortadosList;
 	private List<BlocoMemoria> memoriaList;
 	private MemoriaList memoriaObj;
+	private MemoriaHDList memoriaHDObj;
 //	private List<RequisicaoMemoria> requisicaoMemoriaList;//
 //	private RequisicaoMemoriaList requisicaoMemoriaObj;//
 	/*private List<Processo> filaprio0List;
@@ -109,7 +111,7 @@ public class DispacherRoundRobin implements Runnable {
 			List<Processo> concluidosEAbortadosList,
 			CenterPanel centerPanel, int numProcessadores, int numProcessosIniciais, int quantum0,
 			BottomPanel bottomPanel, int tamanhoMem, List<BlocoMemoria> memoriaList, MemoriaList memoriaObj,
-			RightPanel rightPanel/*, List<RequisicaoMemoria> requisicaoMemoriaList, 
+			RightPanel rightPanel, MemoriaHDList memoriaHDObj/*, List<RequisicaoMemoria> requisicaoMemoriaList, 
 			RequisicaoMemoriaList requisicaoMemoriaObj*/) {
 		this.processoList = processoList;
 		this.processadoresList = processadoresList;
@@ -124,6 +126,7 @@ public class DispacherRoundRobin implements Runnable {
 		this.memoriaList = memoriaList;
 		this.memoriaObj = memoriaObj;
 		this.rightPanel = rightPanel;
+		this.memoriaHDObj = memoriaHDObj;
 		//this.requisicaoMemoriaList = requisicaoMemoriaList;//
 		//this.requisicaoMemoriaObj = requisicaoMemoriaObj;//
 		this.bAtivaLog = processoList.get(0).isAtivalog();
@@ -261,7 +264,9 @@ public class DispacherRoundRobin implements Runnable {
 		while (!pare) {
 			aguardaEmMilisegundos(1000);
 			// - Swap
-			
+			memoriaHDObj.swapHDMemoria(processoList, memoriaObj.getRemainingMemorySize());
+			memoriaHDObj.swapMemoriaHD(processoList, memoriaObj.getRemainingMemorySize());
+			atualizaTela();
 			// - Decrementa quantum
 			for(int i=0; i<processadoresList.size(); i++) {
 				if (processadoresList.get(i).getEstadoProcesso() == "E"){
