@@ -56,4 +56,8 @@ public class BlocoMemoria {
 	public void setIdProcesso(int idProcesso) {
 		this.idProcesso = idProcesso;
 	}
+	
+	public void resetId() {
+		BlocoMemoria.id = 0;
+	}
 }

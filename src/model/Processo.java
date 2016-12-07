@@ -32,7 +32,7 @@ public class Processo implements Comparable<Processo>, Runnable {
 		
 		this.identificadorProcesso = ++Processo.id;
 		this.tempoTotalExecucao = tempoTotalExecucao;
-		this.estadoProcesso = estadoProcesso; // P = Pronto | E = Executando | B = Bloqueado | A = Abortado(para o alg. LTG) | OK = Concluído
+		this.estadoProcesso = estadoProcesso; // P = Pronto | E = Executando | B = Bloqueado | A = Abortado | OK = Concluído
 		this.tempoExecucaoRestante = tempoExecucaoRestante;
 		this.prioridade = prioridade;
 		this.deadline = deadline;

@@ -6,21 +6,24 @@ import java.util.ListIterator;
 public class RequisicaoMemoriaList {
 
 	protected LinkedList<RequisicaoMemoria> blocos;
-
+    private int iPosicaoNaLista;
+    
 	public RequisicaoMemoriaList() {
 		blocos = new LinkedList<>();
 	}
 
-	public void add(RequisicaoMemoria r) {//, int x) {
+	public void add(int iTamanhoBloco) {//RequisicaoMemoria r) {//, int x) {
 		synchronized (this) {
-			int i = buscaPorTamanhoBlocoERetPos(r.getTamanhoBloco());
-			if (i == -1)
+			RequisicaoMemoria r = buscaPorTamanhoBloco(iTamanhoBloco);
+			if (r == null) {
+				r = new RequisicaoMemoria(iTamanhoBloco);
 				blocos.add(r); //blocos.put(x, r);
+			}
 			else
 			{
 				// atualiza incrementando a incidencia
 				r.setIncidencia(1);
-				blocos.set(i, r);
+				blocos.set(iPosicaoNaLista, r);
 			}
 		}		
 	}
@@ -43,10 +46,12 @@ public class RequisicaoMemoriaList {
 	
 	public RequisicaoMemoria buscaPorTamanhoBloco(int t){
 		ListIterator<RequisicaoMemoria> liter = blocos.listIterator();
+		iPosicaoNaLista = 0;
 		while(liter.hasNext()){
 			RequisicaoMemoria r = liter.next();
 			if (r.getTamanhoBloco() == t)
 				return r;			
+			iPosicaoNaLista++;
 		}
 		return null;
 	}

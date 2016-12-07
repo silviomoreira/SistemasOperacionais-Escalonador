@@ -52,6 +52,7 @@ public class Controller {
 		memoriaList.reset();
 		bestfitList.reset();
 		quickfitList.reset();
+		quickfitList.resetComplementar();
 		requisicaoMemoriaList.reset();
 	}
 	
