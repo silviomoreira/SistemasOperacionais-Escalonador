@@ -7,24 +7,19 @@ import java.util.ListIterator;
 
 public class QuickfitList extends MemoriaList {
 
-	private int requisicoes_Chao = 1; // valor min. p/ a partir daí construir a lista de requisições de memória
+	private final int requisicoes_Chao = 4; // valor min. p/ a partir daí construir a lista de requisições de memória
 	private int contadorRequisicoes = 0;
 	private boolean bAtingiuChao = false;
 	private RequisicaoMemoriaList requisicoesMemoria;
 	private LinkedList<BlocoMemoria> listaBlocosLivres;
-	/*private LinkedList<BlocoMemoria> listaBlocos1;
-	private LinkedList<BlocoMemoria> listaBlocos2;
-	private LinkedList<BlocoMemoria> listaBlocos3;
-	private LinkedList<BlocoMemoria> listaBlocos4;*/
 	private MemoriaList[] listaBlocos;
 	 
 	public QuickfitList(RequisicaoMemoriaList requisicoesMemoria) {
 		super();
-		if (requisicoes_Chao == 0)
+		if (requisicoes_Chao <= 4)
 			try {
 				throw new Exception("Valor mín. de requisições inválido !");
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		this.requisicoesMemoria = requisicoesMemoria; 
@@ -34,12 +29,21 @@ public class QuickfitList extends MemoriaList {
 		listaBlocos[1] = new MemoriaList();
 		listaBlocos[2] = new MemoriaList();
 		listaBlocos[3] = new MemoriaList();
-		/*listaBlocos1 = new LinkedList<BlocoMemoria>();
-		listaBlocos2 = new LinkedList<BlocoMemoria>();
-		listaBlocos3 = new LinkedList<BlocoMemoria>();
-		listaBlocos4 = new LinkedList<BlocoMemoria>();*/
 	}
 
+	public void resetComplementar() {
+		BlocoMemoria bm = new BlocoMemoria(0, 0, 0, null);
+		bm.resetId();
+		int contadorRequisicoes = 0;
+		boolean bAtingiuChao = false;
+		listaBlocosLivres = new LinkedList<BlocoMemoria>();
+		listaBlocos = new MemoriaList[4];
+		listaBlocos[0] = new MemoriaList();
+		listaBlocos[1] = new MemoriaList();
+		listaBlocos[2] = new MemoriaList();
+		listaBlocos[3] = new MemoriaList();	
+	}
+	
 	@Override
 	public boolean alocouMemoria(int tamanhoBloco, int tamanhoMemoriaRestante, int idProcesso) {
 		int iPosBlocoMaior = -1;
@@ -128,7 +132,7 @@ public class QuickfitList extends MemoriaList {
 				return;
 		}
 		RequisicaoMemoria rm = new RequisicaoMemoria(tamanhoBloco);
-		requisicoesMemoria.add(rm);
+		requisicoesMemoria.add(tamanhoBloco);
 		if (requisicoesMemoria.size() > 100)
 			requisicoesMemoria.remove(0);
 	}
