@@ -8,6 +8,7 @@ public class BlocoMemoria {
 	private int espacoUsado; // bytes
 	private BlocoMemoria referenciaProxBloco;
 	private int idProcesso;
+	private int idLogicoBloco; // utilizado p/ o swap
  
 	public BlocoMemoria(int tamanho, int espacoUsado, int idProcesso, BlocoMemoria referenciaProxBloco) {
 		this.idBloco = ++BlocoMemoria.id;
@@ -57,6 +58,14 @@ public class BlocoMemoria {
 		this.idProcesso = idProcesso;
 	}
 	
+	public int getIdLogicoBloco() {
+		return idLogicoBloco;
+	}
+
+	public void setIdLogicoBloco(int idLogicoBloco) {
+		this.idLogicoBloco = idLogicoBloco;
+	}
+
 	public void resetId() {
 		BlocoMemoria.id = 0;
 	}
