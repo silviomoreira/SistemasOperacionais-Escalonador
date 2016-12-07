@@ -260,6 +260,8 @@ public class DispacherRoundRobin implements Runnable {
 		// Controle de mudança de processos
 		while (!pare) {
 			aguardaEmMilisegundos(1000);
+			// - Swap
+			
 			// - Decrementa quantum
 			for(int i=0; i<processadoresList.size(); i++) {
 				if (processadoresList.get(i).getEstadoProcesso() == "E"){
@@ -462,6 +464,7 @@ public class DispacherRoundRobin implements Runnable {
 			centerPanel.refreshProcessadores();
 			centerPanel.refreshConcluidosEAbortados();
 			bottomPanel.refreshMemoria();
+			bottomPanel.refreshMemoriaHD();
 			rightPanel.refreshRequisicoesMemoria();
 		}
 	}

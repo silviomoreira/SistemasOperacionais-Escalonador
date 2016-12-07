@@ -16,7 +16,7 @@ public class QuickfitList extends MemoriaList {
 	 
 	public QuickfitList(RequisicaoMemoriaList requisicoesMemoria) {
 		super();
-		if (requisicoes_Chao <= 4)
+		if (requisicoes_Chao < 4)
 			try {
 				throw new Exception("Valor mín. de requisições inválido !");
 			} catch (Exception e) {

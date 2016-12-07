@@ -13,6 +13,9 @@ public class BottomPanel extends JPanel {
 	private JTable tableMemoria;
 	private MemoriaTableModel tableModelMemoria;
 	private MemoriaPanel memoriaPanel;
+	private JTable tableMemoriaHD;
+	private MemoriaHDTableModel tableModelMemoriaHD;
+	private MemoriaHDPanel memoriaHDPanel;
 
 	public BottomPanel() {
 		super();
@@ -20,10 +23,14 @@ public class BottomPanel extends JPanel {
 		tableModelMemoria = new MemoriaTableModel();
 		tableMemoria = new JTable(tableModelMemoria);
 		memoriaPanel = new MemoriaPanel(tableMemoria);
+		tableModelMemoriaHD = new MemoriaHDTableModel();
+		tableMemoriaHD = new JTable(tableModelMemoriaHD);
+		memoriaHDPanel = new MemoriaHDPanel(tableMemoriaHD);
 		
 		setLayout(new BorderLayout());
 		
 		add(memoriaPanel, BorderLayout.CENTER);	
+		add(memoriaHDPanel, BorderLayout.SOUTH);	
 	}
 
 	public void setDataListMemoria(List<BlocoMemoria> blocosMemoria) {
@@ -32,5 +39,13 @@ public class BottomPanel extends JPanel {
 	
 	public void refreshMemoria() {
 		tableModelMemoria.fireTableDataChanged();
+	}
+
+	public void setDataListMemoriaHD(List<BlocoMemoria> blocosMemoria) {
+		tableModelMemoriaHD.setData(blocosMemoria);
+	}
+	
+	public void refreshMemoriaHD() {
+		tableModelMemoriaHD.fireTableDataChanged();
 	}
 }

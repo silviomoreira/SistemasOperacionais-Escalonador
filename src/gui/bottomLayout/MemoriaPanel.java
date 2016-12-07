@@ -19,7 +19,7 @@ public class MemoriaPanel extends JPanel{
 	public MemoriaPanel(JTable table) {
 		super();
 		Dimension dim = getPreferredSize();
-		dim.height = 140;
+		dim.height = 70; // 140;(antes de criar a grid de memória HD)
 		setPreferredSize(dim);
 
 		this.table = table;

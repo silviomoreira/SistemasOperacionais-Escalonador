@@ -43,7 +43,8 @@ public class MainFrame extends JFrame {
 		centerPanel.setDataListProcessos(controller.getProcessos());
 		centerPanel.setDataListProcessadores(controller.getProcessadoresList(), 0);
 		centerPanel.setDataListConcluidosEAbortados(controller.getConcluidosEAbortadosList());
-		bottomPanel.setDataListMemoria(controller.getMemoriaList());//controller.getBestfitList()); //controller.getMemoriaList());
+		bottomPanel.setDataListMemoria(controller.getMemoriaList());//controller.getBestfitList());
+		bottomPanel.setDataListMemoriaHD(controller.getMemoriaHDList()); 
 		rightPanel.setDataListRequisicoesMemoria(controller.getRequisicaoMemoriaList());
 		setLayout(new BorderLayout());
 
@@ -54,10 +55,13 @@ public class MainFrame extends JFrame {
 				centerPanel.setDataListProcessos(controller.getProcessos());
 				centerPanel.setDataListProcessadores(controller.getProcessadoresList(), e.getQdeProcessadores());
 				centerPanel.setDataListConcluidosEAbortados(controller.getConcluidosEAbortadosList());	
-				if (e.getEstrategiaMem() == "Best fit")
+				if (e.getEstrategiaMem() == "Best fit") {
 					bottomPanel.setDataListMemoria(controller.getBestfitList());//controller.getMemoriaList());
+					bottomPanel.setDataListMemoriaHD(controller.getMemoriaHDList()); 			
+				}
 				else if (e.getEstrategiaMem() == "Quick fit"){
 					bottomPanel.setDataListMemoria(controller.getQuickfitList());
+					bottomPanel.setDataListMemoriaHD(controller.getMemoriaHDList()); 
 					rightPanel.setDataListRequisicoesMemoria(controller.getRequisicaoMemoriaList());					
 				}
 				/*else if (e.getEstrategiaMem() == "Merge fit")
@@ -69,6 +73,7 @@ public class MainFrame extends JFrame {
 				centerPanel.refreshProcessadores();
 				centerPanel.refreshConcluidosEAbortados();
 				bottomPanel.refreshMemoria();
+				bottomPanel.refreshMemoriaHD();
 				if (e.getEstrategia() == "Round Robin") {
 					DispacherRoundRobin dispacherRR = null;
 					if (e.getEstrategiaMem() == "Best fit") 

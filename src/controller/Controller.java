@@ -11,6 +11,7 @@ import gui.leftLayout.LeftPanelEvent;
 import gui.topLayout.TopPanelEvent;
 import model.BestfitList;
 import model.BlocoMemoria;
+import model.MemoriaHDList;
 import model.MemoriaList;
 import model.ProcessoList;
 import model.Processo;
@@ -26,6 +27,7 @@ public class Controller {
 	private ProcessoList processadoresList = new ProcessoList();/////private ProcessadoresList processadoresList = new ProcessadoresList();
 	private ProcessoList concluidosEAbortadosList = new ProcessoList();
 	private MemoriaList memoriaList = new MemoriaList();
+	private MemoriaHDList memoriaHDList = new MemoriaHDList();
 	private BestfitList bestfitList = new BestfitList();
 	private RequisicaoMemoriaList requisicaoMemoriaList = new RequisicaoMemoriaList();
 	private QuickfitList quickfitList = new QuickfitList(requisicaoMemoriaList);
@@ -50,6 +52,7 @@ public class Controller {
 		processadoresList.reset();
 		concluidosEAbortadosList.reset();
 		memoriaList.reset();
+		memoriaHDList.reset();
 		bestfitList.reset();
 		quickfitList.reset();
 		quickfitList.resetComplementar();
@@ -100,6 +103,14 @@ public class Controller {
 		return requisicaoMemoriaList.getAll();
 	}
 
+	public MemoriaHDList getMemoriaHDObj() {
+		return memoriaHDList;
+	}
+	
+	public List<BlocoMemoria> getMemoriaHDList() {
+		return memoriaHDList.getAll();
+	}
+	
 	public void iniciarSimulacao(TopPanelEvent e) {
 		estrategia = e.getEstrategia();
 		System.out.println("Estrategia: " + estrategia);
@@ -110,6 +121,7 @@ public class Controller {
 		numProcessadores = e.getQdeProcessadores();
 		numProcessosIniciais = e.getNumProcessosIniciais();
 		tamanhoMemoria = e.getTamanhoMem();
+		memoriaHDList.calculaThreshold(tamanhoMemoria);
 		if (estrategia == "Round Robin")
 			iniciarAlgoritmoRoundRobin(e);			
 		else if (estrategia == "Least Time to Go (LTG)")
