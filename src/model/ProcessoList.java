@@ -31,6 +31,8 @@ public class ProcessoList {
 	
 	public void reset() {
 		processos = new ArrayList<>();
+		Processo p = new Processo(0, "0", "CORE_LIVRE", "0", 0, "0", "");
+		p.resetId();
 	}
 	
 	public Processo get(int index) {

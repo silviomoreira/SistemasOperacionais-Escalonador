@@ -35,6 +35,8 @@ public class MemoriaList {
 	
 	public void reset() {
 		blocosMemoria = new LinkedList<>();		
+		BlocoMemoria bm = new BlocoMemoria(0, 0, 0, null);
+		bm.resetId();
 	}
 	
 	public BlocoMemoria get(int index) {

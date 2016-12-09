@@ -235,4 +235,8 @@ public class Processo implements Comparable<Processo>, Runnable {
 			setEstadoProcesso("B");
 		}*/	   	
     }
+    
+    public void resetId() {
+    	Processo.id = 0;
+    }    
 }

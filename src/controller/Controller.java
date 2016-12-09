@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import gui.bottomLayout.BottomPanel;
 import gui.centerLayout.CenterPanel;
 import gui.leftLayout.LeftPanel;
 import gui.leftLayout.LeftPanelEvent;
@@ -23,6 +24,7 @@ public class Controller {
 	
 	private LeftPanel leftPanel;
 	private CenterPanel centerPanel;//exc depois
+	private BottomPanel bottomPanel; 
 	private ProcessoList processoList = new ProcessoList();
 	private ProcessoList processadoresList = new ProcessoList();/////private ProcessadoresList processadoresList = new ProcessadoresList();
 	private ProcessoList concluidosEAbortadosList = new ProcessoList();
@@ -30,7 +32,7 @@ public class Controller {
 	private BestfitList bestfitList = new BestfitList();
 	private RequisicaoMemoriaList requisicaoMemoriaList = new RequisicaoMemoriaList();
 	private QuickfitList quickfitList = new QuickfitList(requisicaoMemoriaList);
-	private MemoriaHDList memoriaHDList = new MemoriaHDList(memoriaList);
+	private MemoriaHDList memoriaHDList = new MemoriaHDList();
 	
 	private int numProcessadores = 0;
 	private int numProcessosIniciais = 0;
@@ -38,9 +40,11 @@ public class Controller {
 	private String estrategiaMem;
 	private int tamanhoMemoria = 0;
 
-	public Controller(LeftPanel leftPanel, CenterPanel centerPanel){
+	public Controller(LeftPanel leftPanel, CenterPanel centerPanel, BottomPanel bottomPanel){
 		this.leftPanel = leftPanel;
-		this.centerPanel = centerPanel;		
+		this.centerPanel = centerPanel;
+		this.bottomPanel = bottomPanel;
+		memoriaHDList.setBottomPanel(bottomPanel);
 	}
 	
 	public List<Processo> getProcessos() {
@@ -215,12 +219,21 @@ public class Controller {
 	private void iniciarAlgoritmoRoundRobin(TopPanelEvent e) {
 		for(int i=0; i<numProcessosIniciais; i++) {
 			// Passa novos parâmetros se for escolhido rodar a demonstração do funcionamento da memória
-			int iTempoTotalExecucao = retornaRandom(tamanhoMemoria > 0 ? 10 : 4, tamanhoMemoria > 0 ? 30 : 20);//PENDENCIA: DESCOMENTAR
-//			int iTempoTotalExecucao = retornaRandom(tamanhoMemoria > 0 ? 10 : 4, tamanhoMemoria > 0 ? 100 : 20);
+			// PENDENCIA: DESCOMENTAR
+///			int iTempoTotalExecucao = retornaRandom(tamanhoMemoria > 0 ? 10 : 4, tamanhoMemoria > 0 ? 30 : 20);
+			int iTempoTotalExecucao = 100;//retornaRandom(tamanhoMemoria > 0 ? 10 : 4, tamanhoMemoria > 0 ? 100 : 20);
 			String tempoTotalExecucao = String.valueOf(iTempoTotalExecucao);
 			int iPrioridade = retornaRandom(0, 3);
 			String deadline = "0";
 			int iQtdBytes = retornaRandom(32, 1024);//iQtdBytes = 200;
+			// inicio PENDENCIA: APAGAR
+			switch (i) {
+				case 0: iQtdBytes = 320; break;
+				case 1: iQtdBytes = 250; break;
+				case 2: iQtdBytes = 200; break;
+				case 3: iQtdBytes = 320; break;
+				case 4: iQtdBytes = 250; break;
+			} // fim PENDENCIA: APAGAR
 			Processo p = new Processo(tempoTotalExecucao, "P", tempoTotalExecucao, iPrioridade, deadline, "", iQtdBytes);
 			processoList.add(p);
 		}

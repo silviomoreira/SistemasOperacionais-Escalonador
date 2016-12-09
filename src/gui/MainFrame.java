@@ -38,7 +38,7 @@ public class MainFrame extends JFrame {
 		bottomPanel = new BottomPanel();
 		rightPanel = new RightPanel();
 		
-		controller = new Controller(leftPanel, centerPanel);
+		controller = new Controller(leftPanel, centerPanel, bottomPanel);
 
 		centerPanel.setDataListProcessos(controller.getProcessos());
 		centerPanel.setDataListProcessadores(controller.getProcessadoresList(), 0);

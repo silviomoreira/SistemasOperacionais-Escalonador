@@ -220,12 +220,6 @@ public class DispacherRoundRobin implements Runnable {
 		aguardaEmMilisegundos(4000); // Possibilita dar uma olhada na lista de aptos antes de iniciar
 		List<Thread> threadsList = new ArrayList<Thread>();
 		String statusProcessoNoProcessador; 
-		//int iPrioridadeDaVez = 0;
-		//int idProcesso;
-		//int iPosProcesso;
-		// Ref. a memória
-		//int tamanhoBloco;
-		//int espacoUsado; 
 		memoriaObj.setRemainingMemorySize(tamanhoMemoria);
 		boolean bMemoriaAlocada = true;
 		// Loop de processadores starta cada processo na tela em cada processador(core)
@@ -264,8 +258,8 @@ public class DispacherRoundRobin implements Runnable {
 		while (!pare) {
 			aguardaEmMilisegundos(1000);
 			// - Swap
-			memoriaHDObj.swapHDMemoria(processoList, memoriaObj.getRemainingMemorySize());
-			memoriaHDObj.swapMemoriaHD(processoList, memoriaObj.getRemainingMemorySize());
+			memoriaHDObj.swapHDMemoria(processoList, memoriaObj.getRemainingMemorySize(), memoriaObj);
+			memoriaHDObj.swapMemoriaHD(processoList, memoriaObj.getRemainingMemorySize(), memoriaObj);
 			atualizaTela();
 			// - Decrementa quantum
 			for(int i=0; i<processadoresList.size(); i++) {
@@ -404,7 +398,7 @@ public class DispacherRoundRobin implements Runnable {
 			if (bMemoriaAlocada) {
 				bottomPanel.refreshConsole("O processo "+processoList.get(0).getIdentificadorProcesso()+
 						" alocou "+processoList.get(0).getQtdBytes()+
-						" e ficaram "+memoriaObj.getRemainingMemorySize()+" bytes disponíveis");
+						"b e ficaram "+memoriaObj.getRemainingMemorySize()+" bytes disponíveis");
 			} else {
 				JOptionPane.showMessageDialog(null,  "Out of memory ! ) Solicitado: "+processoList.get(0).getQtdBytes()+" | Remanescente: "+ memoriaObj.getRemainingMemorySize());//"Out of memory");
 				mostraLogMemoria(0);

@@ -23,17 +23,10 @@ public class QuickfitList extends MemoriaList {
 				e.printStackTrace();
 			}
 		this.requisicoesMemoria = requisicoesMemoria; 
-		listaBlocosLivres = new LinkedList<BlocoMemoria>();
-		listaBlocos = new MemoriaList[4];
-		listaBlocos[0] = new MemoriaList();
-		listaBlocos[1] = new MemoriaList();
-		listaBlocos[2] = new MemoriaList();
-		listaBlocos[3] = new MemoriaList();
+		resetComplementar();
 	}
 
 	public void resetComplementar() {
-		BlocoMemoria bm = new BlocoMemoria(0, 0, 0, null);
-		bm.resetId();
 		int contadorRequisicoes = 0;
 		boolean bAtingiuChao = false;
 		listaBlocosLivres = new LinkedList<BlocoMemoria>();
@@ -245,12 +238,18 @@ public class QuickfitList extends MemoriaList {
 		return false;
 	}
 
-	/*if (r.getTamanhoBloco() == listaBlocos1.element().getTamanho())
-	r.setNumeroLista(1);
-	if (r.getTamanhoBloco() == listaBlocos2.element().getTamanho())
-		r.setNumeroLista(2);
-	if (r.getTamanhoBloco() == listaBlocos3.element().getTamanho())
-		r.setNumeroLista(3);
-	if (r.getTamanhoBloco() == listaBlocos4.element().getTamanho())
-		r.setNumeroLista(4);*/
+	private void montaListaBlocoMaisRequisitadoEExcluiDaGenerica(int iTamanhoBloco,
+			int iNumeroLista) {
+		BlocoMemoria bm;
+		ListIterator<BlocoMemoria> literbm = listaBlocosLivres.listIterator();
+		while (literbm.hasNext()) {
+			bm = literbm.next();
+			if (bm.getTamanho() == iTamanhoBloco)
+			{
+				listaBlocos[iNumeroLista].add(bm);
+				literbm.remove();
+			}
+		}
+	}
+
 } 
