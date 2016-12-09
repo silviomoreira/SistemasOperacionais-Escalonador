@@ -39,10 +39,10 @@ public class LeftPanel extends JPanel{
 	
 	private JLabel quantumLabel;
 	private JTextField quantumField;
-
+/*
 	private JLabel intervaloLabel;
 	private JTextField intervaloField;
-	
+*/	
 	private JButton addBtn;
 	
 	private LeftPanelListener leftPanelListener;
@@ -63,7 +63,7 @@ public class LeftPanel extends JPanel{
 		addLine(tempoExecucaoRestanteLabel, tempoExecucaoRestanteField);
 		addLine(deadlineLabel, deadlineField);
 		addLine(quantumLabel, quantumField);
-		addLine(intervaloLabel, intervaloField);
+		//addLine(intervaloLabel, intervaloField);
 		
 		addLine(null, addBtn);
 	}
@@ -89,10 +89,10 @@ public class LeftPanel extends JPanel{
 		
 		quantumLabel = new JLabel("Quantum: ");
 		quantumField = new JTextField(10);
-		
+		/*
 		intervaloLabel = new JLabel("Intervalo: ");
 		intervaloField = new JTextField(10);
-		
+		*/
 		addBtn = new JButton("Adicionar!");
 		addBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -102,7 +102,7 @@ public class LeftPanel extends JPanel{
 				int prioridade = prioridadeField.getText().equals("") ? 0 : Integer.parseInt(prioridadeField.getText());
 				String deadline = deadlineField.getText();
 				int quantum = quantumField.getText().equals("") ? 0 : Integer.parseInt(quantumField.getText()); 
-				String intervalo = intervaloField.getText();
+				String intervalo = "";//intervaloField.getText();
 				
 				LeftPanelEvent lpe = new LeftPanelEvent(this, tempoTotalExecucao, estadoProcesso, tempoExecucaoRestante, prioridade, deadline, quantum, intervalo);
 				

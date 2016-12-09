@@ -400,8 +400,12 @@ public class DispacherRoundRobin implements Runnable {
 		if (bMostraMemoria) {
 			bMemoriaAlocada = memoriaObj.alocouMemoria(processoList.get(0).getQtdBytes(), 
 							 						   memoriaObj.getRemainingMemorySize(),
-							 						   processoList.get(0).getIdentificadorProcesso());							
-			if (!bMemoriaAlocada) {
+							 						   processoList.get(0).getIdentificadorProcesso());		
+			if (bMemoriaAlocada) {
+				bottomPanel.refreshConsole("O processo "+processoList.get(0).getIdentificadorProcesso()+
+						" alocou "+processoList.get(0).getQtdBytes()+
+						" e ficaram "+memoriaObj.getRemainingMemorySize()+" bytes disponíveis");
+			} else {
 				JOptionPane.showMessageDialog(null,  "Out of memory ! ) Solicitado: "+processoList.get(0).getQtdBytes()+" | Remanescente: "+ memoriaObj.getRemainingMemorySize());//"Out of memory");
 				mostraLogMemoria(0);
 				processoList.get(0).setEstadoProcesso("A");
@@ -442,11 +446,13 @@ public class DispacherRoundRobin implements Runnable {
 					" | Status: "+concluidosEAbortadosList.get(i).getEstadoProcesso());
 	}
 	private void mostraLogMemoria(int i) {
+		String msg = "Id processo abortado p/ falta de mem.: "+processoList.get(i).getIdentificadorProcesso()+
+			" | Mem. requisitada: "+processoList.get(i).getQtdBytes()+
+			" | Mem. restante: "+memoriaObj.getRemainingMemorySize();
 		if (bAtivaLog && bMostraMemoria) {
-			System.out.println("Id processo abortado p/ falta de mem.: "+processoList.get(i).getIdentificadorProcesso()+
-					" | Mem. requisitada: "+processoList.get(i).getQtdBytes()+
-					" | Mem. restante: "+memoriaObj.getRemainingMemorySize());		
+			System.out.println(msg);		
 		}
+		bottomPanel.refreshConsole(msg);		
 	}
 	
 	private boolean HaAlgumProcessoEmExecucao() {

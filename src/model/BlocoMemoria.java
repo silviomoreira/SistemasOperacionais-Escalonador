@@ -8,7 +8,8 @@ public class BlocoMemoria {
 	private int espacoUsado; // bytes
 	private BlocoMemoria referenciaProxBloco;
 	private int idProcesso;
-	private int idLogicoBloco; // utilizado p/ o swap
+	private int idLogicoBloco;  // utilizado p/ o swap
+	private String listaDeOrigem; // utilizado no quickfit p/ mostrar de qual das 5 listas de blocos livres veio o bloco
  
 	public BlocoMemoria(int tamanho, int espacoUsado, int idProcesso, BlocoMemoria referenciaProxBloco) {
 		this.idBloco = ++BlocoMemoria.id;
@@ -64,6 +65,14 @@ public class BlocoMemoria {
 
 	public void setIdLogicoBloco(int idLogicoBloco) {
 		this.idLogicoBloco = idLogicoBloco;
+	}
+
+	public String getListaDeOrigem() {
+		return listaDeOrigem;
+	}
+
+	public void setListaDeOrigem(String listaDeOrigem) {
+		this.listaDeOrigem = listaDeOrigem;
 	}
 
 	public void resetId() {

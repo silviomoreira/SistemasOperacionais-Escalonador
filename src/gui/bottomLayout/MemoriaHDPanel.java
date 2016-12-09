@@ -16,7 +16,8 @@ public class MemoriaHDPanel extends JPanel{
 	public MemoriaHDPanel(JTable table) {
 		super();
 		Dimension dim = getPreferredSize();
-		dim.height = 70;
+		dim.height = 170; //140; 
+		dim.width = 400; // novo
 		setPreferredSize(dim);
 
 		this.table = table;

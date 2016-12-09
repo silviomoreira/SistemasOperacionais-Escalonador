@@ -19,12 +19,13 @@ public class MemoriaPanel extends JPanel{
 	public MemoriaPanel(JTable table) {
 		super();
 		Dimension dim = getPreferredSize();
-		dim.height = 70; // 140;(antes de criar a grid de memória HD)
+		dim.height = 170; //140;
+		dim.width = 450; // novo
 		setPreferredSize(dim);
 
 		this.table = table;
 
-		Border innerBorder = BorderFactory.createTitledBorder("Memória"); 
+		Border innerBorder = BorderFactory.createTitledBorder("Memória RAM"); 
 		Border outerBorder = BorderFactory.createEmptyBorder(5, 5, 5, 5);
 		JScrollPane scrollPaneProcessTable = new JScrollPane(table);
 		scrollPaneProcessTable.setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));

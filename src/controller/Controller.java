@@ -30,7 +30,7 @@ public class Controller {
 	private BestfitList bestfitList = new BestfitList();
 	private RequisicaoMemoriaList requisicaoMemoriaList = new RequisicaoMemoriaList();
 	private QuickfitList quickfitList = new QuickfitList(requisicaoMemoriaList);
-	private MemoriaHDList memoriaHDList = new MemoriaHDList(bestfitList);
+	private MemoriaHDList memoriaHDList = new MemoriaHDList(memoriaList);
 	
 	private int numProcessadores = 0;
 	private int numProcessosIniciais = 0;
@@ -215,7 +215,8 @@ public class Controller {
 	private void iniciarAlgoritmoRoundRobin(TopPanelEvent e) {
 		for(int i=0; i<numProcessosIniciais; i++) {
 			// Passa novos parâmetros se for escolhido rodar a demonstração do funcionamento da memória
-			int iTempoTotalExecucao = retornaRandom(tamanhoMemoria > 0 ? 10 : 4, tamanhoMemoria > 0 ? 30 : 20);
+			int iTempoTotalExecucao = retornaRandom(tamanhoMemoria > 0 ? 10 : 4, tamanhoMemoria > 0 ? 30 : 20);//PENDENCIA: DESCOMENTAR
+//			int iTempoTotalExecucao = retornaRandom(tamanhoMemoria > 0 ? 10 : 4, tamanhoMemoria > 0 ? 100 : 20);
 			String tempoTotalExecucao = String.valueOf(iTempoTotalExecucao);
 			int iPrioridade = retornaRandom(0, 3);
 			String deadline = "0";

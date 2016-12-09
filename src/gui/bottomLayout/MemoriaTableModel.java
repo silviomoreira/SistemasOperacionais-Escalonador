@@ -10,7 +10,7 @@ public class MemoriaTableModel extends AbstractTableModel {
 
 	private List<BlocoMemoria> blocosMemoria;
 	private String[] colNames =
-		{"Id", "Tamanho", "Espaço usado", "Id do Processo", "Referência prox. bloco"};
+		{"Id", "Tamanho", "Espaço usado", "Id do Processo", "Id lógico", "ListaDeOrigem"};//"Referência prox. bloco"};
 	
 	public MemoriaTableModel() {
 	}
@@ -34,7 +34,7 @@ public class MemoriaTableModel extends AbstractTableModel {
 	@Override
 	public int getColumnCount() {
 		// TODO Auto-generated method stub
-		return 4;
+		return 6;
 	}
 
 	@Override
@@ -50,7 +50,9 @@ public class MemoriaTableModel extends AbstractTableModel {
 		case 3:
 			return blocoMemoria.getIdProcesso();
 		case 4:
-			return blocoMemoria.getReferenciaProxBloco();
+			return blocoMemoria.getIdLogicoBloco();
+		case 5: 
+			return blocoMemoria.getListaDeOrigem();
 		}
 
 		return null;

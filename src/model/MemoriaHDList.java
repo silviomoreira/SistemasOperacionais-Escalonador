@@ -76,21 +76,23 @@ public class MemoriaHDList {
      processo até o 1o. e realiza-se o swap da RAM p/ o HD(tem menos prioridade do que o inverso).
 	 */
 	public void swapMemoriaHD(List<Processo> processoList, int memoriaDisponivel) {
-		if (memoriaDisponivel <= threshold)
-			return;
-		for(int i=processoList.size()-1; i > 0; i--) { // > | >=
-			BlocoMemoria bm;
-			ListIterator<BlocoMemoria> literbm = ((List<BlocoMemoria>) blocosMemoriaRAM).listIterator();
-			while (literbm.hasNext()) {
-				bm = literbm.next();
-				if (bm.getIdProcesso() == processoList.get(i).getIdentificadorProcesso())
-				{
-					// precisa setar idlogico = id ... ? ou marcar outro campo e deixar registro lá ?
-					blocosMemoria.add(bm);
-					literbm.remove();
-				}
-			}			
-		}		
+		// t = 100  l = 70, qdo. disp < (totalRam - treshold) ==> d < 30
+		if (memoriaDisponivel < (tamanhoMemoriaRAM - threshold)) {
+			for(int i=processoList.size()-1; i > 0; i--) { // > | >=
+				BlocoMemoria bm;
+//				ListIterator<BlocoMemoria> literbm = ((List<BlocoMemoria>) blocosMemoriaRAM).listIterator();
+				ListIterator<BlocoMemoria> literbm = blocosMemoriaRAM.getAll().listIterator();
+				while (literbm.hasNext()) {
+					bm = literbm.next();
+					if (bm.getIdProcesso() == processoList.get(i).getIdentificadorProcesso())
+					{
+						// precisa setar idlogico = id ... ? ou marcar outro campo e deixar registro lá ?
+						blocosMemoria.add(bm);
+						literbm.remove();
+					}
+				}			
+			} // Fim <for>
+		}
 	}
 
 	/*
@@ -99,20 +101,21 @@ public class MemoriaHDList {
      deste swap é maior, pois é preferível q o processo q for rodar mais cedo já esteja na RAM.
 	 */
 	public void swapHDMemoria(List<Processo> processoList, int memoriaDisponivel) {
-		if (memoriaDisponivel > threshold)
-			return;
-		for(int i=0; i<processoList.size(); i++) {
-			BlocoMemoria bm;
-			ListIterator<BlocoMemoria> literbm = blocosMemoria.listIterator();
-			while (literbm.hasNext()) {
-				bm = literbm.next();
-				if (bm.getIdProcesso() == processoList.get(i).getIdentificadorProcesso())
-				{
-					// precisa setar idlogico = id ... ?
-					blocosMemoriaRAM.add(bm);
-					literbm.remove();
-				}
-			}			
-		}		
+		// t = 100  l = 70, qdo. disp >= (totalRam - treshold) ==> d >= 30
+		if (memoriaDisponivel >= (tamanhoMemoriaRAM - threshold)) {
+			for(int i=0; i<processoList.size(); i++) {
+				BlocoMemoria bm;
+				ListIterator<BlocoMemoria> literbm = blocosMemoria.listIterator();
+				while (literbm.hasNext()) {
+					bm = literbm.next();
+					if (bm.getIdProcesso() == processoList.get(i).getIdentificadorProcesso())
+					{
+						// precisa setar idlogico = id ... ?
+						blocosMemoriaRAM.add(bm);
+						literbm.remove();
+					}
+				}			
+			} // Fim <for>
+		}
 	}
 }

@@ -74,6 +74,8 @@ public class MainFrame extends JFrame {
 				centerPanel.refreshConcluidosEAbortados();
 				bottomPanel.refreshMemoria();
 				bottomPanel.refreshMemoriaHD();
+				bottomPanel.resetConsole();
+				bottomPanel.refreshConsole("iniciando...");
 				if (e.getEstrategia() == "Round Robin") {
 					DispacherRoundRobin dispacherRR = null;
 					if (e.getEstrategiaMem() == "Best fit") 
@@ -82,8 +84,7 @@ public class MainFrame extends JFrame {
 								controller.getConcluidosEAbortadosList(), 
 								centerPanel, e.getQdeProcessadores(), e.getNumProcessosIniciais(), 
 								e.getQuantum(), bottomPanel, e.getTamanhoMem(), controller.getBestfitList(),
-								controller.getBestfitObj(), rightPanel, controller.getMemoriaHDObj()/*, controller.getRequisicaoMemoriaList(),
-								controller.getRequisicaoMemoriaObj()*/);//controller.getMemoriaList());
+								controller.getBestfitObj(), rightPanel, controller.getMemoriaHDObj());
 					else if (e.getEstrategiaMem() == "Quick fit") {
 						rightPanel.refreshRequisicoesMemoria();						
 						dispacherRR = new DispacherRoundRobin(
@@ -91,8 +92,7 @@ public class MainFrame extends JFrame {
 								controller.getConcluidosEAbortadosList(), 
 								centerPanel, e.getQdeProcessadores(), e.getNumProcessosIniciais(), 
 								e.getQuantum(), bottomPanel, e.getTamanhoMem(), controller.getQuickfitList(),
-								controller.getQuickfitObj(), rightPanel, controller.getMemoriaHDObj()/*, controller.getRequisicaoMemoriaList(),
-								controller.getRequisicaoMemoriaObj()*/);
+								controller.getQuickfitObj(), rightPanel, controller.getMemoriaHDObj());
 					}
 					/*else if (e.getEstrategiaMem() == "Merge fit")
 						dispacherRR = new DispacherRoundRobin(
