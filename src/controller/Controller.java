@@ -126,6 +126,8 @@ public class Controller {
 		numProcessosIniciais = e.getNumProcessosIniciais();
 		tamanhoMemoria = e.getTamanhoMem();
 		memoriaHDList.calculaThreshold(tamanhoMemoria);
+		System.out.println("THRESHOLD: "+memoriaHDList.getThreshold());
+		System.out.println("===============================");
 		if (estrategia == "Round Robin")
 			iniciarAlgoritmoRoundRobin(e);			
 		else if (estrategia == "Least Time to Go (LTG)")
@@ -220,20 +222,20 @@ public class Controller {
 		for(int i=0; i<numProcessosIniciais; i++) {
 			// Passa novos parâmetros se for escolhido rodar a demonstração do funcionamento da memória
 			// PENDENCIA: DESCOMENTAR
-///			int iTempoTotalExecucao = retornaRandom(tamanhoMemoria > 0 ? 10 : 4, tamanhoMemoria > 0 ? 30 : 20);
-			int iTempoTotalExecucao = 100;//retornaRandom(tamanhoMemoria > 0 ? 10 : 4, tamanhoMemoria > 0 ? 100 : 20);
+			int iTempoTotalExecucao = retornaRandom(tamanhoMemoria > 0 ? 10 : 4, tamanhoMemoria > 0 ? 30 : 20);
+//			int iTempoTotalExecucao = 100; // P/ testes no swap
 			String tempoTotalExecucao = String.valueOf(iTempoTotalExecucao);
 			int iPrioridade = retornaRandom(0, 3);
 			String deadline = "0";
 			int iQtdBytes = retornaRandom(32, 1024);//iQtdBytes = 200;
-			// inicio PENDENCIA: APAGAR
-			switch (i) {
+			// inicio PENDENCIA: APAGAR | P/ testes no swap
+			/*switch (i) {
 				case 0: iQtdBytes = 320; break;
 				case 1: iQtdBytes = 250; break;
 				case 2: iQtdBytes = 200; break;
 				case 3: iQtdBytes = 320; break;
 				case 4: iQtdBytes = 250; break;
-			} // fim PENDENCIA: APAGAR
+			}*/ // fim PENDENCIA: APAGAR
 			Processo p = new Processo(tempoTotalExecucao, "P", tempoTotalExecucao, iPrioridade, deadline, "", iQtdBytes);
 			processoList.add(p);
 		}

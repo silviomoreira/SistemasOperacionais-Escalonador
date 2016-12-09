@@ -45,8 +45,8 @@ public class MemoriaHDList {
 
 	public void calculaThreshold(int tamanhoMemoriaRAM) {
 		this.setTamanhoMemoriaRAM(tamanhoMemoriaRAM);
-		this.setThreshold(tamanhoMemoriaRAM*(40/100)); // (70/100)); PENDENCIA: DESCOMENTAR
-		bottomPanel.refreshConsole("THRESHOLD: "+this.threshold);
+		double dThreshold = (tamanhoMemoriaRAM*40)/100; // (70/100)); PENDENCIA: DESCOMENTAR
+		this.setThreshold((int) Math.ceil(dThreshold)); 
 	}
 	
 	public void add(BlocoMemoria blocoMemoria) {
