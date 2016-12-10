@@ -10,7 +10,7 @@ public class RequisicaoMemoriaTableModel extends AbstractTableModel {
 
 	private List<RequisicaoMemoria> requisicoesMemoria;
 	private String[] colNames =
-		{"T.bloco", "Incidencia", "Número da lista"};
+		{"T.bloco", "Incidencia", "Lista"};
 
 	public RequisicaoMemoriaTableModel() {
 	}
@@ -34,7 +34,7 @@ public class RequisicaoMemoriaTableModel extends AbstractTableModel {
 	@Override
 	public int getColumnCount() {
 		// TODO Auto-generated method stub
-		return 2;
+		return 3;
 	}
 
 	@Override

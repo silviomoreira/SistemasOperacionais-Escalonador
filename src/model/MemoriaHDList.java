@@ -90,7 +90,7 @@ public class MemoriaHDList {
 	public void swapHDMemoria(List<Processo> processoList, int memoriaDisponivel, MemoriaList blocosMemoriaRAM) {
 		// t = 100  l = 70, qdo. disp >= (totalRam - treshold) ==> d >= 30
 		if (memoriaDisponivel >= (tamanhoMemoriaRAM - threshold)) {
-			bottomPanel.refreshConsole("Swap HD->M) Tam. da lista de aptos: "+processoList.size());
+			//bottomPanel.refreshConsole("Swap HD->M) Tam. da lista de aptos: "+processoList.size());
 			for(int i=0; i<processoList.size(); i++) {
 				BlocoMemoria bm;
 				ListIterator<BlocoMemoria> literbm = blocosMemoria.listIterator();
@@ -114,7 +114,7 @@ public class MemoriaHDList {
 	public void swapMemoriaHD(List<Processo> processoList, int memoriaDisponivel, MemoriaList blocosMemoriaRAM) {
 		// t = 100  l = 70, qdo. disp < (totalRam - treshold) ==> d < 30
 		if (memoriaDisponivel < (tamanhoMemoriaRAM - threshold)) {
-			bottomPanel.refreshConsole("Swap M->HD) Tam. da lista de aptos: "+processoList.size());
+			//bottomPanel.refreshConsole("Swap M->HD) Tam. da lista de aptos: "+processoList.size());
 			for(int i=processoList.size()-1; i >= 0; i--) { // > | >=
 				BlocoMemoria bm;
 				ListIterator<BlocoMemoria> literbm = blocosMemoriaRAM.getAll().listIterator();
