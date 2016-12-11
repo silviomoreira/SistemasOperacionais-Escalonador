@@ -189,19 +189,25 @@ public class QuickfitList extends MemoriaList {
 		}
 	}
 
+	/*
+	 * Monta 4 listas a partir do momento em q se atingiu o número mín. de requisições estabelecido em requisicoes_Chao 
+	 */
 	private void monta4ListasBlocosLivres() {		
-		// Monta 4 listas
 		// Realiza backup dos valores de tamanhos de blocos antes de reordenar, se não for a 1a vez que monta
 		int i = 0;
-		ListIterator<RequisicaoMemoria> liter = requisicoesMemoria.getAll().listIterator();
-		Integer[] listaRequisicoesBkpTamanhos = new Integer[4];
+		ListIterator<RequisicaoMemoria> liter;
+		RequisicaoMemoria[] listaRequisicoesBkp = new RequisicaoMemoria[4];
 		if (contadorRequisicoes != requisicoes_Chao) {
+			liter = requisicoesMemoria.getAll().listIterator();
+			// Como vai estar ordenado inversamente pelo núm. da lista + incidência, só precisa ler os 4 1os.
 			while(i < 4 && liter.hasNext()){
-				listaRequisicoesBkpTamanhos[i] = liter.next().getTamanhoBloco();
+				listaRequisicoesBkp[i] = liter.next();
 				i++;
 			}
 		}
-		// (re)ordena
+		// (re)ordena inversamente pela incidência(ordenação padrão)
+		// PENDENCIA ATUAL: SETAR BOLEANO PARA ORDENACAO C/ VAR. PUBLICA 
+		//  requisicoesMemoria.get(0).setbOrdenacaoPadrao(true);
 		Collections.sort(requisicoesMemoria.getAll());
 		liter = requisicoesMemoria.getAll().listIterator();
 		RequisicaoMemoria r;
@@ -223,15 +229,17 @@ public class QuickfitList extends MemoriaList {
 				r = liter.next();
 				// Verificar se as 4 primeiras listas de blocos são de blocos do mesmo tamanho que os 4 1os. da
 				// lista de requisições, daí guardo em uma string os que forem encontrados
-				for (int c=0; c < listaRequisicoesBkpTamanhos.length; c++) {
-					if (listaRequisicoesBkpTamanhos[c] != null && r.getTamanhoBloco() == listaRequisicoesBkpTamanhos[c])
-						sListasQuePermanecem += String.valueOf(c)+",";					
+				for (int c=0; c < listaRequisicoesBkp.length; c++) {
+					if (listaRequisicoesBkp[c] != null && r.getTamanhoBloco() == listaRequisicoesBkp[c].getTamanhoBloco())
+						sListasQuePermanecem += String.valueOf(listaRequisicoesBkp[c].getNumeroLista())+",";					
 				}
 				i++;
 			} // Fim <while>
 			// Se todas as listas permanecem com os mesmos tamanhos de bloco, isto é, não houve mudança nas requisições 
 			// prioritárias, então aborta
 			if (sListasQuePermanecem.length() == 8) {
+				// ordena inversamente pelo núm. da lista + incidencia(ordenação não padrão)
+				Collections.sort(requisicoesMemoria.getAll());
 				return;
 			}
 			//
@@ -240,35 +248,41 @@ public class QuickfitList extends MemoriaList {
 			liter = requisicoesMemoria.getAll().listIterator();
 			int iTamanhoBloco;
 			i = 0;
-			while(i < 4 && liter.hasNext()){
+			while(liter.hasNext()){
 				r = liter.next(); 
 				// Verifica se lista N vai mudar p/ o bloco atual na lista de requisições
-				if (r.getTamanhoBloco() != listaRequisicoesBkpTamanhos[0] &&
-					r.getTamanhoBloco() != listaRequisicoesBkpTamanhos[1] &&
-					r.getTamanhoBloco() != listaRequisicoesBkpTamanhos[2] &&
-					r.getTamanhoBloco() != listaRequisicoesBkpTamanhos[3]) {
-					boolean bPodeRealocar = false;
-					if (verificaSeHaMemoriaDisponivelParaCriarEsteBloco(r.getTamanhoBloco())) { 
-						iTamanhoBloco = r.getTamanhoBloco();
-						bPodeRealocar = true;
-					} else {
-						// Sai em busca do proximo bloco da lista de requisições que mais teve requisições a partir do
-						// 5o registro e q tenha mem. disponível p/ criar
-						iTamanhoBloco = retornaTamanhoProxBlocoQTeveMaisRequisicoesPartindoDo5oRegistro();
-						bPodeRealocar = (iTamanhoBloco > 0);
-					}
-					if (bPodeRealocar) {
-						int iNumeroListaQVaiMudar = veEmQualListaVaiGuardar(sListasQuePermanecem, i);
-						if (iNumeroListaQVaiMudar != -1)
-						{
-							// Seta o número da lista em q a requisição será guardada
-							r.setNumeroLista(iNumeroListaQVaiMudar); // VER A QUESTÃO DO -1 NAS LISTAS
-							realocaBlocoNasListasBlocosLivres(iTamanhoBloco, iNumeroListaQVaiMudar, listaRequisicoesBkpTamanhos);
+				if (r.getNumeroLista()  != -1)
+				{
+					// verif. os 4 mais requisitados
+					if (++i == 5)
+						break;
+					if (r.getTamanhoBloco() != listaRequisicoesBkp[0].getTamanhoBloco() &&
+						r.getTamanhoBloco() != listaRequisicoesBkp[1].getTamanhoBloco() &&
+						r.getTamanhoBloco() != listaRequisicoesBkp[2].getTamanhoBloco() &&
+						r.getTamanhoBloco() != listaRequisicoesBkp[3].getTamanhoBloco()) {
+						boolean bPodeRealocar = false;
+						if (verificaSeHaMemoriaDisponivelParaCriarEsteBloco(r.getTamanhoBloco())) { 
+							iTamanhoBloco = r.getTamanhoBloco();
+							bPodeRealocar = true;
+						} else {
+							// Sai em busca do proximo bloco da lista de requisições que mais teve requisições a partir do
+							// 5o registro e q tenha mem. disponível p/ criar
+							iTamanhoBloco = retornaTamanhoProxBlocoQTeveMaisRequisicoesPartindoDo5oRegistro();
+							bPodeRealocar = (iTamanhoBloco > 0);
 						}
-					}
-				} // Fim <if>
-				i++;
+						if (bPodeRealocar) {
+							int iNumeroListaQVaiMudar = veEmQualListaVaiGuardar(sListasQuePermanecem, i);
+							if (iNumeroListaQVaiMudar != -1)
+							{
+								// Seta o número da lista em q a requisição será guardada
+								r.setNumeroLista(iNumeroListaQVaiMudar); // VER A QUESTÃO DO -1 NAS LISTAS
+								realocaBlocoNasListasBlocosLivres(iTamanhoBloco, iNumeroListaQVaiMudar, listaRequisicoesBkp);
+							}
+						}
+					} // Fim <if>
+				} // Fim <if (r.getNumeroLista()  != -1)>						
 			} // Fim <while>
+			Collections.sort(requisicoesMemoria.getAll());
 			
 		} // Fim <if (contadorRequisicoes == requisicoes_Chao)>		
 	}
@@ -280,7 +294,7 @@ public class QuickfitList extends MemoriaList {
 	 * porém antes, os blocos livres desta lista de 16b, são inseridos na lista geral de blocos livres
 	 */
 	private void realocaBlocoNasListasBlocosLivres(int iTamanhoBloco,
-			int iNumeroListaQVaiMudar, Integer[] listaRequisicoesBkpTamanhos) {
+			int iNumeroListaQVaiMudar, RequisicaoMemoria[] listaRequisicoesBkp) {
 		ListIterator<BlocoMemoria> literbm = listaBlocos[iNumeroListaQVaiMudar].getAll().listIterator();
 		while (literbm.hasNext()) {
 			listaBlocosLivres.add(literbm.next());
