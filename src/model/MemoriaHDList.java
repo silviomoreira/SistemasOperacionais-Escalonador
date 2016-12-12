@@ -45,7 +45,7 @@ public class MemoriaHDList {
 
 	public void calculaThreshold(int tamanhoMemoriaRAM) {
 		this.setTamanhoMemoriaRAM(tamanhoMemoriaRAM);
-		double dThreshold = (tamanhoMemoriaRAM*40)/100; // (70/100)); PENDENCIA: DESCOMENTAR
+		double dThreshold = (tamanhoMemoriaRAM*70)/100; // (70/100)); PENDENCIA: DESCOMENTAR
 		this.setThreshold((int) Math.ceil(dThreshold)); 
 	}
 	
@@ -89,20 +89,23 @@ public class MemoriaHDList {
 	 */
 	public void swapHDMemoria(List<Processo> processoList, int memoriaDisponivel, MemoriaList blocosMemoriaRAM) {
 		// t = 100  l = 70, qdo. disp >= (totalRam - treshold) ==> d >= 30
-		if (memoriaDisponivel >= (tamanhoMemoriaRAM - threshold)) {
-			//bottomPanel.refreshConsole("Swap HD->M) Tam. da lista de aptos: "+processoList.size());
+		//if (memoriaDisponivel >= (tamanhoMemoriaRAM - threshold)) {
+		if (blocosMemoriaRAM.getOccupiedMemorySize() <= threshold) {
 			for(int i=0; i<processoList.size(); i++) {
 				BlocoMemoria bm;
 				ListIterator<BlocoMemoria> literbm = blocosMemoria.listIterator();
 				while (literbm.hasNext()) {
-					bottomPanel.refreshConsole("Swap HD->M) Examinando processo "+processoList.get(i).getIdentificadorProcesso());
 					bm = literbm.next();
 					if (bm.getIdProcesso() == processoList.get(i).getIdentificadorProcesso())
 					{
-						bottomPanel.refreshConsole("Swap HD->M) adicionando à memória...");
-						// precisa setar idlogico = id ... ?
-						blocosMemoriaRAM.add(bm);
-						literbm.remove();
+//						bottomPanel.refreshConsole("Swap HD->M) adicionando à memória bloco de "+
+//								bm.getTamanho()+" ...");
+						if (blocosMemoriaRAM.alocouMemoria(bm.getEspacoUsado(),  
+								blocosMemoriaRAM.getRemainingMemorySize(), bm.getIdProcesso())) {
+//							bottomPanel.refreshConsole("Swap HD->M) adicionando à memória bloco de "+
+//									bm.getTamanho()+" ...");
+							literbm.remove();
+						}
 					}
 				}			
 			} // Fim <for>
@@ -115,25 +118,41 @@ public class MemoriaHDList {
 	 */
 	public void swapMemoriaHD(List<Processo> processoList, int memoriaDisponivel, MemoriaList blocosMemoriaRAM) {
 		// t = 100  l = 70, qdo. disp < (totalRam - treshold) ==> d < 30
-		if (memoriaDisponivel < (tamanhoMemoriaRAM - threshold)) {
-			//bottomPanel.refreshConsole("Swap M->HD) Tam. da lista de aptos: "+processoList.size());
-			for(int i=processoList.size()-1; i >= 0; i--) { // > | >=
+		//if (memoriaDisponivel < (tamanhoMemoriaRAM - threshold)) {
+		if (blocosMemoriaRAM.getOccupiedMemorySize() > threshold) {
+			for(int i=processoList.size()-1; i >= 0; i--) { 
 				BlocoMemoria bm;
 				ListIterator<BlocoMemoria> literbm = blocosMemoriaRAM.getAll().listIterator();
 				while (literbm.hasNext()) {
-					bottomPanel.refreshConsole("Swap M->HD) Examinando processo "+processoList.get(i).getIdentificadorProcesso());		
 					bm = literbm.next();
 					if (bm.getIdProcesso() == processoList.get(i).getIdentificadorProcesso()
 							&& processoList.get(i).getEstadoProcesso() == "B")
 					{
-						bottomPanel.refreshConsole("Swap M->HD) adicionando ao disco...");
-						// precisa setar idlogico = id ... ? ou marcar outro campo e deixar registro lá ?
-						blocosMemoria.add(bm);
-						literbm.remove();
+//						bottomPanel.refreshConsole("Swap M->HD) adicionando ao disco bloco de "+
+//								bm.getTamanho()+" ...");//"b processo "+bm.getIdProcesso()
+						bm.setIdLogicoBloco(bm.getIdBloco()+5000);
+						// verificar se bloco deste processo já está no disco antes de adiciona-lo
+						if (naoEstaNoHD(bm.getIdProcesso())){
+							blocosMemoria.add(bm);						
+							blocosMemoriaRAM.liberaMemoria(bm.getIdProcesso());//literbm.remove();
+						}
 					}
 				}			
 			} // Fim <for>
 		}
+	}
+
+	private boolean naoEstaNoHD(int idProcesso) {
+		BlocoMemoria bm;
+		ListIterator<BlocoMemoria> literbm = blocosMemoria.listIterator();
+		while (literbm.hasNext()) {
+			bm = literbm.next();
+			if (bm.getIdProcesso() == idProcesso)
+			{
+				return false;
+			}
+		}			
+		return true;
 	}
 
 }

@@ -11,12 +11,13 @@ public class BlocoMemoria {
 	private int idLogicoBloco;  // utilizado p/ o swap
 	private String listaDeOrigem; // utilizado no quickfit p/ mostrar de qual das 5 listas de blocos livres veio o bloco
  
-	public BlocoMemoria(int tamanho, int espacoUsado, int idProcesso, BlocoMemoria referenciaProxBloco) {
+	public BlocoMemoria(int tamanho, int espacoUsado, int idProcesso, BlocoMemoria referenciaProxBloco, int idLogicoBloco) {
 		this.idBloco = ++BlocoMemoria.id;
 		this.tamanho = tamanho;
 		this.espacoUsado = espacoUsado;
 		this.idProcesso = idProcesso;
 		this.referenciaProxBloco = referenciaProxBloco;
+		this.idLogicoBloco = (idLogicoBloco == 0 ? this.idBloco : idLogicoBloco); 
 	}
 
 	public int getIdBloco() {

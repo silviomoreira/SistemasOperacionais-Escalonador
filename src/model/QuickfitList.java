@@ -60,6 +60,12 @@ public class QuickfitList extends MemoriaList {
 		BlocoMemoria b;
 		int i;
 		int idBloco;
+		
+		if (foiAlocadoPorMeioDoProcesso(idProcesso)) {
+			guardaRequisicoes(tamanhoBloco);
+			return true;
+		}
+		
 		// 1...4) busca bloco vazio de mesmo tamanho
 		if (bAtingiuChao) {
 			liter = requisicoesMemoria.getAll().listIterator();
@@ -222,7 +228,7 @@ public class QuickfitList extends MemoriaList {
 	
 	private void aloqueMemoria(int tamanhoBloco, int idProcesso) {
 		// caso 2: aloca novo bloco com mesmo tamanho (alocação completa)
-		BlocoMemoria bm = new BlocoMemoria(tamanhoBloco, tamanhoBloco, idProcesso, null);
+		BlocoMemoria bm = new BlocoMemoria(tamanhoBloco, tamanhoBloco, idProcesso, null, 0);
 		getAll().add(bm);
 		this.setRemainingMemorySize(this.getRemainingMemorySize()-tamanhoBloco);
 	}
@@ -464,5 +470,17 @@ public class QuickfitList extends MemoriaList {
 				literbm.remove();
 			}
 		}
+	}
+
+	public boolean foiAlocadoPorMeioDoProcesso(int idProcesso) {
+		BlocoMemoria b;
+		ListIterator<BlocoMemoria> liter = getAll().listIterator();
+		while(liter.hasNext()){
+			b = liter.next();
+			if (b.getIdProcesso() == idProcesso && b.getEspacoUsado() > 0) {
+				return true;
+			}
+		}		
+		return false;
 	}
 } 

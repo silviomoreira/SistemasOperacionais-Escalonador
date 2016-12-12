@@ -8,9 +8,11 @@ public class MemoriaList {
 	protected LinkedList<BlocoMemoria> blocosMemoria;
 	protected int memorySize;
 	protected int remainingMemorySize;
-
+	protected int occupiedMemorySize;
+ 
 	public MemoriaList() {
-		blocosMemoria = new LinkedList<>();		
+		blocosMemoria = new LinkedList<>();
+		this.occupiedMemorySize = 0;
 	}
 
 	public void add(BlocoMemoria blocoMemoria) {
@@ -34,8 +36,9 @@ public class MemoriaList {
 	}
 	
 	public void reset() {
-		blocosMemoria = new LinkedList<>();		
-		BlocoMemoria bm = new BlocoMemoria(0, 0, 0, null);
+		blocosMemoria = new LinkedList<>();
+		this.occupiedMemorySize = 0;
+		BlocoMemoria bm = new BlocoMemoria(0, 0, 0, null, 0);
 		bm.resetId();
 	}
 	
@@ -63,10 +66,25 @@ public class MemoriaList {
 		this.remainingMemorySize = remainingMemorySize;
 	}
 
+	public int getOccupiedMemorySize() {
+		return occupiedMemorySize;
+	}
+
+	public void setOccupiedMemorySize(int occupiedMemorySize) {
+		this.occupiedMemorySize = occupiedMemorySize;
+	}
+
 	public boolean alocouMemoria(int tamanhoBloco, int tamanhoMemoriaRestante, int idProcesso) {
+		return true;
+	}
+	public boolean alocouMemoria(int tamanhoBloco, int idProcesso) {
 		return true;
 	}
 	
 	public void liberaMemoria(int idProcesso) {		
+	}
+	
+	public boolean foiAlocadoPorMeioDoProcesso(int idProcesso) {
+		return true;
 	}
 }

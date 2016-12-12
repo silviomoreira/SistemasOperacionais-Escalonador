@@ -10,6 +10,8 @@ import java.util.ListIterator;
 
 import javax.swing.JOptionPane;
 
+import com.sun.org.apache.bcel.internal.generic.ILOAD;
+
 import model.BlocoMemoria;
 import model.MemoriaHDList;
 import model.MemoriaList;
@@ -77,6 +79,7 @@ public class DispacherRoundRobin implements Runnable {
 	private List<BlocoMemoria> memoriaList;
 	private MemoriaList memoriaObj;
 	private MemoriaHDList memoriaHDObj;
+	private boolean bSwapAtivado;
 //	private List<RequisicaoMemoria> requisicaoMemoriaList;//
 //	private RequisicaoMemoriaList requisicaoMemoriaObj;//
 	/*private List<Processo> filaprio0List;
@@ -111,8 +114,8 @@ public class DispacherRoundRobin implements Runnable {
 			List<Processo> concluidosEAbortadosList,
 			CenterPanel centerPanel, int numProcessadores, int numProcessosIniciais, int quantum0,
 			BottomPanel bottomPanel, int tamanhoMem, List<BlocoMemoria> memoriaList, MemoriaList memoriaObj,
-			RightPanel rightPanel, MemoriaHDList memoriaHDObj/*, List<RequisicaoMemoria> requisicaoMemoriaList, 
-			RequisicaoMemoriaList requisicaoMemoriaObj*/) {
+			RightPanel rightPanel, MemoriaHDList memoriaHDObj, boolean bSwapAtivado/*, 
+			List<RequisicaoMemoria> requisicaoMemoriaList, RequisicaoMemoriaList requisicaoMemoriaObj*/) {
 		this.processoList = processoList;
 		this.processadoresList = processadoresList;
 		this.concluidosEAbortadosList = concluidosEAbortadosList;
@@ -127,6 +130,7 @@ public class DispacherRoundRobin implements Runnable {
 		this.memoriaObj = memoriaObj;
 		this.rightPanel = rightPanel;
 		this.memoriaHDObj = memoriaHDObj;
+		this.bSwapAtivado = bSwapAtivado;
 		//this.requisicaoMemoriaList = requisicaoMemoriaList;//
 		//this.requisicaoMemoriaObj = requisicaoMemoriaObj;//
 		this.bAtivaLog = processoList.get(0).isAtivalog();
@@ -255,12 +259,14 @@ public class DispacherRoundRobin implements Runnable {
 		} // Fim <for>
 		
 		// Controle de mudança de processos
+		int iContadorLoops = 0;
 		while (!pare) {
 			aguardaEmMilisegundos(1000);
 			// - Swap
-			//memoriaHDObj.swapHDMemoria(processoList, memoriaObj.getRemainingMemorySize(), memoriaObj);
-			memoriaHDObj.swapMemoriaHD(processoList, memoriaObj.getRemainingMemorySize(), memoriaObj);
-			atualizaTela();
+			if (bSwapAtivado) {
+				memoriaHDObj.swapHDMemoria(processoList, memoriaObj.getRemainingMemorySize(), memoriaObj);
+				atualizaTela();
+			}
 			// - Decrementa quantum
 			for(int i=0; i<processadoresList.size(); i++) {
 				if (processadoresList.get(i).getEstadoProcesso() == "E"){
@@ -270,7 +276,7 @@ public class DispacherRoundRobin implements Runnable {
 	    	atualizaTela();
 	    	// Ver a possibilidade de realizar o tratamento do processo bloqueado logo
 	    	// aqui, ou em Processo.DecrementaTempoRestante(), qdo. já finalizaria a execução do processo 
-	    	// e setaria o estado p/ "B" lá. Foi realizado lá, pois aqui não funcionou bem.
+	    	// e setaria o estado p/ "B" lá. Foi realizado lá, pois funcionou bem melhor.
 	    	// ...
 	    	// - mata processos (no Round Robin, ocorre apenas no caso de "Out of Memory"(gerado pelo Algoritmo de memória)) 
 			for(int i=0; i<processoList.size(); i++) {
@@ -330,11 +336,19 @@ public class DispacherRoundRobin implements Runnable {
 				if (processadoresList.get(i).getEstadoProcesso() == "B"){
 					//recolocaProcessoBloqueadoNaFilaDePrioridades(i);
 					processoList.add(processadoresList.get(i)); //recolocaProcessoBloqueadoNalistaDeProcessosGeral(i);
-					// ? .... TEM de dar vazão p/ os processos começarem a rodar e continuar
-					// a contagem do quantum
-				//**	memoriaObj.liberaMemoria(processadoresList.get(i).getIdentificadorProcesso());
+					
 					if (processoList.size() > 0) {
-						bMemoriaAlocada = tentaAlocarMemoria(i, bMemoriaAlocada, false);
+						// tenta alocar memoria que tem o numero do processo atrelado(por ter vindo do swap)  
+						if (bSwapAtivado) {
+							// verifico se esta alocado pelo processo
+							if (!memoriaObj.foiAlocadoPorMeioDoProcesso(processoList.get(0).getIdentificadorProcesso()))
+							    // se nao estiver alocado tento alocar
+	      						bMemoriaAlocada = tentaAlocarMemoria(i, bMemoriaAlocada, false);
+							else
+								bMemoriaAlocada = true;
+      					} else {					
+      						bMemoriaAlocada = tentaAlocarMemoria(i, bMemoriaAlocada, false);
+      					}
 						if (bMemoriaAlocada) {
 							// escalona Proximo Processo // escalonaProximoProcesso();
 							//idProcesso = excluiProcessoDaProximaFilaDePrioridadeERetornaIdDoMesmo();
@@ -364,8 +378,21 @@ public class DispacherRoundRobin implements Runnable {
 	    	if (processoList.size() == 0 && !HaAlgumProcessoEmExecucao()){
 	    		pare = true;
 	    		System.out.println("< ESCALONADOR TERMINOU ! >"); System.out.println();
+	    		bottomPanel.refreshConsole("< ESCALONADOR TERMINOU ! >");
+	    	} else if (bSwapAtivado) {// && (iContadorLoops % 2 == 0)) {
+				memoriaHDObj.swapMemoriaHD(processoList, memoriaObj.getRemainingMemorySize(), memoriaObj);
 	    	}
 		} // Fim <while>
+		limpaMemoria();
+	}
+
+	private void limpaMemoria() {
+		// TODO Auto-generated method stub
+		for(int i=0; i<concluidosEAbortadosList.size(); i++) {
+			memoriaObj.liberaMemoria(concluidosEAbortadosList.get(i).getIdentificadorProcesso());
+		}
+		memoriaHDObj.reset();
+		atualizaTela();
 	}
 
 	/**
@@ -422,9 +449,9 @@ public class DispacherRoundRobin implements Runnable {
 					" | Status: "+concluidosEAbortadosList.get(i).getEstadoProcesso());
 	}
 	private void mostraLogMemoria(int i) {
-		String msg = "Id processo abortado p/ falta de mem.: "+processoList.get(i).getIdentificadorProcesso()+
-			" | Mem. requisitada: "+processoList.get(i).getQtdBytes()+
-			" | Mem. restante: "+memoriaObj.getRemainingMemorySize();
+		String msg = "Id processo abortado p/falta mem.: "+processoList.get(i).getIdentificadorProcesso()+
+			" | M. requisitada: "+processoList.get(i).getQtdBytes()+
+			" | M. restante: "+memoriaObj.getRemainingMemorySize();
 		if (bAtivaLog && bMostraMemoria) {
 			System.out.println(msg);		
 		}
