@@ -228,12 +228,7 @@ public class Processo implements Comparable<Processo>, Runnable {
     
     public void decrementaQuantum() {
     	if (this.quantum != 0)
-		//{
 	    	setQuantum(--this.quantum);			
-		/*} else
-		{
-			setEstadoProcesso("B");
-		}*/	   	
     }
     
     public void resetId() {

@@ -236,6 +236,8 @@ public class Controller {
 				case 3: iQtdBytes = 320; break;
 				case 4: iQtdBytes = 250; break;
 			}*/ // fim PENDENCIA: APAGAR
+			//if (iPrioridade == 2) // p/ testes
+			//	iQtdBytes = 40;
 			Processo p = new Processo(tempoTotalExecucao, "P", tempoTotalExecucao, iPrioridade, deadline, "", iQtdBytes);
 			processoList.add(p);
 		}

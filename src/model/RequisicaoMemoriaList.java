@@ -7,12 +7,14 @@ public class RequisicaoMemoriaList {
 
 	protected LinkedList<RequisicaoMemoria> blocos;
     private int iPosicaoNaLista;
+	// chaveia a ordenação entre a padrão: incidencia | ou a não-padrão: número da lista + incidencia
+	public static volatile boolean bOrdenacaoPadrao = true; 
     
 	public RequisicaoMemoriaList() {
 		blocos = new LinkedList<>();
 	}
 
-	public void add(int iTamanhoBloco) {//RequisicaoMemoria r) {//, int x) {
+	public void add(int iTamanhoBloco) { //, int x) {
 		synchronized (this) {
 			RequisicaoMemoria r = buscaPorTamanhoBloco(iTamanhoBloco);
 			if (r == null) {
