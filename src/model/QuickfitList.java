@@ -119,7 +119,7 @@ public class QuickfitList extends MemoriaList {
 				if (tamanhoBloco <= r.getTamanhoBloco()) {
 					// procura em uma das 4 listas
 					if (listaBlocos[r.getNumeroLista()].size() > 0) {
-						System.out.println("=>Y1 Achou na lista o bloco maior de "+r.getTamanhoBloco());
+						System.out.println("=>Y1 Busca alocar "+tamanhoBloco+". Achou na lista o bloco maior de "+r.getTamanhoBloco());
 						idBloco = listaBlocos[r.getNumeroLista()].get(0).getIdBloco();
 						if (buscouEAlocouMemoria(tamanhoBloco, idProcesso, idBloco, String.valueOf(r.getNumeroLista()))) {
 							listaBlocos[r.getNumeroLista()].remove(0);
@@ -141,24 +141,8 @@ public class QuickfitList extends MemoriaList {
 			while(lite2.hasNext()) {
 				b = lite2.next();
 				if (tamanhoBloco <= b.getTamanho()) {
-					System.out.println("=>Y2 Achou na lista o bloco maior de "+b.getTamanho());
+					System.out.println("=>Y2 Busca alocar "+tamanhoBloco+". Achou na lista o bloco maior de "+b.getTamanho());
 					idBloco = b.getIdBloco();
-					/*
-					ListIterator<BlocoMemoria> lite = getAll().listIterator(); // lista q representa a memória
-					int n = 0;
-					while(lite.hasNext()) {
-						b = lite.next();
-						if (b.getIdBloco() == idBloco) {
-							aloqueMemoria(tamanhoBloco, idProcesso, n);
-							b.setListaDeOrigem("G");
-							lite2.remove(); // PENDENCIA: TESTAR
-							bRetorno = true;
-							break;
-						}
-						n++;
-					}*/
-					// -> dar outro break aqui se descomentar codigo acima
-					//
 					if (buscouEAlocouMemoria(tamanhoBloco, idProcesso, idBloco, "G")) {
 						lite2.remove(); 
 						System.out.println("=> Alocou...");

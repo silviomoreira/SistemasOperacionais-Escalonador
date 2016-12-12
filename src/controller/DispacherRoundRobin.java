@@ -259,8 +259,8 @@ public class DispacherRoundRobin implements Runnable {
 			aguardaEmMilisegundos(1000);
 			// - Swap
 			//memoriaHDObj.swapHDMemoria(processoList, memoriaObj.getRemainingMemorySize(), memoriaObj);
-			//memoriaHDObj.swapMemoriaHD(processoList, memoriaObj.getRemainingMemorySize(), memoriaObj);
-			//atualizaTela();
+			memoriaHDObj.swapMemoriaHD(processoList, memoriaObj.getRemainingMemorySize(), memoriaObj);
+			atualizaTela();
 			// - Decrementa quantum
 			for(int i=0; i<processadoresList.size(); i++) {
 				if (processadoresList.get(i).getEstadoProcesso() == "E"){
@@ -332,7 +332,7 @@ public class DispacherRoundRobin implements Runnable {
 					processoList.add(processadoresList.get(i)); //recolocaProcessoBloqueadoNalistaDeProcessosGeral(i);
 					// ? .... TEM de dar vazão p/ os processos começarem a rodar e continuar
 					// a contagem do quantum
-				/**	memoriaObj.liberaMemoria(processadoresList.get(i).getIdentificadorProcesso());
+				//**	memoriaObj.liberaMemoria(processadoresList.get(i).getIdentificadorProcesso());
 					if (processoList.size() > 0) {
 						bMemoriaAlocada = tentaAlocarMemoria(i, bMemoriaAlocada, false);
 						if (bMemoriaAlocada) {
@@ -355,7 +355,7 @@ public class DispacherRoundRobin implements Runnable {
 						processadoresList.set(i, p);
 					}
 					if (bMemoriaAlocada)
-						mostraLogProcessadores(i);	**/			
+						mostraLogProcessadores(i);		
 				} // Fim <if geral>					
 			} // Fim <for>
 	    	atualizaTela();

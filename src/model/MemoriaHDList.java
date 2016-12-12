@@ -95,9 +95,11 @@ public class MemoriaHDList {
 				BlocoMemoria bm;
 				ListIterator<BlocoMemoria> literbm = blocosMemoria.listIterator();
 				while (literbm.hasNext()) {
+					bottomPanel.refreshConsole("Swap HD->M) Examinando processo "+processoList.get(i).getIdentificadorProcesso());
 					bm = literbm.next();
 					if (bm.getIdProcesso() == processoList.get(i).getIdentificadorProcesso())
 					{
+						bottomPanel.refreshConsole("Swap HD->M) adicionando à memória...");
 						// precisa setar idlogico = id ... ?
 						blocosMemoriaRAM.add(bm);
 						literbm.remove();
@@ -119,9 +121,12 @@ public class MemoriaHDList {
 				BlocoMemoria bm;
 				ListIterator<BlocoMemoria> literbm = blocosMemoriaRAM.getAll().listIterator();
 				while (literbm.hasNext()) {
+					bottomPanel.refreshConsole("Swap M->HD) Examinando processo "+processoList.get(i).getIdentificadorProcesso());		
 					bm = literbm.next();
-					if (bm.getIdProcesso() == processoList.get(i).getIdentificadorProcesso())
+					if (bm.getIdProcesso() == processoList.get(i).getIdentificadorProcesso()
+							&& processoList.get(i).getEstadoProcesso() == "B")
 					{
+						bottomPanel.refreshConsole("Swap M->HD) adicionando ao disco...");
 						// precisa setar idlogico = id ... ? ou marcar outro campo e deixar registro lá ?
 						blocosMemoria.add(bm);
 						literbm.remove();

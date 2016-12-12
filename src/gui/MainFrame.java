@@ -43,7 +43,7 @@ public class MainFrame extends JFrame {
 		centerPanel.setDataListProcessos(controller.getProcessos());
 		centerPanel.setDataListProcessadores(controller.getProcessadoresList(), 0);
 		centerPanel.setDataListConcluidosEAbortados(controller.getConcluidosEAbortadosList());
-		bottomPanel.setDataListMemoria(controller.getMemoriaList());//controller.getBestfitList());
+		bottomPanel.setDataListMemoria(controller.getMemoriaList());
 		bottomPanel.setDataListMemoriaHD(controller.getMemoriaHDList()); 
 		rightPanel.setDataListRequisicoesMemoria(controller.getRequisicaoMemoriaList());
 		setLayout(new BorderLayout());
