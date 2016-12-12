@@ -258,9 +258,9 @@ public class DispacherRoundRobin implements Runnable {
 		while (!pare) {
 			aguardaEmMilisegundos(1000);
 			// - Swap
-			memoriaHDObj.swapHDMemoria(processoList, memoriaObj.getRemainingMemorySize(), memoriaObj);
-			memoriaHDObj.swapMemoriaHD(processoList, memoriaObj.getRemainingMemorySize(), memoriaObj);
-			atualizaTela();
+			//memoriaHDObj.swapHDMemoria(processoList, memoriaObj.getRemainingMemorySize(), memoriaObj);
+			//memoriaHDObj.swapMemoriaHD(processoList, memoriaObj.getRemainingMemorySize(), memoriaObj);
+			//atualizaTela();
 			// - Decrementa quantum
 			for(int i=0; i<processadoresList.size(); i++) {
 				if (processadoresList.get(i).getEstadoProcesso() == "E"){
@@ -330,7 +330,9 @@ public class DispacherRoundRobin implements Runnable {
 				if (processadoresList.get(i).getEstadoProcesso() == "B"){
 					//recolocaProcessoBloqueadoNaFilaDePrioridades(i);
 					processoList.add(processadoresList.get(i)); //recolocaProcessoBloqueadoNalistaDeProcessosGeral(i);
-					memoriaObj.liberaMemoria(processadoresList.get(i).getIdentificadorProcesso());
+					// ? .... TEM de dar vazão p/ os processos começarem a rodar e continuar
+					// a contagem do quantum
+				/**	memoriaObj.liberaMemoria(processadoresList.get(i).getIdentificadorProcesso());
 					if (processoList.size() > 0) {
 						bMemoriaAlocada = tentaAlocarMemoria(i, bMemoriaAlocada, false);
 						if (bMemoriaAlocada) {
@@ -353,7 +355,7 @@ public class DispacherRoundRobin implements Runnable {
 						processadoresList.set(i, p);
 					}
 					if (bMemoriaAlocada)
-						mostraLogProcessadores(i);				
+						mostraLogProcessadores(i);	**/			
 				} // Fim <if geral>					
 			} // Fim <for>
 	    	atualizaTela();
@@ -366,26 +368,6 @@ public class DispacherRoundRobin implements Runnable {
 		} // Fim <while>
 	}
 
-//	private void liberaMemoria(int idProcesso) {
-		/*for(int i=0; i<memoriaList.size(); i++) {
-			if (memoriaList.get(i).getIdProcesso() == idProcesso) {
-				memoriaList.get(i).setEspacoUsado(0);
-				memoriaList.get(i).setIdProcesso(0);
-				break;
-			}
-		}*/		
-/*		BlocoMemoria b;
-		ListIterator<BlocoMemoria> liter = memoriaList.listIterator();
-		while(liter.hasNext()){
-			b = liter.next();
-			if (b.getIdProcesso() == idProcesso) {
-				b.setEspacoUsado(0);
-				b.setIdProcesso(0);
-				break;
-			}
-		}
-	}
-*/
 	/**
 	 * @param bMemoriaAlocada
 	 * @return

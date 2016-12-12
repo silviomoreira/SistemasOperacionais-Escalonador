@@ -338,7 +338,7 @@ public class QuickfitList extends MemoriaList {
 				Collections.sort(requisicoesMemoria.getAll());
 				return;
 			}
-			System.out.println("==>listas serão alteradas ?");
+			System.out.println("==>verificando se listas serão alteradas...");
 			// Verifica se lista N vai mudar p/ uma lista de outro bloco, verificando se cada bloco na lista de 
 			// requisições, não está encaixado em nenhuma lista
 			liter = requisicoesMemoria.getAll().listIterator();
@@ -356,18 +356,21 @@ public class QuickfitList extends MemoriaList {
 					System.out.println("==>verificando bloco tamanho: "+r.getTamanhoBloco()+" de incidencia: "+r.getIncidencia());
 					boolean bPodeRealocar = false;
 					boolean bBlocoPos5oRegistro = false; 
-					if (verificaSeHaMemoriaDisponivelParaCriarEsteBloco(r.getTamanhoBloco())) { 
+					if (verificaSeHaMemoriaDisponivelParaCriarEsteBloco(r.getTamanhoBloco())) {
+						System.out.println("==>Teve memória disponível para ele...");
 						iTamanhoBloco = r.getTamanhoBloco();
 						bPodeRealocar = true;
 					} else {
 						// Sai em busca do proximo bloco da lista de requisições que mais teve requisições a partir do
 						// 5o registro e q tenha mem. disponível p/ criar
+						System.out.println("==>Não Teve memória disponível para ele. Buscando após o 5o reg...");
 						rProxima = retornaRequisicaoProxBlocoQTeveMaisRequisicoesPartindoDo5oRegistro();
 						iTamanhoBloco = rProxima == null ? 0 : rProxima.getTamanhoBloco();
 						bPodeRealocar = (iTamanhoBloco > 0);
 						bBlocoPos5oRegistro = true;
 					}
 					if (bPodeRealocar) {
+						System.out.println("==>Pode realocar...");
 						int iNumeroListaQVaiMudar = veEmQualListaVaiGuardar(sListasQuePermanecem);//, i);
 						if (iNumeroListaQVaiMudar != -1)
 						{
@@ -381,7 +384,16 @@ public class QuickfitList extends MemoriaList {
 							else
 								r.setNumeroLista(iNumeroListaQVaiMudar);
 						}
+					} else {
+						System.out.println("==>Não foi possível realocar...");
 					}
+				}	
+				else {
+					// realimenta listaBlocos dos 4+ q vao permanecer
+					if (r.getNumeroLista() != -1)
+						montaListaBlocoMaisRequisitadoEExcluiDaGenerica(r.getTamanhoBloco(),r.getNumeroLista());
+					else
+						System.out.println("Infelizmente não deu p/ realimentar a lista do bloco de "+r.getTamanhoBloco());
 				} // Fim <if>
 				i++;
 			} // Fim <while>
@@ -435,7 +447,7 @@ public class QuickfitList extends MemoriaList {
 		return iNumeroListaQVaiMudar;
 	}
 	
-	private RequisicaoMemoria retornaRequisicaoProxBlocoQTeveMaisRequisicoesPartindoDo5oRegistro() { // int retornaTamanhoProxBlocoQTeveMaisRequisicoesPartindoDo5oRegistro() {
+	private RequisicaoMemoria retornaRequisicaoProxBlocoQTeveMaisRequisicoesPartindoDo5oRegistro() { 
 		int iTamanhoBloco;
 		ListIterator<RequisicaoMemoria> liter = requisicoesMemoria.getAll().listIterator(iProxRegistroASerVerificado);
 		RequisicaoMemoria r;
@@ -444,7 +456,7 @@ public class QuickfitList extends MemoriaList {
 			iTamanhoBloco = r.getTamanhoBloco();
 			if (verificaSeHaMemoriaDisponivelParaCriarEsteBloco(iTamanhoBloco)) {
 				iProxRegistroASerVerificado++;
-				return r;//iTamanhoBloco;
+				return r;
 			}
 			iProxRegistroASerVerificado++;
 		}		
