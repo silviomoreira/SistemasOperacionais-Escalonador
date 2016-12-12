@@ -62,6 +62,7 @@ public class QuickfitList extends MemoriaList {
 		int idBloco;
 		
 		if (foiAlocadoPorMeioDoProcesso(idProcesso)) {
+			
 			guardaRequisicoes(tamanhoBloco);
 			return true;
 		}
@@ -261,6 +262,7 @@ public class QuickfitList extends MemoriaList {
 			if (b.getIdProcesso() == idProcesso) {
 				b.setEspacoUsado(0);
 				b.setIdProcesso(0);
+				b.setListaDeOrigem("");
 				listaBlocosLivres.add(b);
 				break;
 			}
@@ -478,9 +480,29 @@ public class QuickfitList extends MemoriaList {
 		while(liter.hasNext()){
 			b = liter.next();
 			if (b.getIdProcesso() == idProcesso && b.getEspacoUsado() > 0) {
+				String sListaOrigem = retornaListaOrigem(b.getTamanho());
+				if (sListaOrigem != "")
+					b.setListaDeOrigem(sListaOrigem);
+				else if (bAtingiuChao)
+					b.setListaDeOrigem("G");
 				return true;
 			}
 		}		
 		return false;
 	}
+	
+    public String retornaListaOrigem(int iTamanhoBloco) {
+		ListIterator<RequisicaoMemoria> liter = requisicoesMemoria.getAll().listIterator();
+		RequisicaoMemoria r;
+		int i = 0;
+		String sLista = "";
+		while(i < 4 && liter.hasNext()){
+			r = liter.next();
+			if (iTamanhoBloco == r.getTamanhoBloco()) {
+				return String.valueOf(r.getNumeroLista());
+			}
+		    i++;
+		}
+		return sLista;
+    }
 } 
