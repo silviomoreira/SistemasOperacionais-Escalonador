@@ -197,12 +197,13 @@ public class Processo implements Comparable<Processo>, Runnable {
 						" | T. restante: "+tempoExecucaoRestante);
     	}
     	int iTempoExecucaoRestante = Integer.valueOf(this.tempoExecucaoRestante);
+    	int iDeadline = Integer.valueOf(this.deadline);
     	if (_ativaLog)
     		System.out.println("Id parado: "+identificadorProcesso+
 					" | T. total "+tempoTotalExecucao+
 					" | T. restante: "+tempoExecucaoRestante+
 					" | Causa parada: pro. "+(iTempoExecucaoRestante == 0 ? "concluído" : "bloqueado"));
-    	if (this.quantum == 0 && iTempoExecucaoRestante != 0)
+    	if (this.quantum == 0 && iTempoExecucaoRestante != 0 && iDeadline == 0)
     		setEstadoProcesso("B");
     	else if (iTempoExecucaoRestante == 0)
     		setEstadoProcesso("OK");
