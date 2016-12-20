@@ -3,7 +3,6 @@ package model;
 public class MergefitList extends MemoriaList {
 
 	public MergefitList() {
-		// TODO Auto-generated constructor stub
 	}
 	
 	@Override
